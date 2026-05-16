@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tawan Taekwondo Club — Vientiane, Laos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black:    #0a0a0a;
+      --zinc-900: #111111;
+      --zinc-800: #1c1c1c;
+      --zinc-700: #2e2e2e;
+      --zinc-600: #4a4a4a;
+      --zinc-400: #888888;
+      --zinc-300: #b0b0b0;
+      --zinc-200: #d8d8d8;
+      --zinc-100: #f0f0f0;
+      --zinc-50:  #f8f8f8;
+      --surface:  #f7f7f5;
+      --white:    #ffffff;
+      --accent:   #b91c1c;
+      --accent-d: #991b1b;
+      --accent-l: #dc2626;
+      --font: 'Outfit', system-ui, sans-serif;
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --radius-xl: 2rem;
+      --radius-lg: 1.25rem;
+      --radius-md: 0.75rem;
+      --shadow: 0 20px 40px -12px rgba(0,0,0,0.08);
+      --shadow-md: 0 8px 24px -6px rgba(0,0,0,0.1);
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font); background: var(--white); color: var(--black); overflow-x: hidden; }
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--black); }
+    ::-webkit-scrollbar-thumb { background: var(--zinc-700); border-radius: 99px; }
+
+    /* ─── NAV ────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.125rem 3rem;
+      transition: all 0.4s var(--ease-out);
+    }
+    nav.scrolled {
+      background: rgba(10,10,10,0.94);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 0.875rem 3rem;
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 0.625rem;
+      text-decoration: none; color: var(--white);
+      font-size: 1.1rem; font-weight: 800; letter-spacing: -0.02em;
+    }
+    .nav-logo-badge {
+      width: 34px; height: 34px; background: var(--accent);
+      border-radius: 8px; display: flex; align-items: center;
+      justify-content: center; font-size: 0.85rem; font-weight: 900; color: white;
+    }
+    .nav-links { display: flex; align-items: center; gap: 2rem; list-style: none; }
+    .nav-links a {
+      color: rgba(255,255,255,0.65); text-decoration: none;
+      font-size: 0.85rem; font-weight: 500; transition: color 0.2s;
+    }
+    .nav-links a:hover { color: white; }
+    .nav-cta {
+      background: var(--accent); color: white;
+      border: none; border-radius: 99px;
+      padding: 0.6rem 1.375rem;
+      font-family: var(--font); font-size: 0.85rem; font-weight: 700;
+      cursor: pointer; text-decoration: none;
+      transition: all 0.2s var(--ease-spring);
+      display: flex; align-items: center; gap: 0.4rem;
+    }
+    .nav-cta:hover { background: var(--accent-l); transform: translateY(-1px); }
+    .nav-cta:active { transform: scale(0.97); }
+    .nav-cta svg { width: 14px; height: 14px; }
+
+    /* ─── HERO ───────────────────────────────────── */
+    .hero {
+      position: relative; min-height: 100dvh;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background: url('photos/hero.jpg') center center/cover no-repeat;
+    }
+    .hero-bg::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(to top,
+        rgba(10,10,10,1) 0%,
+        rgba(10,10,10,0.65) 45%,
+        rgba(10,10,10,0.2) 100%);
+    }
+    .hero-grain {
+      position: absolute; inset: 0; z-index: 1; pointer-events: none;
+      opacity: 0.04;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 200px;
+    }
+    .hero-content {
+      position: relative; z-index: 2;
+      padding: 0 3.5rem 5rem;
+      max-width: 780px;
+    }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: rgba(185,28,28,0.2);
+      border: 1px solid rgba(185,28,28,0.4);
+      border-radius: 99px; padding: 0.3rem 1rem;
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: #fca5a5;
+      margin-bottom: 1.75rem;
+      animation: fadeUp 0.8s var(--ease-out) 0.1s both;
+    }
+    .eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent-l); animation: blink 2s infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    .hero-title {
+      font-size: clamp(3.25rem, 7vw, 7rem);
+      font-weight: 900; letter-spacing: -0.04em; line-height: 0.9;
+      color: white;
+      animation: fadeUp 0.8s var(--ease-out) 0.2s both;
+    }
+    .hero-title .red { color: var(--accent-l); }
+    .hero-tagline {
+      margin-top: 1.25rem;
+      font-size: 1.125rem; font-weight: 400;
+      color: rgba(255,255,255,0.55); letter-spacing: 0.01em;
+      animation: fadeUp 0.8s var(--ease-out) 0.3s both;
+    }
+    .hero-actions {
+      display: flex; align-items: center; gap: 0.875rem;
+      margin-top: 2.5rem;
+      animation: fadeUp 0.8s var(--ease-out) 0.42s both;
+    }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: var(--accent); color: white;
+      border: none; border-radius: 99px;
+      padding: 0.9rem 2rem;
+      font-family: var(--font); font-size: 0.9375rem; font-weight: 700;
+      cursor: pointer; text-decoration: none;
+      transition: all 0.22s var(--ease-spring);
+    }
+    .btn-primary:hover { background: var(--accent-l); transform: translateY(-2px); box-shadow: 0 12px 30px rgba(185,28,28,0.4); }
+    .btn-primary:active { transform: scale(0.97); }
+    .btn-primary svg { width: 18px; height: 18px; flex-shrink: 0; }
+    .btn-outline {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: transparent; color: rgba(255,255,255,0.8);
+      border: 1px solid rgba(255,255,255,0.25); border-radius: 99px;
+      padding: 0.9rem 2rem;
+      font-family: var(--font); font-size: 0.9375rem; font-weight: 600;
+      cursor: pointer; text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-outline:hover { border-color: rgba(255,255,255,0.6); color: white; }
+    .btn-outline svg { width: 16px; height: 16px; }
+
+    .hero-stats {
+      display: flex; gap: 2.5rem; padding-top: 3rem;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      margin-top: 3rem;
+      animation: fadeUp 0.8s var(--ease-out) 0.55s both;
+    }
+    .hero-stat-num { font-size: 2.25rem; font-weight: 900; letter-spacing: -0.05em; color: white; }
+    .hero-stat-label { font-size: 0.72rem; font-weight: 500; color: rgba(255,255,255,0.4); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 0.2rem; }
+
+    .hero-scroll {
+      position: absolute; bottom: 2rem; right: 3.5rem; z-index: 2;
+      display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+      animation: fadeUp 1s var(--ease-out) 0.8s both;
+    }
+    .hero-scroll span { font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.3); }
+    .scroll-line { width: 1px; height: 40px; background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.4)); animation: scrollAnim 2s ease-in-out infinite; }
+    @keyframes scrollAnim { 0%,100%{opacity:0.3} 50%{opacity:1} }
+
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(22px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+
+    /* ─── TICKER ─────────────────────────────────── */
+    .ticker { background: var(--accent); overflow: hidden; padding: 0.8rem 0; }
+    .ticker-track { display: inline-flex; animation: ticker 30s linear infinite; }
+    .ticker-item {
+      display: inline-flex; align-items: center; gap: 1rem;
+      padding: 0 2.5rem;
+      font-size: 0.72rem; font-weight: 800; letter-spacing: 0.1em;
+      text-transform: uppercase; color: rgba(255,255,255,0.9);
+      white-space: nowrap;
+    }
+    .ticker-sep { opacity: 0.4; }
+    @keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+    /* ─── SHARED SECTION STYLES ─────────────────── */
+    .section { padding: 6rem 3.5rem; }
+    .section--dark { background: var(--black); color: white; }
+    .section--light { background: var(--surface); }
+    .section--white { background: var(--white); }
+
+    .label {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-size: 0.68rem; font-weight: 800; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 0.875rem;
+    }
+    .label::before { content:''; width:18px; height:2px; background:var(--accent); border-radius:99px; }
+    .h2 {
+      font-size: clamp(2rem, 4.5vw, 3.75rem);
+      font-weight: 900; letter-spacing: -0.04em; line-height: 0.94;
+    }
+    .h2 span { color: var(--accent); }
+    .body-text { font-size: 1rem; line-height: 1.72; color: var(--zinc-600); }
+    .body-text--light { color: rgba(255,255,255,0.5); }
+
+    .reveal {
+      opacity: 0; transform: translateY(24px);
+      transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .d1{transition-delay:.1s} .d2{transition-delay:.2s} .d3{transition-delay:.3s} .d4{transition-delay:.4s} .d5{transition-delay:.5s}
+
+    /* ─── ABOUT ──────────────────────────────────── */
+    .about-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 5rem;
+      align-items: center; margin-top: 3.5rem;
+    }
+    .about-img-stack { position: relative; }
+    .about-img-main {
+      width: 100%; border-radius: var(--radius-xl);
+      overflow: hidden; aspect-ratio: 4/3;
+      box-shadow: var(--shadow);
+    }
+    .about-img-main img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .about-img-inset {
+      position: absolute; bottom: -1.5rem; right: -1.5rem;
+      width: 52%; border-radius: var(--radius-lg);
+      overflow: hidden; aspect-ratio: 3/4;
+      border: 4px solid white;
+      box-shadow: var(--shadow);
+    }
+    .about-img-inset img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .about-founded {
+      display: inline-flex; align-items: center; gap: 0.75rem;
+      background: var(--black); color: white;
+      border-radius: var(--radius-md);
+      padding: 0.875rem 1.25rem;
+      margin-top: 1.5rem;
+      font-size: 0.85rem; font-weight: 600;
+    }
+    .about-founded-icon { color: var(--accent); font-size: 1.25rem; }
+    .about-text p { margin-bottom: 1.125rem; }
+    .about-pillars { display: grid; grid-template-columns: 1fr 1fr; gap: 0.875rem; margin-top: 2rem; }
+    .pillar {
+      background: var(--surface); border: 1px solid var(--zinc-200);
+      border-radius: var(--radius-md); padding: 1.125rem;
+      transition: all 0.25s var(--ease-out);
+    }
+    .pillar:hover { border-color: var(--zinc-300); box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    .pillar-name { font-size: 0.85rem; font-weight: 700; color: var(--black); margin-bottom: 0.2rem; }
+    .pillar-val { font-size: 1.5rem; font-weight: 900; letter-spacing: -0.04em; color: var(--accent); }
+
+    /* ─── TAEKWONDO OVERVIEW ─────────────────────── */
+    .overview-intro {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 4rem;
+      align-items: start; margin-top: 3rem; margin-bottom: 4rem;
+    }
+    .overview-desc { font-size: 1rem; line-height: 1.72; color: rgba(255,255,255,0.55); }
+    .types-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;
+      margin-bottom: 4rem;
+    }
+    .type-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem 1.5rem;
+      transition: all 0.25s var(--ease-out);
+    }
+    .type-card:hover {
+      background: rgba(185,28,28,0.1);
+      border-color: rgba(185,28,28,0.3);
+      transform: translateY(-3px);
+    }
+    .type-number {
+      font-size: 0.65rem; font-weight: 800; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 1rem;
+    }
+    .type-name { font-size: 1.1rem; font-weight: 800; color: white; letter-spacing: -0.02em; margin-bottom: 0.625rem; }
+    .type-desc { font-size: 0.85rem; line-height: 1.6; color: rgba(255,255,255,0.45); }
+
+    .benefits-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+    .benefit-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem 1.5rem;
+      position: relative; overflow: hidden;
+      transition: all 0.25s var(--ease-out);
+    }
+    .benefit-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: var(--accent); opacity: 0;
+      transition: opacity 0.25s;
+    }
+    .benefit-card:hover::before { opacity: 1; }
+    .benefit-card:hover { background: rgba(255,255,255,0.06); transform: translateY(-3px); }
+    .benefit-icon {
+      width: 44px; height: 44px; border-radius: 12px;
+      background: rgba(185,28,28,0.15); border: 1px solid rgba(185,28,28,0.25);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 1rem;
+    }
+    .benefit-icon svg { width: 22px; height: 22px; color: #fca5a5; }
+    .benefit-title { font-size: 1rem; font-weight: 800; color: white; margin-bottom: 0.5rem; letter-spacing: -0.02em; }
+    .benefit-desc { font-size: 0.83rem; line-height: 1.6; color: rgba(255,255,255,0.45); }
+
+    /* ─── SCHEDULE ───────────────────────────────── */
+    .schedule-layout { display: grid; grid-template-columns: 1.2fr 1fr; gap: 5rem; align-items: start; margin-top: 3rem; }
+    .schedule-days { display: flex; flex-direction: column; gap: 0; }
+    .schedule-day {
+      display: flex; align-items: stretch;
+      border-bottom: 1px solid var(--zinc-100);
+      padding: 1.25rem 0;
+      transition: background 0.15s;
+    }
+    .schedule-day:first-child { border-top: 1px solid var(--zinc-100); }
+    .schedule-day-name {
+      width: 110px; flex-shrink: 0;
+      font-size: 0.72rem; font-weight: 800; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--zinc-400);
+      padding-top: 0.125rem;
+    }
+    .schedule-classes { display: flex; flex-direction: column; gap: 0.5rem; flex: 1; }
+    .schedule-class-item {
+      display: flex; align-items: center; justify-content: space-between;
+      background: var(--surface); border-radius: var(--radius-md);
+      padding: 0.75rem 1rem;
+    }
+    .sched-class-name { font-size: 0.875rem; font-weight: 700; color: var(--black); }
+    .sched-time { font-size: 0.8rem; font-weight: 600; color: var(--zinc-600); }
+    .sched-badge {
+      display: inline-block;
+      font-size: 0.65rem; font-weight: 800; letter-spacing: 0.06em;
+      text-transform: uppercase; border-radius: 99px;
+      padding: 0.18rem 0.6rem; white-space: nowrap;
+    }
+    .sched-badge--junior { background: #eff6ff; color: #1d4ed8; }
+    .sched-badge--adult { background: rgba(185,28,28,0.08); color: var(--accent); }
+    .sched-badge--all { background: var(--zinc-100); color: var(--zinc-600); }
+
+    .schedule-cta-box {
+      background: var(--black); border-radius: var(--radius-xl);
+      padding: 2.5rem; color: white; position: sticky; top: 6rem;
+    }
+    .schedule-cta-box .h3 {
+      font-size: 1.75rem; font-weight: 900; letter-spacing: -0.04em;
+      line-height: 1.05; margin-bottom: 1rem;
+    }
+    .schedule-cta-box p { font-size: 0.9rem; color: rgba(255,255,255,0.5); line-height: 1.65; margin-bottom: 1.5rem; }
+    .schedule-cta-box .btn-primary { width: 100%; justify-content: center; }
+    .schedule-note { font-size: 0.78rem; color: rgba(255,255,255,0.3); margin-top: 1rem; text-align: center; }
+
+    /* ─── PRICING ────────────────────────────────── */
+    .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-top: 3.5rem; }
+    .price-card {
+      background: var(--white); border: 1.5px solid var(--zinc-200);
+      border-radius: var(--radius-xl); padding: 2.25rem;
+      position: relative; transition: all 0.3s var(--ease-out);
+    }
+    .price-card:hover { box-shadow: var(--shadow); transform: translateY(-4px); }
+    .price-card--featured {
+      background: var(--black); color: white;
+      border-color: var(--black);
+    }
+    .price-card--featured:hover { box-shadow: 0 24px 48px rgba(0,0,0,0.2); }
+    .price-badge {
+      position: absolute; top: -0.75rem; left: 50%; transform: translateX(-50%);
+      background: var(--accent); color: white;
+      font-size: 0.65rem; font-weight: 800; letter-spacing: 0.08em;
+      text-transform: uppercase; border-radius: 99px;
+      padding: 0.25rem 0.875rem; white-space: nowrap;
+    }
+    .price-sessions { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--zinc-400); margin-bottom: 0.75rem; }
+    .price-card--featured .price-sessions { color: rgba(255,255,255,0.4); }
+    .price-amount {
+      font-size: 2.75rem; font-weight: 900; letter-spacing: -0.05em;
+      color: var(--black); line-height: 1;
+    }
+    .price-card--featured .price-amount { color: white; }
+    .price-currency { font-size: 1rem; font-weight: 700; vertical-align: super; line-height: 1; }
+    .price-period { font-size: 0.8rem; font-weight: 500; color: var(--zinc-400); }
+    .price-card--featured .price-period { color: rgba(255,255,255,0.4); }
+    .price-divider { border: none; border-top: 1px solid var(--zinc-100); margin: 1.5rem 0; }
+    .price-card--featured .price-divider { border-color: rgba(255,255,255,0.1); }
+    .price-perks { display: flex; flex-direction: column; gap: 0.625rem; margin-bottom: 1.75rem; }
+    .price-perk { display: flex; align-items: center; gap: 0.625rem; font-size: 0.875rem; color: var(--zinc-700); }
+    .price-card--featured .price-perk { color: rgba(255,255,255,0.75); }
+    .perk-check {
+      width: 18px; height: 18px; border-radius: 50%; flex-shrink: 0;
+      background: rgba(185,28,28,0.1); border: 1px solid rgba(185,28,28,0.2);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .perk-check svg { width: 9px; height: 9px; color: var(--accent); }
+    .price-card .btn-primary { width: 100%; justify-content: center; }
+    .price-card--default .btn-primary { background: var(--zinc-100); color: var(--black); }
+    .price-card--default .btn-primary:hover { background: var(--zinc-200); }
+
+    .pricing-extras { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-top: 1.25rem; }
+    .extras-card {
+      background: var(--surface); border: 1px solid var(--zinc-200);
+      border-radius: var(--radius-lg); padding: 1.5rem;
+    }
+    .extras-card h4 { font-size: 1rem; font-weight: 800; color: var(--black); margin-bottom: 0.25rem; }
+    .extras-card .price-line { font-size: 1.5rem; font-weight: 900; letter-spacing: -0.04em; color: var(--accent); margin-bottom: 0.25rem; }
+    .extras-card p { font-size: 0.83rem; color: var(--zinc-500); line-height: 1.55; }
+
+    /* ─── EQUIPMENT ──────────────────────────────── */
+    .equipment-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; margin-top: 3rem; }
+    .dobok-section h3 { font-size: 1.125rem; font-weight: 800; color: var(--black); margin-bottom: 1rem; }
+    .size-grid {
+      display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.75rem;
+    }
+    .size-chip {
+      background: var(--surface); border: 1.5px solid var(--zinc-200);
+      border-radius: 99px; padding: 0.35rem 0.875rem;
+      font-size: 0.85rem; font-weight: 700; color: var(--black);
+      transition: all 0.2s;
+    }
+    .size-chip:hover { background: var(--black); color: white; border-color: var(--black); }
+    .dobok-price-tag {
+      display: inline-flex; align-items: baseline; gap: 0.375rem;
+      background: var(--black); color: white;
+      border-radius: var(--radius-md); padding: 1rem 1.5rem;
+    }
+    .dobok-price-tag .amount { font-size: 1.75rem; font-weight: 900; letter-spacing: -0.04em; }
+    .dobok-price-tag .label-text { font-size: 0.8rem; color: rgba(255,255,255,0.5); }
+    .gear-section h3 { font-size: 1.125rem; font-weight: 800; color: var(--black); margin-bottom: 1rem; }
+    .gear-list { display: flex; flex-direction: column; gap: 0.5rem; }
+    .gear-item {
+      display: flex; align-items: center; gap: 0.75rem;
+      padding: 0.875rem 1.125rem;
+      background: var(--surface); border: 1px solid var(--zinc-200);
+      border-radius: var(--radius-md);
+      font-size: 0.875rem; font-weight: 600; color: var(--black);
+    }
+    .gear-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+    .gear-tag {
+      margin-left: auto;
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.06em;
+      text-transform: uppercase; color: var(--zinc-400);
+      background: var(--zinc-100); border-radius: 99px;
+      padding: 0.2rem 0.6rem;
+    }
+
+    /* ─── COACHES ────────────────────────────────── */
+    .coaches-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; margin-top: 3rem; }
+    .coach-card {
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius-xl); overflow: hidden;
+      background: rgba(255,255,255,0.03);
+      transition: all 0.3s var(--ease-out);
+    }
+    .coach-card:hover {
+      background: rgba(255,255,255,0.07);
+      border-color: rgba(255,255,255,0.15);
+      transform: translateY(-4px);
+    }
+    .coach-top {
+      aspect-ratio: 3/4;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(255,255,255,0.025);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      position: relative; overflow: hidden;
+    }
+    .coach-top img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      transition: transform 0.6s var(--ease-out);
+      filter: grayscale(20%);
+    }
+    .coach-card:hover .coach-top img { transform: scale(1.05); filter: grayscale(0%); }
+    .coach-monogram {
+      font-size: 4rem; font-weight: 900; letter-spacing: -0.05em;
+      color: rgba(255,255,255,0.07);
+      position: absolute;
+    }
+    .coach-accent-bar {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      height: 3px; background: var(--accent); opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .coach-card:hover .coach-accent-bar { opacity: 1; }
+    .coach-body { padding: 1.25rem; }
+    .coach-role-tag {
+      display: inline-block;
+      background: rgba(185,28,28,0.15); color: #fca5a5;
+      font-size: 0.62rem; font-weight: 800; letter-spacing: 0.08em;
+      text-transform: uppercase; border-radius: 99px;
+      padding: 0.18rem 0.625rem; margin-bottom: 0.625rem;
+    }
+    .coach-role-tag--head { background: rgba(185,28,28,0.25); }
+    .coach-name { font-size: 1.1rem; font-weight: 800; color: white; letter-spacing: -0.02em; }
+    .coach-specialty { font-size: 0.78rem; color: rgba(255,255,255,0.4); margin-top: 0.3rem; line-height: 1.5; }
+
+    /* ─── COMPETITION SHOWCASE ───────────────────── */
+    .showcase-grid {
+      display: grid; grid-template-columns: 1.3fr 1fr; gap: 1rem;
+      margin-top: 3rem; border-radius: var(--radius-xl); overflow: hidden;
+    }
+    .showcase-main {
+      position: relative; aspect-ratio: 4/3; overflow: hidden;
+    }
+    .showcase-main img { width:100%; height:100%; object-fit:cover; display:block; transition: transform 0.6s var(--ease-out); }
+    .showcase-main:hover img { transform: scale(1.04); }
+    .showcase-col { display: flex; flex-direction: column; gap: 1rem; }
+    .showcase-sub { position: relative; flex: 1; overflow: hidden; min-height: 200px; }
+    .showcase-sub img { width:100%; height:100%; object-fit:cover; display:block; transition: transform 0.6s var(--ease-out); }
+    .showcase-sub:hover img { transform: scale(1.04); }
+    .showcase-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 60%);
+      display: flex; align-items: flex-end; padding: 1.25rem;
+    }
+    .showcase-caption { font-size: 0.78rem; font-weight: 700; color: rgba(255,255,255,0.8); }
+
+    /* ─── CONTACT ────────────────────────────────── */
+    .contact-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 5rem; align-items: start; margin-top: 3.5rem; }
+    .contact-channels { display: flex; flex-direction: column; gap: 1rem; }
+    .contact-btn {
+      display: flex; align-items: center; gap: 1rem;
+      padding: 1.25rem 1.5rem;
+      border: 1.5px solid var(--zinc-200); border-radius: var(--radius-lg);
+      text-decoration: none; color: var(--black);
+      transition: all 0.25s var(--ease-out);
+      background: white;
+    }
+    .contact-btn:hover { border-color: var(--black); box-shadow: var(--shadow-md); transform: translateX(4px); }
+    .contact-btn--wa { border-color: #25d366; }
+    .contact-btn--wa:hover { background: #f0fdf4; border-color: #16a34a; }
+    .contact-btn--fb { border-color: #1877f2; }
+    .contact-btn--fb:hover { background: #eff6ff; border-color: #1d4ed8; }
+    .contact-btn-icon {
+      width: 44px; height: 44px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; font-size: 1.25rem;
+    }
+    .contact-btn-icon--wa { background: #25d366; }
+    .contact-btn-icon--email { background: var(--zinc-100); }
+    .contact-btn-icon--fb { background: #1877f2; }
+    .contact-btn-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--zinc-400); }
+    .contact-btn-value { font-size: 0.925rem; font-weight: 700; color: var(--black); }
+    .contact-btn svg { width: 16px; height: 16px; margin-left: auto; color: var(--zinc-300); transition: transform 0.2s; }
+    .contact-btn:hover svg { transform: translateX(3px); color: var(--zinc-600); }
+
+    .contact-info-box {
+      background: var(--surface); border-radius: var(--radius-xl);
+      padding: 2.25rem; border: 1px solid var(--zinc-200);
+    }
+    .contact-info-box h3 { font-size: 1.25rem; font-weight: 800; margin-bottom: 1.25rem; }
+    .info-row { display: flex; gap: 0.75rem; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--zinc-100); }
+    .info-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .info-icon { width: 36px; height: 36px; border-radius: 10px; background: var(--zinc-100); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .info-icon svg { width: 16px; height: 16px; color: var(--accent); }
+    .info-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--zinc-400); margin-bottom: 0.2rem; }
+    .info-val { font-size: 0.9rem; font-weight: 600; color: var(--black); line-height: 1.4; }
+
+    /* ─── FOOTER ─────────────────────────────────── */
+    footer {
+      background: var(--black);
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 4rem 3.5rem 2.25rem;
+    }
+    .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 4rem; margin-bottom: 3.5rem; }
+    .footer-brand { color: rgba(255,255,255,0.5); font-size: 0.875rem; line-height: 1.7; margin-top: 0.875rem; max-width: 28ch; }
+    .footer-col-title { font-size: 0.68rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 1.125rem; }
+    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+    .footer-links a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 0.875rem; transition: color 0.2s; }
+    .footer-links a:hover { color: white; }
+    .footer-bottom { display: flex; align-items: center; justify-content: space-between; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.06); }
+    .footer-copy { font-size: 0.78rem; color: rgba(255,255,255,0.25); }
+    .footer-social { display: flex; gap: 0.625rem; }
+    .social-link {
+      width: 32px; height: 32px; border-radius: 8px;
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08);
+      display: flex; align-items: center; justify-content: center;
+      color: rgba(255,255,255,0.4); text-decoration: none; font-size: 0.75rem;
+      transition: all 0.2s;
+    }
+    .social-link:hover { background: rgba(255,255,255,0.12); color: white; }
+
+    /* ─── RESPONSIVE ─────────────────────────────── */
+    @media (max-width: 1100px) {
+      .coaches-grid { grid-template-columns: repeat(3, 1fr); }
+      .benefits-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 960px) {
+      nav { padding: 1rem 1.5rem; }
+      nav.scrolled { padding: 0.75rem 1.5rem; }
+      .nav-links { display: none; }
+      .section { padding: 4rem 1.75rem; }
+      .hero-content { padding: 0 1.75rem 4.5rem; }
+      .about-grid, .overview-intro, .schedule-layout, .equipment-layout,
+      .contact-grid, .showcase-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .about-img-inset { display: none; }
+      .types-grid { grid-template-columns: 1fr 1fr; }
+      .pricing-grid { grid-template-columns: 1fr; }
+      .pricing-extras { grid-template-columns: 1fr; }
+      .coaches-grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-top { grid-template-columns: 1fr 1fr; gap: 2.5rem; }
+    }
+    @media (max-width: 640px) {
+      .hero-stats { gap: 1.5rem; }
+      .hero-actions { flex-direction: column; align-items: flex-start; }
+      .types-grid { grid-template-columns: 1fr; }
+      .benefits-grid { grid-template-columns: 1fr; }
+      .coaches-grid { grid-template-columns: repeat(2, 1fr); }
+      .about-pillars { grid-template-columns: 1fr 1fr; }
+      .size-grid { gap: 0.375rem; }
+      .footer-top { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── NAV ─── -->
+<nav id="nav">
+  <a href="#" class="nav-logo">
+    <div class="nav-logo-badge">TK</div>
+    Tawan TKD Club
+  </a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#overview">Taekwondo</a></li>
+    <li><a href="#schedule">Schedule</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#coaches">Coaches</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="https://wa.me/02022112211" target="_blank" rel="noopener" class="nav-cta">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.555 4.116 1.526 5.845L0 24l6.334-1.507A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.89 0-3.663-.5-5.194-1.378L3 21.5l.908-3.726A10.018 10.018 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+    Join Now
+  </a>
+</nav>
+
+<!-- ─── HERO ─── -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-grain"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <span class="eyebrow-dot"></span>
+      Vientiane, Laos &nbsp;·&nbsp; Since 2010
+    </div>
+    <h1 class="hero-title">
+      Tawan<br>
+      <span class="red">Taekwondo</span><br>
+      Club
+    </h1>
+    <p class="hero-tagline">Where Discipline Shapes Who You Are.</p>
+    <div class="hero-actions">
+      <a href="https://wa.me/02022112211" target="_blank" rel="noopener" class="btn-primary">
+        <svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.555 4.116 1.526 5.845L0 24l6.334-1.507A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.89 0-3.663-.5-5.194-1.378L3 21.5l.908-3.726A10.018 10.018 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+        Message on WhatsApp
+      </a>
+      <a href="https://www.facebook.com/profile.php?id=100057081595469" target="_blank" rel="noopener" class="btn-outline">
+        <svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        View Facebook Page
+      </a>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <div class="hero-stat-num">100+</div>
+        <div class="hero-stat-label">Active Students</div>
+      </div>
+      <div>
+        <div class="hero-stat-num">15+</div>
+        <div class="hero-stat-label">Years in Vientiane</div>
+      </div>
+      <div>
+        <div class="hero-stat-num">5</div>
+        <div class="hero-stat-label">Expert Coaches</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ─── TICKER ─── -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track">
+    <span class="ticker-item">Tawan Taekwondo Club <span class="ticker-sep">—</span></span>
+    <span class="ticker-item">Founded 12 June 2010 <span class="ticker-sep">—</span></span>
+    <span class="ticker-item">Budo Centre, Vientiane <span class="ticker-sep">—</span></span>
+    <span class="ticker-item">All Ages Welcome <span class="ticker-sep">—</span></span>
+    <span class="ticker-item">Kyorugi · Poomsae · Self-Defense <span class="ticker-sep">—</span></span>
+    <span class="ticker-item">9th Lao TKD Federation Championship <span class="ticker-sep">—</span></span>
+    <span class="ticker-item">Tawan Taekwondo Club <span class="ticker-sep">—</span></span>
+    <span class="ticker-item">Founded 12 June 2010 <span class="ticker-sep">—</span></span>
+    <span class="ticker-item">Budo Centre, Vientiane <span class="ticker-sep">—</span></span>
+    <span class="ticker-item">All Ages Welcome <span class="ticker-sep">—</span></span>
+    <span class="ticker-item">Kyorugi · Poomsae · Self-Defense <span class="ticker-sep">—</span></span>
+    <span class="ticker-item">9th Lao TKD Federation Championship <span class="ticker-sep">—</span></span>
+  </div>
+</div>
+
+<!-- ─── ABOUT ─── -->
+<section class="section section--white" id="about">
+  <div class="label reveal">About Us</div>
+  <h2 class="h2 reveal d1">Vientiane's home of<br><span>Taekwondo</span></h2>
+
+  <div class="about-grid">
+    <div class="about-img-stack reveal">
+      <div class="about-img-main">
+        <img src="photos/group.jpg"
+             alt="Tawan Taekwondo Club team at the 9th Lao Taekwondo Federation Championship" />
+      </div>
+      <div class="about-img-inset">
+        <img src="photos/founder.jpg"
+             alt="Southida Phommavong, founder of Tawan Taekwondo Club" />
+      </div>
+    </div>
+
+    <div class="about-text reveal d2">
+      <p class="body-text">
+        Tawan Taekwondo Club was founded on <strong>12 June 2010</strong> by <strong>Southida Phommavong</strong> with a simple belief: that Taekwondo is not only a sport, but a path to building better people. Based at the <strong>Budo Centre, Vientiane</strong>, the club has grown over 15 years into a home for more than <strong>100 active students</strong> of all ages and skill levels.
+      </p>
+      <p class="body-text">
+        From first-time beginners stepping onto the mat to competitive athletes representing Laos at national level — every student trains in an environment that values discipline, respect, and continuous improvement. We are proud to have participated in the Lao Taekwondo Federation Championship and continue to build the next generation of Lao martial artists.
+      </p>
+
+      <div class="about-founded">
+        <span class="about-founded-icon">&#127358;</span>
+        Founded by Southida Phommavong &nbsp;·&nbsp; 12 June 2010
+      </div>
+
+      <div class="about-pillars">
+        <div class="pillar reveal d1">
+          <div class="pillar-val">100+</div>
+          <div class="pillar-name">Active Students</div>
+        </div>
+        <div class="pillar reveal d2">
+          <div class="pillar-val">15+</div>
+          <div class="pillar-name">Years Established</div>
+        </div>
+        <div class="pillar reveal d3">
+          <div class="pillar-val">5</div>
+          <div class="pillar-name">Dedicated Coaches</div>
+        </div>
+        <div class="pillar reveal d4">
+          <div class="pillar-val">All</div>
+          <div class="pillar-name">Ages Welcome</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── TAEKWONDO OVERVIEW ─── -->
+<section class="section section--dark" id="overview">
+  <div class="label reveal" style="color:#fca5a5">What Is Taekwondo</div>
+  <div class="overview-intro">
+    <h2 class="h2 reveal d1" style="color:white">More than kicks.<br><span>A complete</span> discipline.</h2>
+    <p class="overview-desc reveal d2">
+      Taekwondo is a Korean martial art and Olympic sport known for its emphasis on head-height kicks, fast kicking combinations, and jumping and spinning kicks. It develops the full person — body, mind, and character — through structured training, progressive belt ranks, and both individual and team competition.
+    </p>
+  </div>
+
+  <div class="label reveal" style="color:#fca5a5;margin-bottom:1.25rem">Disciplines We Teach</div>
+  <div class="types-grid">
+    <div class="type-card reveal">
+      <div class="type-number">01 &nbsp;·&nbsp; Sparring</div>
+      <div class="type-name">Kyorugi (Olympic)</div>
+      <div class="type-desc">Full-contact sparring following World Taekwondo rules — the format used in the Olympic Games. Trains speed, timing, footwork, and strategic thinking under pressure.</div>
+    </div>
+    <div class="type-card reveal d1">
+      <div class="type-number">02 &nbsp;·&nbsp; Forms</div>
+      <div class="type-name">Poomsae</div>
+      <div class="type-desc">A sequence of offensive and defensive techniques performed in a set pattern. Develops precision, balance, breath control, and the deepest understanding of Taekwondo movement.</div>
+    </div>
+    <div class="type-card reveal d2">
+      <div class="type-number">03 &nbsp;·&nbsp; Practical</div>
+      <div class="type-name">Self-Defense</div>
+      <div class="type-desc">Applied Taekwondo techniques in realistic scenarios. Builds situational awareness, practical response skills, and the confidence to move safely in the world.</div>
+    </div>
+  </div>
+
+  <div class="label reveal" style="color:#fca5a5;margin-bottom:1.25rem;margin-top:3.5rem">Why Train With Us</div>
+  <div class="benefits-grid">
+    <div class="benefit-card reveal">
+      <div class="benefit-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      </div>
+      <div class="benefit-title">Mobility &amp; Flexibility</div>
+      <div class="benefit-desc">Dynamic kicking and stretching routines progressively extend your range of motion and keep joints healthy for life.</div>
+    </div>
+    <div class="benefit-card reveal d1">
+      <div class="benefit-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+      </div>
+      <div class="benefit-title">Sharper Cognitive Function</div>
+      <div class="benefit-desc">Pattern memorisation, split-second reaction training, and strategic sparring sharpen focus, memory, and mental clarity.</div>
+    </div>
+    <div class="benefit-card reveal d2">
+      <div class="benefit-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 3a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3H6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3V6a3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/></svg>
+      </div>
+      <div class="benefit-title">Strength &amp; Power</div>
+      <div class="benefit-desc">Full-body conditioning through kicking combinations, core exercises, and resistance training builds functional strength in every session.</div>
+    </div>
+    <div class="benefit-card reveal d3">
+      <div class="benefit-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+      </div>
+      <div class="benefit-title">Cardiovascular Fitness</div>
+      <div class="benefit-desc">High-intensity interval training within each session significantly improves heart health, endurance, and overall fitness levels.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── COMPETITION SHOWCASE ─── -->
+<section class="section section--white" style="padding-top:0">
+  <div class="showcase-grid reveal">
+    <div class="showcase-main">
+      <img src="photos/group.jpg"
+           alt="Tawan Taekwondo Club at the 9th Lao Taekwondo Federation Championship" />
+      <div class="showcase-overlay">
+        <div class="showcase-caption">9th Lao Taekwondo Federation Championship · 02 May 2026</div>
+      </div>
+    </div>
+    <div class="showcase-col">
+      <div class="showcase-sub">
+        <img src="photos/founder.jpg"
+             alt="Founder Southida Phommavong with Coach Alex" />
+        <div class="showcase-overlay">
+          <div class="showcase-caption">Kyorugi · Full Contact Sparring</div>
+        </div>
+      </div>
+      <div class="showcase-sub" style="background:var(--black);display:flex;align-items:center;justify-content:center;padding:2rem;">
+        <div style="text-align:center">
+          <div style="font-size:2.5rem;font-weight:900;letter-spacing:-0.05em;color:white;line-height:1">Lao TKD<br>Federation</div>
+          <div style="font-size:0.75rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-top:0.5rem">Championship Participants</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SCHEDULE ─── -->
+<section class="section section--light" id="schedule">
+  <div class="label reveal">Class Schedule</div>
+  <div class="schedule-layout">
+    <div>
+      <h2 class="h2 reveal d1">Train on your<br><span>schedule</span></h2>
+      <p class="body-text reveal d2" style="margin-top:1rem;margin-bottom:2.5rem">We run 6 days a week across junior and adult sessions. All classes are held at the <strong>Budo Centre, Vientiane</strong>.</p>
+
+      <div class="schedule-days reveal d2">
+        <div class="schedule-day">
+          <div class="schedule-day-name">Monday</div>
+          <div class="schedule-classes">
+            <div class="schedule-class-item">
+              <div>
+                <div class="sched-class-name">All Classes</div>
+                <div class="sched-time">5:30 PM – 7:00 PM</div>
+              </div>
+              <span class="sched-badge sched-badge--all">All Levels</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="schedule-day">
+          <div class="schedule-day-name">Wednesday</div>
+          <div class="schedule-classes">
+            <div class="schedule-class-item">
+              <div>
+                <div class="sched-class-name">All Classes</div>
+                <div class="sched-time">5:30 PM – 7:00 PM</div>
+              </div>
+              <span class="sched-badge sched-badge--all">All Levels</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="schedule-day">
+          <div class="schedule-day-name">Friday</div>
+          <div class="schedule-classes">
+            <div class="schedule-class-item">
+              <div>
+                <div class="sched-class-name">All Classes</div>
+                <div class="sched-time">5:30 PM – 7:00 PM</div>
+              </div>
+              <span class="sched-badge sched-badge--all">All Levels</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="schedule-day">
+          <div class="schedule-day-name">Saturday</div>
+          <div class="schedule-classes">
+            <div class="schedule-class-item">
+              <div>
+                <div class="sched-class-name">Junior Class</div>
+                <div class="sched-time">1:00 PM – 2:25 PM</div>
+              </div>
+              <span class="sched-badge sched-badge--junior">Junior</span>
+            </div>
+            <div class="schedule-class-item">
+              <div>
+                <div class="sched-class-name">Teenager / Adult Class</div>
+                <div class="sched-time">2:30 PM – 4:00 PM</div>
+              </div>
+              <span class="sched-badge sched-badge--adult">Teen · Adult</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="schedule-day">
+          <div class="schedule-day-name">Sunday</div>
+          <div class="schedule-classes">
+            <div class="schedule-class-item">
+              <div>
+                <div class="sched-class-name">Junior Class</div>
+                <div class="sched-time">1:00 PM – 2:25 PM</div>
+              </div>
+              <span class="sched-badge sched-badge--junior">Junior</span>
+            </div>
+            <div class="schedule-class-item">
+              <div>
+                <div class="sched-class-name">Teenager / Adult Class</div>
+                <div class="sched-time">2:30 PM – 4:00 PM</div>
+              </div>
+              <span class="sched-badge sched-badge--adult">Teen · Adult</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal d3">
+      <div class="schedule-cta-box">
+        <div class="h3">Ready to start?</div>
+        <p>Message us on WhatsApp to book your first session. No experience required — just show up ready to learn.</p>
+        <a href="https://wa.me/02022112211" target="_blank" rel="noopener" class="btn-primary">
+          <svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.555 4.116 1.526 5.845L0 24l6.334-1.507A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.89 0-3.663-.5-5.194-1.378L3 21.5l.908-3.726A10.018 10.018 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+          Book via WhatsApp
+        </a>
+        <div class="schedule-note">Or email us at yeealal@gmail.com</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── PRICING ─── -->
+<section class="section section--white" id="pricing">
+  <div class="label reveal">Membership</div>
+  <h2 class="h2 reveal d1">Simple, transparent<br><span>pricing</span></h2>
+  <p class="body-text reveal d2" style="margin-top:0.875rem;max-width:50ch">All prices in Lao Kip. Registration fee of <strong>50,000 Kip</strong> applies once — and includes your free club t-shirt.</p>
+
+  <div class="pricing-grid">
+    <div class="price-card price-card--default reveal">
+      <div class="price-sessions">2 Sessions / Week</div>
+      <div class="price-amount"><span class="price-currency">₭</span>450,000</div>
+      <div class="price-period">per month</div>
+      <hr class="price-divider" />
+      <div class="price-perks">
+        <div class="price-perk"><div class="perk-check"><svg viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>2 classes per week</div>
+        <div class="price-perk"><div class="perk-check"><svg viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>All age groups</div>
+        <div class="price-perk"><div class="perk-check"><svg viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Certified coaching</div>
+        <div class="price-perk"><div class="perk-check"><svg viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Belt progression</div>
+      </div>
+      <a href="https://wa.me/02022112211" target="_blank" rel="noopener" class="btn-primary">Get Started</a>
+    </div>
+
+    <div class="price-card price-card--featured reveal d1">
+      <div class="price-badge">Most Popular</div>
+      <div class="price-sessions">3 Sessions / Week</div>
+      <div class="price-amount"><span class="price-currency">₭</span>550,000</div>
+      <div class="price-period">per month</div>
+      <hr class="price-divider" />
+      <div class="price-perks">
+        <div class="price-perk"><div class="perk-check"><svg viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>3 classes per week</div>
+        <div class="price-perk"><div class="perk-check"><svg viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>All age groups</div>
+        <div class="price-perk"><div class="perk-check"><svg viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Certified coaching</div>
+        <div class="price-perk"><div class="perk-check"><svg viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Belt progression</div>
+        <div class="price-perk"><div class="perk-check"><svg viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Competition preparation</div>
+      </div>
+      <a href="https://wa.me/02022112211" target="_blank" rel="noopener" class="btn-primary">Get Started</a>
+    </div>
+
+    <div class="price-card price-card--default reveal d2">
+      <div class="price-sessions">5 Sessions / Week</div>
+      <div class="price-amount"><span class="price-currency">₭</span>750,000</div>
+      <div class="price-period">per month</div>
+      <hr class="price-divider" />
+      <div class="price-perks">
+        <div class="price-perk"><div class="perk-check"><svg viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>5 classes per week</div>
+        <div class="price-perk"><div class="perk-check"><svg viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>All age groups</div>
+        <div class="price-perk"><div class="perk-check"><svg viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Certified coaching</div>
+        <div class="price-perk"><div class="perk-check"><svg viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Full competition training</div>
+        <div class="price-perk"><div class="perk-check"><svg viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Priority scheduling</div>
+      </div>
+      <a href="https://wa.me/02022112211" target="_blank" rel="noopener" class="btn-primary">Get Started</a>
+    </div>
+  </div>
+
+  <div class="pricing-extras reveal d3">
+    <div class="extras-card">
+      <h4>Registration Fee</h4>
+      <div class="price-line">₭ 50,000</div>
+      <p>One-time fee on joining. Includes your <strong>free Tawan TKD club t-shirt</strong>.</p>
+    </div>
+    <div class="extras-card">
+      <h4>Taekwondo Dobok</h4>
+      <div class="price-line">₭ 500,000</div>
+      <p>Price for the Taekwondo uniform (Dobok) only. Available in sizes 110–190. For optional protective gear pricing, please contact us directly.</p>
+      <a href="https://wa.me/02022112211" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:0.4rem;margin-top:0.875rem;font-size:0.8rem;font-weight:700;color:var(--accent);text-decoration:none;">
+        Ask about gear pricing
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:13px;height:13px"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ─── EQUIPMENT ─── -->
+<section class="section section--light" id="equipment">
+  <div class="label reveal">Gear & Equipment</div>
+  <h2 class="h2 reveal d1">Everything you need<br><span>to train</span></h2>
+
+  <div class="equipment-layout">
+    <div>
+      <div class="dobok-section reveal d1">
+        <h3>Taekwondo Dobok (Uniform)</h3>
+        <p class="body-text" style="margin-bottom:1.25rem">Available in all standard sizes. Includes all sizes below — ask your coach which size is right for you.</p>
+        <div class="size-grid">
+          <div class="size-chip">110</div>
+          <div class="size-chip">120</div>
+          <div class="size-chip">130</div>
+          <div class="size-chip">140</div>
+          <div class="size-chip">150</div>
+          <div class="size-chip">160</div>
+          <div class="size-chip">170</div>
+          <div class="size-chip">180</div>
+          <div class="size-chip">190</div>
+        </div>
+        <div class="dobok-price-tag">
+          <div>
+            <div class="label-text">Included in</div>
+            <div class="amount">Equipment Package</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="gear-section reveal d2">
+      <h3>Optional Protective Gear</h3>
+      <p class="body-text" style="margin-bottom:1.25rem">Recommended for sparring and competition training. Ask your coach what's needed for your class level.</p>
+      <div class="gear-list">
+        <div class="gear-item"><div class="gear-dot"></div>Chest Guard <span class="gear-tag">Contact for price</span></div>
+        <div class="gear-item"><div class="gear-dot"></div>Mouth Guard <span class="gear-tag">Contact for price</span></div>
+        <div class="gear-item"><div class="gear-dot"></div>Head Guard <span class="gear-tag">Contact for price</span></div>
+        <div class="gear-item"><div class="gear-dot"></div>Arm &amp; Shin Guard <span class="gear-tag">Contact for price</span></div>
+        <div class="gear-item"><div class="gear-dot"></div>Glove <span class="gear-tag">Contact for price</span></div>
+        <div class="gear-item"><div class="gear-dot"></div>Groin Guard <span class="gear-tag">Contact for price</span></div>
+        <div class="gear-item"><div class="gear-dot"></div>Foot Guard <span class="gear-tag">Contact for price</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── COACHES ─── -->
+<section class="section section--dark" id="coaches">
+  <div class="label reveal" style="color:#fca5a5">The Coaching Team</div>
+  <h2 class="h2 reveal d1" style="color:white">Guided by<br><span>dedicated coaches</span></h2>
+  <p class="body-text body-text--light reveal d2" style="margin-top:1rem;max-width:52ch">Every coach at Tawan TKD is committed to your growth — from your very first white belt session to competing on the national stage.</p>
+
+  <div class="coaches-grid">
+    <div class="coach-card reveal">
+      <div class="coach-top">
+        <img src="photos/coach-alex.jpg" alt="Coach Alex — Head Coach" />
+        <div class="coach-accent-bar"></div>
+      </div>
+      <div class="coach-body">
+        <div class="coach-role-tag coach-role-tag--head">Head Coach</div>
+        <div class="coach-name">Alex</div>
+        <div class="coach-specialty">Lead instructor &amp; overall program director</div>
+      </div>
+    </div>
+    <div class="coach-card reveal d1">
+      <div class="coach-top">
+        <img src="photos/coach-alan.jpg" alt="Coach Alan — Head Coach" />
+        <div class="coach-accent-bar"></div>
+      </div>
+      <div class="coach-body">
+        <div class="coach-role-tag coach-role-tag--head">Head Coach</div>
+        <div class="coach-name">Alan</div>
+        <div class="coach-specialty">Kyorugi sparring &amp; competition preparation</div>
+      </div>
+    </div>
+    <div class="coach-card reveal d2">
+      <div class="coach-top">
+        <img src="photos/coach-bird.jpg" alt="Coach Bird" />
+        <div class="coach-accent-bar"></div>
+      </div>
+      <div class="coach-body">
+        <div class="coach-role-tag">Coach</div>
+        <div class="coach-name">Bird</div>
+        <div class="coach-specialty">Foundations, technique &amp; junior development</div>
+      </div>
+    </div>
+    <div class="coach-card reveal d3">
+      <div class="coach-top">
+        <div class="coach-monogram">B</div>
+        <div class="coach-accent-bar"></div>
+      </div>
+      <div class="coach-body">
+        <div class="coach-role-tag">Coach</div>
+        <div class="coach-name">Bom</div>
+        <div class="coach-specialty">Substitute instructor &amp; youth class support</div>
+      </div>
+    </div>
+    <div class="coach-card reveal d4">
+      <div class="coach-top">
+        <div class="coach-monogram">G</div>
+        <div class="coach-accent-bar"></div>
+      </div>
+      <div class="coach-body">
+        <div class="coach-role-tag">Poomsae Coach</div>
+        <div class="coach-name">Genoz</div>
+        <div class="coach-specialty">Poomsae forms specialist &amp; pattern instruction</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CONTACT ─── -->
+<section class="section section--white" id="contact">
+  <div class="label reveal">Get In Touch</div>
+  <h2 class="h2 reveal d1">We'd love to<br><span>hear from you</span></h2>
+
+  <div class="contact-grid">
+    <div>
+      <p class="body-text reveal d2" style="margin-bottom:2rem">Have questions about classes, pricing, or equipment? Reach us directly through any of the channels below. We respond fastest on WhatsApp.</p>
+
+      <div class="contact-channels">
+        <a href="https://wa.me/02022112211" target="_blank" rel="noopener" class="contact-btn contact-btn--wa reveal d2">
+          <div class="contact-btn-icon contact-btn-icon--wa">
+            <svg viewBox="0 0 24 24" fill="white" style="width:22px;height:22px"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.555 4.116 1.526 5.845L0 24l6.334-1.507A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.89 0-3.663-.5-5.194-1.378L3 21.5l.908-3.726A10.018 10.018 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+          </div>
+          <div>
+            <div class="contact-btn-label">WhatsApp</div>
+            <div class="contact-btn-value">+020 2211 2211</div>
+          </div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+
+        <a href="mailto:yeealal@gmail.com" class="contact-btn reveal d3">
+          <div class="contact-btn-icon contact-btn-icon--email">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#b91c1c" stroke-width="2" style="width:20px;height:20px"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <div>
+            <div class="contact-btn-label">Email</div>
+            <div class="contact-btn-value">yeealal@gmail.com</div>
+          </div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+
+        <a href="https://www.facebook.com/profile.php?id=100057081595469" target="_blank" rel="noopener" class="contact-btn contact-btn--fb reveal d4">
+          <div class="contact-btn-icon contact-btn-icon--fb">
+            <svg viewBox="0 0 24 24" fill="white" style="width:20px;height:20px"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          </div>
+          <div>
+            <div class="contact-btn-label">Facebook Page</div>
+            <div class="contact-btn-value">Tawan TKD Club</div>
+          </div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="contact-info-box reveal d3">
+      <h3>Visit Us</h3>
+      <div class="info-row">
+        <div class="info-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <div>
+          <div class="info-label">Location</div>
+          <div class="info-val">Budo Centre<br>Vientiane, Laos</div>
+        </div>
+      </div>
+      <div class="info-row">
+        <div class="info-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div>
+          <div class="info-label">Class Days</div>
+          <div class="info-val">Mon · Wed · Fri (5:30–7:00 PM)<br>Sat · Sun (1:00–4:00 PM)</div>
+        </div>
+      </div>
+      <div class="info-row">
+        <div class="info-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div>
+          <div class="info-label">Who Can Join</div>
+          <div class="info-val">All ages · All levels welcome<br>No prior experience needed</div>
+        </div>
+      </div>
+      <div class="info-row">
+        <div class="info-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </div>
+        <div>
+          <div class="info-label">Founded</div>
+          <div class="info-val">12 June 2010<br>by Southida Phommavong</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <a href="#" class="nav-logo" style="display:inline-flex">
+        <div class="nav-logo-badge">TK</div>
+        Tawan TKD Club
+      </a>
+      <p class="footer-brand">
+        Vientiane's home of Taekwondo since 2010. Founded by Southida Phommavong at Budo Centre, Vientiane, Laos. Where discipline shapes who you are.
+      </p>
+    </div>
+    <div>
+      <div class="footer-col-title">Quick Links</div>
+      <ul class="footer-links">
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#overview">Taekwondo</a></li>
+        <li><a href="#schedule">Schedule</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#equipment">Equipment</a></li>
+        <li><a href="#coaches">Coaches</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Contact</div>
+      <ul class="footer-links">
+        <li><a href="https://wa.me/02022112211" target="_blank" rel="noopener">WhatsApp: +020 2211 2211</a></li>
+        <li><a href="mailto:yeealal@gmail.com">yeealal@gmail.com</a></li>
+        <li><a href="https://www.facebook.com/profile.php?id=100057081595469" target="_blank" rel="noopener">Facebook: Tawan TKD Club</a></li>
+        <li><a href="#contact">Budo Centre, Vientiane</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">2026 Tawan Taekwondo Club · Founded 12 June 2010 · Vientiane, Laos</div>
+    <div class="footer-social">
+      <a href="https://wa.me/02022112211" target="_blank" rel="noopener" class="social-link" aria-label="WhatsApp">WA</a>
+      <a href="https://www.facebook.com/profile.php?id=100057081595469" target="_blank" rel="noopener" class="social-link" aria-label="Facebook">FB</a>
+      <a href="mailto:yeealal@gmail.com" class="social-link" aria-label="Email">@</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Nav scroll shrink
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  }, { passive: true });
+
+  // Intersection observer reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+  reveals.forEach(el => io.observe(el));
+
+  // Magnetic buttons
+  document.querySelectorAll('.btn-primary, .btn-outline').forEach(btn => {
+    btn.addEventListener('mousemove', e => {
+      const r = btn.getBoundingClientRect();
+      const x = ((e.clientX - r.left) / r.width - 0.5) * 7;
+      const y = ((e.clientY - r.top)  / r.height - 0.5) * 7;
+      btn.style.transform = `translate(${x}px,${y}px) translateY(-2px)`;
+    });
+    btn.addEventListener('mouseleave', () => { btn.style.transform = ''; });
+  });
+
+  // Counter animation
+  function animateCount(el, target, suffix) {
+    let start = 0;
+    const duration = 1800;
+    const step = timestamp => {
+      if (!start) start = timestamp;
+      const progress = Math.min((timestamp - start) / duration, 1);
+      const ease = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.floor(ease * target) + suffix;
+      if (progress < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+  const statNums = document.querySelectorAll('.hero-stat-num');
+  const statsIo = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const text = e.target.textContent;
+        const num = parseInt(text);
+        const suffix = text.replace(num, '');
+        animateCount(e.target, num, suffix);
+        statsIo.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  statNums.forEach(el => statsIo.observe(el));
+</script>
+</body>
+</html>

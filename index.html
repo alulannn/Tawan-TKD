@@ -558,8 +558,8 @@
     </div>
     <div class="showcase-col">
       <div class="showcase-sub">
-        <img src="photos/competition.jpg" alt="Coach and student during competition" />
-        <div class="showcase-overlay"><div class="showcase-cap">Kyorugi · Full Contact Sparring</div></div>
+        <img src="photos/mini-warrior.jpg" alt="Mini Warriors training" />
+        <div class="showcase-overlay"><div class="showcase-cap">Mini Warriors · Junior Class</div></div>
       </div>
       <div class="showcase-sub">
         <img src="photos/southida-trophy.jpg" alt="Founder holding a trophy" />
@@ -1161,17 +1161,11 @@
   if (window.gsap && window.ScrollTrigger) {
     gsap.registerPlugin(ScrollTrigger);
 
-    /* generic reveal for [data-r] elements */
-    gsap.utils.toArray('[data-r]').forEach(el => {
-      const delay = parseFloat(el.dataset.d || 0) * 0.1;
-      gsap.fromTo(el,
-        { opacity: 0, y: 36 },
-        { opacity: 1, y: 0, duration: 0.85, delay,
-          ease: 'power3.out',
-          scrollTrigger: { trigger: el, start: 'top 88%', once: true }
-        }
-      );
-    });
+    /* generic reveal — handled by CSS + IntersectionObserver below */
+    const ioReveal = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('vis'); ioReveal.unobserve(e.target); } });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('[data-r]').forEach(el => ioReveal.observe(el));
 
     /* founder cards — slide in from sides */
     gsap.utils.toArray('.founder-card').forEach((card, i) => {
@@ -1272,7 +1266,10 @@
       track.style.transform = 'translateX(-' + (cur * 100) + '%)';
       dotsEl.querySelectorAll('.gallery-dot').forEach((d, i) => d.classList.toggle('active', i === cur));
       thumbs.forEach((t, i) => t.classList.toggle('active', i === cur));
-      if (thumbs[cur]) thumbs[cur].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      if (thumbs[cur] && thumbsEl) {
+        const t = thumbs[cur];
+        thumbsEl.scrollLeft = t.offsetLeft - thumbsEl.offsetWidth / 2 + t.offsetWidth / 2;
+      }
     }
 
     document.getElementById('gallPrev').addEventListener('click', () => goTo(cur - 1));

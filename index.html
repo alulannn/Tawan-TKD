@@ -1273,120 +1273,198 @@
     const W = container.offsetWidth || 480;
     const H = Math.round(W * 1.25);
 
+    /* ── SCENE ── */
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x141420);
+    scene.background = new THREE.Color(0x1c1c28);
 
-    const cam = new THREE.PerspectiveCamera(44, W / H, 0.1, 100);
-    cam.position.set(0, -0.5, 13);
-    cam.lookAt(0, -0.5, 0);
+    const cam = new THREE.PerspectiveCamera(42, W / H, 0.1, 100);
+    cam.position.set(0, -0.4, 13);
+    cam.lookAt(0, -0.4, 0);
 
     const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
     renderer.setSize(W, H);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.15;
+    renderer.outputEncoding = THREE.sRGBEncoding;
 
-    /* dramatic dark-bg studio lighting */
-    scene.add(new THREE.AmbientLight(0x8899bb, 0.35));
-    const key = new THREE.DirectionalLight(0xffffff, 2.2);
-    key.position.set(5, 10, 9);
-    key.castShadow = true;
-    scene.add(key);
-    const fill = new THREE.DirectionalLight(0xaabbff, 0.7);
-    fill.position.set(-8, 4, 6);
-    scene.add(fill);
-    const rimTop = new THREE.DirectionalLight(0xffffff, 0.9);
-    rimTop.position.set(0, 8, -7);
-    scene.add(rimTop);
-    const rimRed = new THREE.DirectionalLight(0xff2222, 0.22);
-    rimRed.position.set(3, -6, -5);
-    scene.add(rimRed);
-
-    /* materials — crisp white fabric against dark bg */
-    const wMat = new THREE.MeshPhongMaterial({ color: 0xffffff, shininess: 35, specular: 0xddddee, emissive: 0x111111 });
-    const dMat = new THREE.MeshPhongMaterial({ color: 0x0d0d12, shininess: 80, specular: 0x3344aa, emissive: 0x050508 });
-
-    const g = new THREE.Group();
-
-    function bx(w, h, d, mat, x, y, z, rz) {
-      const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
-      m.position.set(x, y, z); if (rz) m.rotation.z = rz; return m;
+    /* ── FABRIC TEXTURE (canvas-generated) ── */
+    function makeFabric(light) {
+      const sz = 512, cv = document.createElement('canvas');
+      cv.width = cv.height = sz;
+      const cx = cv.getContext('2d');
+      cx.fillStyle = light ? '#f0f0f0' : '#070710';
+      cx.fillRect(0, 0, sz, sz);
+      for (let i = 0; i < sz; i += 4) {
+        cx.fillStyle = light ? `rgba(0,0,0,${i%8===0?0.06:0.025})` : `rgba(255,255,255,${i%8===0?0.04:0.015})`;
+        cx.fillRect(0, i, sz, 2);
+      }
+      for (let i = 0; i < sz; i += 4) {
+        cx.fillStyle = light ? `rgba(0,0,0,${i%8===0?0.05:0.018})` : `rgba(255,255,255,${i%8===0?0.03:0.01})`;
+        cx.fillRect(i, 0, 2, sz);
+      }
+      const id = cx.getImageData(0, 0, sz, sz);
+      for (let i = 0; i < id.data.length; i += 4) {
+        const n = (Math.random() - 0.5) * (light ? 7 : 4);
+        id.data[i]   = Math.min(255, Math.max(0, id.data[i]   + n));
+        id.data[i+1] = Math.min(255, Math.max(0, id.data[i+1] + n));
+        id.data[i+2] = Math.min(255, Math.max(0, id.data[i+2] + n));
+      }
+      cx.putImageData(id, 0, 0);
+      const t = new THREE.CanvasTexture(cv);
+      t.wrapS = t.wrapT = THREE.RepeatWrapping;
+      t.repeat.set(light ? 6 : 4, light ? 12 : 5);
+      return t;
     }
 
-    /* ── JACKET BODY ── */
-    g.add(bx(2.55, 2.85, 0.66, wMat, 0,  0,    0));          /* torso */
-    g.add(bx(3.25, 0.43, 0.62, wMat, 0,  1.55, 0));          /* shoulder strip */
-    g.add(bx(0.76, 1.12, 0.55, wMat, -1.58,  1.02, 0,  0.07)); /* left sleeve upper */
-    g.add(bx(0.71, 1.05, 0.50, wMat, -1.64, -0.05, 0,  0.09)); /* left sleeve lower */
-    g.add(bx(0.76, 1.12, 0.55, wMat,  1.58,  1.02, 0, -0.07)); /* right sleeve upper */
-    g.add(bx(0.71, 1.05, 0.50, wMat,  1.64, -0.05, 0, -0.09)); /* right sleeve lower */
+    /* ── NORMAL MAP ── */
+    function makeNormal() {
+      const sz = 256, cv = document.createElement('canvas');
+      cv.width = cv.height = sz;
+      const cx = cv.getContext('2d');
+      cx.fillStyle = 'rgb(128,128,255)';
+      cx.fillRect(0, 0, sz, sz);
+      for (let i = 0; i < sz; i += 4) {
+        const v = i % 8 === 0 ? 108 : 122;
+        cx.fillStyle = `rgba(${v},${v},252,0.7)`;
+        cx.fillRect(0, i, sz, 2);
+        cx.fillRect(i, 0, 2, sz);
+      }
+      const t = new THREE.CanvasTexture(cv);
+      t.wrapS = t.wrapT = THREE.RepeatWrapping;
+      t.repeat.set(6, 12);
+      return t;
+    }
 
-    /* ── V-COLLAR — dark, crossed at chest ── */
-    g.add(bx(0.80, 0.48, 0.22, dMat,  0,     1.60,  0.14));    /* neck band */
-    g.add(bx(0.23, 2.28, 0.14, dMat, -0.48,  0.72,  0.35,  0.44)); /* left collar panel */
-    g.add(bx(0.23, 2.28, 0.14, dMat,  0.48,  0.72,  0.35, -0.44)); /* right collar panel */
-    g.add(bx(0.07, 2.28, 0.05, dMat, -0.70,  0.62,  0.37,  0.44)); /* left collar edge */
-    g.add(bx(0.07, 2.28, 0.05, dMat,  0.70,  0.62,  0.37, -0.44)); /* right collar edge */
+    const wTex = makeFabric(true);
+    const dTex = makeFabric(false);
+    const nTex = makeNormal();
+
+    /* ── PBR MATERIALS ── */
+    const wMat = new THREE.MeshStandardMaterial({
+      color: 0xf4f4f4, roughness: 0.87, metalness: 0.0,
+      map: wTex, normalMap: nTex, normalScale: new THREE.Vector2(0.45, 0.45)
+    });
+    const dMat = new THREE.MeshStandardMaterial({
+      color: 0x060609, roughness: 0.80, metalness: 0.04,
+      map: dTex, normalMap: nTex, normalScale: new THREE.Vector2(0.25, 0.25)
+    });
+    const sMat = new THREE.MeshStandardMaterial({ color: 0xcccccc, roughness: 0.92, metalness: 0 });
+
+    /* ── STUDIO LIGHTING ── */
+    scene.add(new THREE.HemisphereLight(0x9999bb, 0x333344, 0.55));
+
+    const key = new THREE.DirectionalLight(0xffffff, 2.6);
+    key.position.set(4, 10, 9);
+    key.castShadow = true;
+    key.shadow.mapSize.width = key.shadow.mapSize.height = 2048;
+    key.shadow.camera.near = 0.5;
+    key.shadow.camera.far = 40;
+    key.shadow.bias = -0.001;
+    scene.add(key);
+
+    const fill = new THREE.DirectionalLight(0xaaccff, 0.9);
+    fill.position.set(-9, 3, 7);
+    scene.add(fill);
+
+    const rimBack = new THREE.DirectionalLight(0xffffff, 1.3);
+    rimBack.position.set(0, 7, -9);
+    scene.add(rimBack);
+
+    const rimLow = new THREE.DirectionalLight(0x4455aa, 0.35);
+    rimLow.position.set(2, -8, 4);
+    scene.add(rimLow);
+
+    /* ── GEOMETRY BUILDER ── */
+    const g = new THREE.Group();
+    const SEG = 3;
+
+    function bx(w, h, d, mat, x, y, z, rz, ry) {
+      const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d, SEG, SEG, SEG), mat);
+      m.position.set(x, y, z);
+      if (rz) m.rotation.z = rz;
+      if (ry) m.rotation.y = ry;
+      m.castShadow = m.receiveShadow = true;
+      return m;
+    }
+
+    /* ── JACKET ── */
+    g.add(bx(2.72, 2.95, 0.72, wMat,  0,      0,     0));            /* torso */
+    g.add(bx(3.50, 0.46, 0.66, wMat,  0,      1.60,  0));            /* shoulder bar */
+    g.add(bx(0.90, 1.18, 0.62, wMat, -1.68,   1.08,  0,  0.06));    /* L sleeve upper */
+    g.add(bx(0.82, 1.08, 0.57, wMat, -1.75,  -0.04,  0,  0.08));    /* L sleeve lower */
+    g.add(bx(0.78, 0.20, 0.54, wMat, -1.75,  -0.60,  0,  0.09));    /* L cuff band */
+    g.add(bx(0.90, 1.18, 0.62, wMat,  1.68,   1.08,  0, -0.06));    /* R sleeve upper */
+    g.add(bx(0.82, 1.08, 0.57, wMat,  1.75,  -0.04,  0, -0.08));    /* R sleeve lower */
+    g.add(bx(0.78, 0.20, 0.54, wMat,  1.75,  -0.60,  0, -0.09));    /* R cuff band */
+
+    /* seam lines — subtle depth at sleeve/body junction */
+    g.add(bx(0.035, 2.95, 0.035, sMat, -1.26, 0, 0.37));
+    g.add(bx(0.035, 2.95, 0.035, sMat,  1.26, 0, 0.37));
+
+    /* ── V-COLLAR ── */
+    g.add(bx(0.88, 0.52, 0.28, dMat,  0,      1.64,  0.16));         /* neck band */
+    g.add(bx(0.32, 2.45, 0.17, dMat, -0.55,   0.74,  0.38,  0.46)); /* L collar */
+    g.add(bx(0.32, 2.45, 0.17, dMat,  0.55,   0.74,  0.38, -0.46)); /* R collar */
+    g.add(bx(0.09, 2.42, 0.07, dMat, -0.80,   0.63,  0.40,  0.46)); /* L collar edge */
+    g.add(bx(0.09, 2.42, 0.07, dMat,  0.80,   0.63,  0.40, -0.46)); /* R collar edge */
+    /* small chest badge */
+    g.add(bx(0.40, 0.24, 0.06, dMat,  0,      0.48,  0.39));
 
     /* ── PANTS ── */
-    g.add(bx(2.48, 0.40, 0.66, wMat,  0,    -1.54,  0));       /* waist join */
-    g.add(bx(1.12, 2.90, 0.61, wMat, -0.59, -2.99,  0));       /* left leg */
-    g.add(bx(1.12, 2.90, 0.61, wMat,  0.59, -2.99,  0));       /* right leg */
-    g.add(bx(1.00, 0.24, 0.55, wMat, -0.59, -4.38,  0));       /* left ankle */
-    g.add(bx(1.00, 0.24, 0.55, wMat,  0.59, -4.38,  0));       /* right ankle */
+    g.add(bx(2.65, 0.44, 0.72, wMat,  0,     -1.58,  0));            /* waist */
+    g.add(bx(1.22, 3.05, 0.64, wMat, -0.63,  -3.10,  0));            /* L leg */
+    g.add(bx(1.22, 3.05, 0.64, wMat,  0.63,  -3.10,  0));            /* R leg */
+    g.add(bx(1.10, 0.18, 0.60, sMat, -0.63,  -2.72,  0));            /* L knee crease */
+    g.add(bx(1.10, 0.18, 0.60, sMat,  0.63,  -2.72,  0));            /* R knee crease */
 
-    g.position.set(0, 0.85, 0);
+    g.position.set(0, 0.92, 0);
     scene.add(g);
 
-    /* subtle floor shadow */
-    const floor = new THREE.Mesh(new THREE.PlaneGeometry(20, 20), new THREE.ShadowMaterial({ opacity: 0.07 }));
+    /* floor shadow plane */
+    const floor = new THREE.Mesh(
+      new THREE.PlaneGeometry(24, 24),
+      new THREE.ShadowMaterial({ opacity: 0.18 })
+    );
     floor.rotation.x = -Math.PI / 2;
-    floor.position.y = -3.7;
+    floor.position.y = -3.8;
     floor.receiveShadow = true;
     scene.add(floor);
 
-    /* ── DRAG / TOUCH CONTROLS ── */
-    let isDown = false, sx = 0, sy = 0, rotY = 0.3, rotX = 0, tRotY = 0.3, tRotX = 0, autoSpin = true;
+    /* ── CONTROLS ── */
+    let isDown=false, sx=0, sy=0, rotY=0.3, rotX=0, tRotY=0.3, tRotX=0, autoSpin=true;
 
-    canvas.addEventListener('mousedown', e => { isDown = true; autoSpin = false; sx = e.clientX; sy = e.clientY; });
-    window.addEventListener('mousemove', e => {
-      if (!isDown) return;
-      tRotY += (e.clientX - sx) * 0.013;
-      tRotX += (e.clientY - sy) * 0.006;
-      tRotX = Math.max(-0.5, Math.min(0.5, tRotX));
-      sx = e.clientX; sy = e.clientY;
+    canvas.addEventListener('mousedown', e=>{isDown=true;autoSpin=false;sx=e.clientX;sy=e.clientY;});
+    window.addEventListener('mousemove', e=>{
+      if(!isDown) return;
+      tRotY+=(e.clientX-sx)*0.013; tRotX+=(e.clientY-sy)*0.006;
+      tRotX=Math.max(-0.5,Math.min(0.5,tRotX)); sx=e.clientX; sy=e.clientY;
     });
-    window.addEventListener('mouseup', () => { isDown = false; setTimeout(() => { autoSpin = true; }, 2200); });
-    canvas.addEventListener('touchstart', e => { autoSpin = false; sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
-    canvas.addEventListener('touchmove', e => {
-      tRotY += (e.touches[0].clientX - sx) * 0.015;
-      tRotX += (e.touches[0].clientY - sy) * 0.007;
-      tRotX = Math.max(-0.5, Math.min(0.5, tRotX));
-      sx = e.touches[0].clientX; sy = e.touches[0].clientY;
-    }, { passive: true });
-    canvas.addEventListener('touchend', () => { setTimeout(() => { autoSpin = true; }, 2200); });
+    window.addEventListener('mouseup', ()=>{isDown=false; setTimeout(()=>{autoSpin=true;},2200);});
+    canvas.addEventListener('touchstart', e=>{autoSpin=false;sx=e.touches[0].clientX;sy=e.touches[0].clientY;},{passive:true});
+    canvas.addEventListener('touchmove', e=>{
+      tRotY+=(e.touches[0].clientX-sx)*0.015; tRotX+=(e.touches[0].clientY-sy)*0.007;
+      tRotX=Math.max(-0.5,Math.min(0.5,tRotX)); sx=e.touches[0].clientX; sy=e.touches[0].clientY;
+    },{passive:true});
+    canvas.addEventListener('touchend', ()=>{setTimeout(()=>{autoSpin=true;},2200);});
 
     /* ── RENDER LOOP ── */
-    let t = 0;
-    (function render() {
-      requestAnimationFrame(render);
-      t += 0.01;
-      if (autoSpin) tRotY += 0.006;
-      rotY += (tRotY - rotY) * 0.08;
-      rotX += (tRotX - rotX) * 0.08;
-      g.rotation.y = rotY;
-      g.rotation.x = rotX;
-      g.position.y = 0.85 + Math.sin(t * 0.65) * 0.04;
-      renderer.render(scene, cam);
+    let t=0;
+    (function render(){
+      requestAnimationFrame(render); t+=0.01;
+      if(autoSpin) tRotY+=0.006;
+      rotY+=(tRotY-rotY)*0.08; rotX+=(tRotX-rotX)*0.08;
+      g.rotation.y=rotY; g.rotation.x=rotX;
+      g.position.y=0.92+Math.sin(t*0.65)*0.04;
+      renderer.render(scene,cam);
     })();
 
     /* resize */
-    window.addEventListener('resize', () => {
-      const w = container.offsetWidth || 480;
-      const h = Math.round(w * 1.25);
-      renderer.setSize(w, h);
-      cam.aspect = w / h;
-      cam.updateProjectionMatrix();
+    window.addEventListener('resize', ()=>{
+      const w=container.offsetWidth||480, h=Math.round(w*1.25);
+      renderer.setSize(w,h); cam.aspect=w/h; cam.updateProjectionMatrix();
     });
   })();
 

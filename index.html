@@ -858,14 +858,12 @@
 
   <div class="gallery-slider-wrap" data-r data-d="3">
     <div class="gallery-slides" id="gallerySlides">
-      <div class="gallery-slide"><img src="photos/club-overview.jpg" alt="Our Club" /><div class="gallery-slide-overlay"></div><div class="gallery-caption"><span class="gallery-caption-text">Our Club</span><span class="gallery-caption-num">01 / 08</span></div></div>
-      <div class="gallery-slide"><img src="photos/competition.jpg" alt="Competition Day" /><div class="gallery-slide-overlay"></div><div class="gallery-caption"><span class="gallery-caption-text">Competition Day</span><span class="gallery-caption-num">02 / 08</span></div></div>
-      <div class="gallery-slide"><img src="photos/group.jpg" alt="Team Photo" /><div class="gallery-slide-overlay"></div><div class="gallery-caption"><span class="gallery-caption-text">Team Photo</span><span class="gallery-caption-num">03 / 08</span></div></div>
-      <div class="gallery-slide"><img src="photos/group-pic.jpg" alt="Our Team" /><div class="gallery-slide-overlay"></div><div class="gallery-caption"><span class="gallery-caption-text">Our Team</span><span class="gallery-caption-num">04 / 08</span></div></div>
-      <div class="gallery-slide"><img src="photos/group-picture.jpg" alt="Together We Train" /><div class="gallery-slide-overlay"></div><div class="gallery-caption"><span class="gallery-caption-text">Together We Train</span><span class="gallery-caption-num">05 / 08</span></div></div>
-      <div class="gallery-slide"><img src="photos/group-photo.jpg" alt="Club Members" /><div class="gallery-slide-overlay"></div><div class="gallery-caption"><span class="gallery-caption-text">Club Members</span><span class="gallery-caption-num">06 / 08</span></div></div>
-      <div class="gallery-slide"><img src="photos/mini-warrior.jpg" alt="Mini Warriors" /><div class="gallery-slide-overlay"></div><div class="gallery-caption"><span class="gallery-caption-text">Mini Warriors</span><span class="gallery-caption-num">07 / 08</span></div></div>
-      <div class="gallery-slide"><img src="photos/founder-and-alex.jpg" alt="Founder &amp; Coach Alex" /><div class="gallery-slide-overlay"></div><div class="gallery-caption"><span class="gallery-caption-text">Founder &amp; Coach Alex</span><span class="gallery-caption-num">08 / 08</span></div></div>
+      <div class="gallery-slide"><img src="photos/club-overview.jpg" alt="Our Club" /><div class="gallery-slide-overlay"></div><div class="gallery-caption"><span class="gallery-caption-text">Our Club</span><span class="gallery-caption-num">01 / 06</span></div></div>
+      <div class="gallery-slide"><img src="photos/group.jpg" alt="Team Photo" /><div class="gallery-slide-overlay"></div><div class="gallery-caption"><span class="gallery-caption-text">Team Photo</span><span class="gallery-caption-num">02 / 06</span></div></div>
+      <div class="gallery-slide"><img src="photos/group-pic.jpg" alt="Our Team" /><div class="gallery-slide-overlay"></div><div class="gallery-caption"><span class="gallery-caption-text">Our Team</span><span class="gallery-caption-num">03 / 06</span></div></div>
+      <div class="gallery-slide"><img src="photos/group-picture.jpg" alt="Together We Train" /><div class="gallery-slide-overlay"></div><div class="gallery-caption"><span class="gallery-caption-text">Together We Train</span><span class="gallery-caption-num">04 / 06</span></div></div>
+      <div class="gallery-slide"><img src="photos/group-photo.jpg" alt="Club Members" /><div class="gallery-slide-overlay"></div><div class="gallery-caption"><span class="gallery-caption-text">Club Members</span><span class="gallery-caption-num">05 / 06</span></div></div>
+      <div class="gallery-slide"><img src="photos/mini-warrior.jpg" alt="Mini Warriors" /><div class="gallery-slide-overlay"></div><div class="gallery-caption"><span class="gallery-caption-text">Mini Warriors</span><span class="gallery-caption-num">06 / 06</span></div></div>
     </div>
     <button class="gallery-nav gallery-nav--prev" id="gallPrev" aria-label="Previous slide">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>
@@ -879,13 +877,11 @@
 
   <div class="gallery-thumbs" id="gallThumbs">
     <div class="gallery-thumb active"><img src="photos/club-overview.jpg" alt="Our Club" /></div>
-    <div class="gallery-thumb"><img src="photos/competition.jpg" alt="Competition Day" /></div>
     <div class="gallery-thumb"><img src="photos/group.jpg" alt="Team Photo" /></div>
     <div class="gallery-thumb"><img src="photos/group-pic.jpg" alt="Our Team" /></div>
     <div class="gallery-thumb"><img src="photos/group-picture.jpg" alt="Together We Train" /></div>
     <div class="gallery-thumb"><img src="photos/group-photo.jpg" alt="Club Members" /></div>
     <div class="gallery-thumb"><img src="photos/mini-warrior.jpg" alt="Mini Warriors" /></div>
-    <div class="gallery-thumb"><img src="photos/founder-and-alex.jpg" alt="Founder &amp; Coach Alex" /></div>
   </div>
 </section>
 
@@ -1277,8 +1273,6 @@
       dotsEl.querySelectorAll('.gallery-dot').forEach((d, i) => d.classList.toggle('active', i === cur));
       thumbs.forEach((t, i) => t.classList.toggle('active', i === cur));
       if (thumbs[cur]) thumbs[cur].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-      clearInterval(timer);
-      timer = setInterval(() => goTo(cur + 1), 5000);
     }
 
     document.getElementById('gallPrev').addEventListener('click', () => goTo(cur - 1));
@@ -1288,8 +1282,6 @@
     let tx = 0;
     track.addEventListener('touchstart', e => { tx = e.changedTouches[0].clientX; }, { passive: true });
     track.addEventListener('touchend',   e => { const dx = e.changedTouches[0].clientX - tx; if (Math.abs(dx) > 40) goTo(dx < 0 ? cur + 1 : cur - 1); }, { passive: true });
-
-    timer = setInterval(() => goTo(cur + 1), 5000);
   })();
 
   /* ── 3D DOBOK MODEL ──────────────────── */

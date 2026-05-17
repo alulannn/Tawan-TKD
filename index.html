@@ -307,7 +307,7 @@
     /* ── 3D DOBOK VIEWER ────────────────────── */
     .dobok-3d-wrap{display:grid;grid-template-columns:1fr 1fr;gap:3.5rem;align-items:center;margin-top:3rem}
     .dobok-canvas-col{display:flex;flex-direction:column;align-items:center}
-    .dobok-canvas-container{border-radius:var(--r-xl);overflow:hidden;position:relative;background:linear-gradient(145deg,#f7f5f1 0%,#eceae4 100%);border:1px solid rgba(0,0,0,.07);box-shadow:var(--shadow-sm);width:100%}
+    .dobok-canvas-container{border-radius:var(--r-xl);overflow:hidden;position:relative;background:#141420;border:1px solid rgba(255,255,255,.07);box-shadow:var(--shadow-sm);width:100%}
     .dobok-canvas-container canvas{width:100%!important;height:auto!important;display:block;cursor:grab}
     .dobok-canvas-container canvas:active{cursor:grabbing}
     .dobok-hint{position:absolute;bottom:1rem;left:50%;transform:translateX(-50%);display:inline-flex;align-items:center;gap:.45rem;background:rgba(0,0,0,.5);backdrop-filter:blur(10px);color:rgba(255,255,255,.9);font-size:.65rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;border-radius:99px;padding:.35rem .95rem;pointer-events:none;white-space:nowrap}
@@ -709,7 +709,7 @@
     <p class="body body--m" data-r data-d="2" style="margin-top:1rem;max-width:54ch">Tawan Taekwondo Club was built on the dedication and expertise of two passionate martial artists who brought their dream of a world-class club to Vientiane.</p>
     <div class="founders-grid">
       <div class="founder-card" data-r>
-        <div class="founder-img"><img src="photos/founder.jpg" alt="Ms Southida Phommavong — Founder" /></div>
+        <div class="founder-img"><img src="photos/founder.jpg" alt="Ms Southida Phommavong — Founder" style="object-position:center 28%" /></div>
         <div class="founder-body">
           <div class="founder-role">Founder &amp; Club Director</div>
           <div class="founder-name">Ms Southida<br>Phommavong</div>
@@ -1274,7 +1274,7 @@
     const H = Math.round(W * 1.25);
 
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xffffff);
+    scene.background = new THREE.Color(0x141420);
 
     const cam = new THREE.PerspectiveCamera(44, W / H, 0.1, 100);
     cam.position.set(0, -0.5, 13);
@@ -1286,22 +1286,25 @@
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-    /* studio lighting — bright, clean, product-shot style */
-    scene.add(new THREE.AmbientLight(0xffffff, 0.75));
-    const key = new THREE.DirectionalLight(0xffffff, 1.7);
-    key.position.set(4, 9, 8);
+    /* dramatic dark-bg studio lighting */
+    scene.add(new THREE.AmbientLight(0x8899bb, 0.35));
+    const key = new THREE.DirectionalLight(0xffffff, 2.2);
+    key.position.set(5, 10, 9);
     key.castShadow = true;
     scene.add(key);
-    const fill = new THREE.DirectionalLight(0xe8f0ff, 0.55);
-    fill.position.set(-7, 3, 5);
+    const fill = new THREE.DirectionalLight(0xaabbff, 0.7);
+    fill.position.set(-8, 4, 6);
     scene.add(fill);
-    const rim = new THREE.DirectionalLight(0xffffff, 0.28);
-    rim.position.set(0, -5, -6);
-    scene.add(rim);
+    const rimTop = new THREE.DirectionalLight(0xffffff, 0.9);
+    rimTop.position.set(0, 8, -7);
+    scene.add(rimTop);
+    const rimRed = new THREE.DirectionalLight(0xff2222, 0.22);
+    rimRed.position.set(3, -6, -5);
+    scene.add(rimRed);
 
-    /* materials */
-    const wMat = new THREE.MeshPhongMaterial({ color: 0xfafafa, shininess: 20, specular: 0xcccccc });
-    const dMat = new THREE.MeshPhongMaterial({ color: 0x111118, shininess: 60, specular: 0x334455 });
+    /* materials — crisp white fabric against dark bg */
+    const wMat = new THREE.MeshPhongMaterial({ color: 0xffffff, shininess: 35, specular: 0xddddee, emissive: 0x111111 });
+    const dMat = new THREE.MeshPhongMaterial({ color: 0x0d0d12, shininess: 80, specular: 0x3344aa, emissive: 0x050508 });
 
     const g = new THREE.Group();
 

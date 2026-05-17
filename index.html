@@ -816,11 +816,11 @@
             <div class="coach-front-body">
               <div class="coach-role-tag">Poomsae Coach</div>
               <div class="coach-name-f">Gno</div>
-              <div class="coach-spec-f">3rd Dan Black Belt · Poomsae specialist</div>
+              <div class="coach-spec-f">4th Dan Black Belt · Poomsae specialist</div>
             </div>
           </div>
           <div class="coach-back">
-            <div class="coach-back-role">Poomsae Coach · 3rd Dan Black Belt</div>
+            <div class="coach-back-role">Poomsae Coach · 4th Dan Black Belt</div>
             <div class="coach-back-name">Gno</div>
             <div class="coach-back-spec">Poomsae forms specialist &amp; pattern instruction. Develops precision, balance, and mastery of Taekwondo movement sequences.</div>
             <a href="https://wa.me/02022112211" target="_blank" rel="noopener" class="coach-back-link">Train with Gno <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
@@ -1271,15 +1271,15 @@
 
     const container = canvas.parentElement;
     const W = container.offsetWidth || 480;
-    const H = Math.round(W * 1.25);
+    const H = Math.round(W * 1.4);
 
     /* ── SCENE ── */
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x1c1c28);
 
     const cam = new THREE.PerspectiveCamera(42, W / H, 0.1, 100);
-    cam.position.set(0, -0.4, 13);
-    cam.lookAt(0, -0.4, 0);
+    cam.position.set(0, 0.9, 11);
+    cam.lookAt(0, 0.9, 0);
 
     const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
     renderer.setSize(W, H);
@@ -1290,7 +1290,7 @@
     renderer.toneMappingExposure = 1.15;
     renderer.outputEncoding = THREE.sRGBEncoding;
 
-    /* ── FABRIC TEXTURE (canvas-generated) ── */
+    /* ── FABRIC TEXTURE ── */
     function makeFabric(light) {
       const sz = 512, cv = document.createElement('canvas');
       cv.width = cv.height = sz;
@@ -1315,11 +1315,10 @@
       cx.putImageData(id, 0, 0);
       const t = new THREE.CanvasTexture(cv);
       t.wrapS = t.wrapT = THREE.RepeatWrapping;
-      t.repeat.set(light ? 6 : 4, light ? 12 : 5);
+      t.repeat.set(light ? 4 : 3, light ? 8 : 4);
       return t;
     }
 
-    /* ── NORMAL MAP ── */
     function makeNormal() {
       const sz = 256, cv = document.createElement('canvas');
       cv.width = cv.height = sz;
@@ -1334,7 +1333,7 @@
       }
       const t = new THREE.CanvasTexture(cv);
       t.wrapS = t.wrapT = THREE.RepeatWrapping;
-      t.repeat.set(6, 12);
+      t.repeat.set(4, 8);
       return t;
     }
 
@@ -1344,97 +1343,102 @@
 
     /* ── PBR MATERIALS ── */
     const wMat = new THREE.MeshStandardMaterial({
-      color: 0xf4f4f4, roughness: 0.87, metalness: 0.0,
-      map: wTex, normalMap: nTex, normalScale: new THREE.Vector2(0.45, 0.45)
+      color: 0xf2f2f2, roughness: 0.87, metalness: 0.0,
+      map: wTex, normalMap: nTex, normalScale: new THREE.Vector2(0.4, 0.4)
     });
     const dMat = new THREE.MeshStandardMaterial({
       color: 0x060609, roughness: 0.80, metalness: 0.04,
       map: dTex, normalMap: nTex, normalScale: new THREE.Vector2(0.25, 0.25)
     });
-    const sMat = new THREE.MeshStandardMaterial({ color: 0xcccccc, roughness: 0.92, metalness: 0 });
+    const mMat = new THREE.MeshStandardMaterial({ color: 0x555568, roughness: 0.65, metalness: 0.1 });
+    const rMat = new THREE.MeshStandardMaterial({ color: 0xcc1111, roughness: 0.75, metalness: 0 });
+    const sMat = new THREE.MeshStandardMaterial({ color: 0xbbbbcc, roughness: 0.92, metalness: 0 });
 
-    /* ── STUDIO LIGHTING ── */
+    /* ── STUDIO LIGHTS ── */
     scene.add(new THREE.HemisphereLight(0x9999bb, 0x333344, 0.55));
-
-    const key = new THREE.DirectionalLight(0xffffff, 2.6);
-    key.position.set(4, 10, 9);
-    key.castShadow = true;
+    const key = new THREE.DirectionalLight(0xffffff, 2.5);
+    key.position.set(4, 10, 8); key.castShadow = true;
     key.shadow.mapSize.width = key.shadow.mapSize.height = 2048;
-    key.shadow.camera.near = 0.5;
-    key.shadow.camera.far = 40;
     key.shadow.bias = -0.001;
     scene.add(key);
+    const fill = new THREE.DirectionalLight(0xaaccff, 0.85);
+    fill.position.set(-8, 3, 7); scene.add(fill);
+    const rimBack = new THREE.DirectionalLight(0xffffff, 1.2);
+    rimBack.position.set(0, 6, -9); scene.add(rimBack);
+    const rimLow = new THREE.DirectionalLight(0x4455aa, 0.3);
+    rimLow.position.set(2, -7, 4); scene.add(rimLow);
 
-    const fill = new THREE.DirectionalLight(0xaaccff, 0.9);
-    fill.position.set(-9, 3, 7);
-    scene.add(fill);
-
-    const rimBack = new THREE.DirectionalLight(0xffffff, 1.3);
-    rimBack.position.set(0, 7, -9);
-    scene.add(rimBack);
-
-    const rimLow = new THREE.DirectionalLight(0x4455aa, 0.35);
-    rimLow.position.set(2, -8, 4);
-    scene.add(rimLow);
-
-    /* ── GEOMETRY BUILDER ── */
+    /* ── HELPERS ── */
     const g = new THREE.Group();
-    const SEG = 3;
-
-    function bx(w, h, d, mat, x, y, z, rz, ry) {
-      const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d, SEG, SEG, SEG), mat);
-      m.position.set(x, y, z);
-      if (rz) m.rotation.z = rz;
-      if (ry) m.rotation.y = ry;
-      m.castShadow = m.receiveShadow = true;
-      return m;
+    const S = 3;
+    function bx(w,h,d,mat,x,y,z,rz){
+      const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d,S,S,S),mat);
+      m.position.set(x,y,z); if(rz)m.rotation.z=rz;
+      m.castShadow=m.receiveShadow=true; return m;
+    }
+    function sph(r,mat,x,y,z){
+      const m=new THREE.Mesh(new THREE.SphereGeometry(r,20,16),mat);
+      m.position.set(x,y,z); m.castShadow=m.receiveShadow=true; return m;
+    }
+    function cyl(rt,rb,h,mat,x,y,z,rz){
+      const m=new THREE.Mesh(new THREE.CylinderGeometry(rt,rb,h,14,2),mat);
+      m.position.set(x,y,z); if(rz)m.rotation.z=rz;
+      m.castShadow=m.receiveShadow=true; return m;
     }
 
-    /* ── JACKET ── */
-    g.add(bx(2.72, 2.95, 0.72, wMat,  0,      0,     0));            /* torso */
-    g.add(bx(3.50, 0.46, 0.66, wMat,  0,      1.60,  0));            /* shoulder bar */
-    g.add(bx(0.90, 1.18, 0.62, wMat, -1.68,   1.08,  0,  0.06));    /* L sleeve upper */
-    g.add(bx(0.82, 1.08, 0.57, wMat, -1.75,  -0.04,  0,  0.08));    /* L sleeve lower */
-    g.add(bx(0.78, 0.20, 0.54, wMat, -1.75,  -0.60,  0,  0.09));    /* L cuff band */
-    g.add(bx(0.90, 1.18, 0.62, wMat,  1.68,   1.08,  0, -0.06));    /* R sleeve upper */
-    g.add(bx(0.82, 1.08, 0.57, wMat,  1.75,  -0.04,  0, -0.08));    /* R sleeve lower */
-    g.add(bx(0.78, 0.20, 0.54, wMat,  1.75,  -0.60,  0, -0.09));    /* R cuff band */
+    /* ── MANNEQUIN BODY (grey) ── */
+    g.add(sph(0.28, mMat, 0, 3.22, 0));                         /* head */
+    g.add(cyl(0.115, 0.14, 0.38, mMat, 0, 2.84, 0));            /* neck */
 
-    /* seam lines — subtle depth at sleeve/body junction */
-    g.add(bx(0.035, 2.95, 0.035, sMat, -1.26, 0, 0.37));
-    g.add(bx(0.035, 2.95, 0.035, sMat,  1.26, 0, 0.37));
+    /* ── JACKET (fitted, matching reference) ── */
+    g.add(bx(1.40, 2.60, 0.55, wMat,  0,      1.22,  0));       /* torso */
+    g.add(bx(1.84, 0.38, 0.52, wMat,  0,      2.54,  0));       /* shoulder bar */
+    g.add(bx(0.36, 1.20, 0.38, wMat, -0.94,   1.85,  0,  0.08)); /* L sleeve upper */
+    g.add(bx(0.32, 1.10, 0.34, wMat, -1.00,   0.72,  0,  0.10)); /* L sleeve lower */
+    g.add(bx(0.30, 0.18, 0.32, wMat, -1.04,   0.15,  0,  0.10)); /* L cuff */
+    g.add(bx(0.36, 1.20, 0.38, wMat,  0.94,   1.85,  0, -0.08)); /* R sleeve upper */
+    g.add(bx(0.32, 1.10, 0.34, wMat,  1.00,   0.72,  0, -0.10)); /* R sleeve lower */
+    g.add(bx(0.30, 0.18, 0.32, wMat,  1.04,   0.15,  0, -0.10)); /* R cuff */
+    /* seam shadows at sleeve/body join */
+    g.add(bx(0.03, 2.60, 0.03, sMat, -0.72, 1.22, 0.29));
+    g.add(bx(0.03, 2.60, 0.03, sMat,  0.72, 1.22, 0.29));
 
-    /* ── V-COLLAR ── */
-    g.add(bx(0.88, 0.52, 0.28, dMat,  0,      1.64,  0.16));         /* neck band */
-    g.add(bx(0.32, 2.45, 0.17, dMat, -0.55,   0.74,  0.38,  0.46)); /* L collar */
-    g.add(bx(0.32, 2.45, 0.17, dMat,  0.55,   0.74,  0.38, -0.46)); /* R collar */
-    g.add(bx(0.09, 2.42, 0.07, dMat, -0.80,   0.63,  0.40,  0.46)); /* L collar edge */
-    g.add(bx(0.09, 2.42, 0.07, dMat,  0.80,   0.63,  0.40, -0.46)); /* R collar edge */
-    /* small chest badge */
-    g.add(bx(0.40, 0.24, 0.06, dMat,  0,      0.48,  0.39));
+    /* ── V-COLLAR (black) ── */
+    g.add(bx(0.72, 0.46, 0.24, dMat,  0,      2.56,  0.14));    /* neck band */
+    g.add(bx(0.28, 2.10, 0.16, dMat, -0.42,   1.50,  0.30,  0.42)); /* L collar */
+    g.add(bx(0.28, 2.10, 0.16, dMat,  0.42,   1.50,  0.30, -0.42)); /* R collar */
+    g.add(bx(0.08, 2.08, 0.06, dMat, -0.63,   1.42,  0.32,  0.42)); /* L edge */
+    g.add(bx(0.08, 2.08, 0.06, dMat,  0.63,   1.42,  0.32, -0.42)); /* R edge */
+    g.add(bx(0.36, 0.22, 0.06, dMat,  0,      0.50,  0.30));    /* chest badge bg */
+    g.add(bx(0.28, 0.14, 0.04, rMat,  0,      0.50,  0.33));    /* chest badge red */
 
-    /* ── PANTS ── */
-    g.add(bx(2.65, 0.44, 0.72, wMat,  0,     -1.58,  0));            /* waist */
-    g.add(bx(1.22, 3.05, 0.64, wMat, -0.63,  -3.10,  0));            /* L leg */
-    g.add(bx(1.22, 3.05, 0.64, wMat,  0.63,  -3.10,  0));            /* R leg */
-    g.add(bx(1.10, 0.18, 0.60, sMat, -0.63,  -2.72,  0));            /* L knee crease */
-    g.add(bx(1.10, 0.18, 0.60, sMat,  0.63,  -2.72,  0));            /* R knee crease */
+    /* ── PANTS (slim, full-length) ── */
+    g.add(bx(1.32, 0.38, 0.55, wMat,  0,     -0.18,  0));       /* waist */
+    g.add(bx(0.56, 2.65, 0.50, wMat, -0.29,  -1.58,  0));       /* L leg */
+    g.add(bx(0.56, 2.65, 0.50, wMat,  0.29,  -1.58,  0));       /* R leg */
+    g.add(bx(0.52, 0.16, 0.48, sMat, -0.29,  -2.76,  0));       /* L knee crease */
+    g.add(bx(0.52, 0.16, 0.48, sMat,  0.29,  -2.76,  0));       /* R knee crease */
 
-    g.position.set(0, 0.92, 0);
+    /* ── LOGO on left knee (red, like reference) ── */
+    g.add(bx(0.26, 0.22, 0.06, dMat, -0.29,  -1.20,  0.27));   /* badge bg */
+    g.add(bx(0.20, 0.15, 0.04, rMat, -0.29,  -1.20,  0.30));   /* red logo */
+
+    /* ── GREY HANDS visible at cuff ── */
+    g.add(sph(0.085, mMat, -1.07, 0.10, 0));
+    g.add(sph(0.085, mMat,  1.07, 0.10, 0));
+
+    g.position.set(0, 0.5, 0);
     scene.add(g);
 
-    /* floor shadow plane */
-    const floor = new THREE.Mesh(
-      new THREE.PlaneGeometry(24, 24),
-      new THREE.ShadowMaterial({ opacity: 0.18 })
-    );
+    /* floor shadow */
+    const floor = new THREE.Mesh(new THREE.PlaneGeometry(24, 24), new THREE.ShadowMaterial({ opacity: 0.18 }));
     floor.rotation.x = -Math.PI / 2;
-    floor.position.y = -3.8;
+    floor.position.y = -2.4;
     floor.receiveShadow = true;
     scene.add(floor);
 
     /* ── CONTROLS ── */
-    let isDown=false, sx=0, sy=0, rotY=0.3, rotX=0, tRotY=0.3, tRotX=0, autoSpin=true;
+    let isDown=false, sx=0, sy=0, rotY=0.25, rotX=0, tRotY=0.25, tRotX=0, autoSpin=true;
 
     canvas.addEventListener('mousedown', e=>{isDown=true;autoSpin=false;sx=e.clientX;sy=e.clientY;});
     window.addEventListener('mousemove', e=>{
@@ -1457,13 +1461,13 @@
       if(autoSpin) tRotY+=0.006;
       rotY+=(tRotY-rotY)*0.08; rotX+=(tRotX-rotX)*0.08;
       g.rotation.y=rotY; g.rotation.x=rotX;
-      g.position.y=0.92+Math.sin(t*0.65)*0.04;
+      g.position.y=0.5+Math.sin(t*0.65)*0.04;
       renderer.render(scene,cam);
     })();
 
     /* resize */
     window.addEventListener('resize', ()=>{
-      const w=container.offsetWidth||480, h=Math.round(w*1.25);
+      const w=container.offsetWidth||480, h=Math.round(w*1.4);
       renderer.setSize(w,h); cam.aspect=w/h; cam.updateProjectionMatrix();
     });
   })();

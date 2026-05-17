@@ -1288,14 +1288,14 @@
 
     const container = canvas.parentElement;
     const W = container.offsetWidth || 480;
-    const H = Math.round(W * 0.88);
+    const H = Math.round(W * 1.25);
 
-    const scene    = new THREE.Scene();
-    scene.background = new THREE.Color(0xf4f2ee);
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xffffff);
 
-    const cam = new THREE.PerspectiveCamera(42, W / H, 0.1, 100);
-    cam.position.set(0, 0.8, 9.5);
-    cam.lookAt(0, 0, 0);
+    const cam = new THREE.PerspectiveCamera(44, W / H, 0.1, 100);
+    cam.position.set(0, -0.5, 13);
+    cam.lookAt(0, -0.5, 0);
 
     const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
     renderer.setSize(W, H);
@@ -1303,89 +1303,63 @@
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-    /* lights */
-    scene.add(new THREE.AmbientLight(0xffffff, 0.55));
-    const key = new THREE.DirectionalLight(0xffffff, 1.4);
-    key.position.set(5, 10, 7);
+    /* studio lighting — bright, clean, product-shot style */
+    scene.add(new THREE.AmbientLight(0xffffff, 0.75));
+    const key = new THREE.DirectionalLight(0xffffff, 1.7);
+    key.position.set(4, 9, 8);
     key.castShadow = true;
     scene.add(key);
-    const fill = new THREE.DirectionalLight(0xddeeff, 0.5);
-    fill.position.set(-6, 2, 4);
+    const fill = new THREE.DirectionalLight(0xe8f0ff, 0.55);
+    fill.position.set(-7, 3, 5);
     scene.add(fill);
-    const rim = new THREE.DirectionalLight(0xff2222, 0.18);
+    const rim = new THREE.DirectionalLight(0xffffff, 0.28);
     rim.position.set(0, -5, -6);
     scene.add(rim);
 
     /* materials */
-    const wMat = new THREE.MeshPhongMaterial({ color: 0xf0ede8, shininess: 22, specular: 0x999999 });
-    const cMat = new THREE.MeshPhongMaterial({ color: 0xe5e1da, shininess: 14, specular: 0x777777 });
-    const bMat = new THREE.MeshPhongMaterial({ color: 0x0f0f0f, shininess: 90, specular: 0x444444 });
+    const wMat = new THREE.MeshPhongMaterial({ color: 0xfafafa, shininess: 20, specular: 0xcccccc });
+    const dMat = new THREE.MeshPhongMaterial({ color: 0x111118, shininess: 60, specular: 0x334455 });
 
     const g = new THREE.Group();
 
-    /* torso */
-    g.add(Object.assign(new THREE.Mesh(new THREE.BoxGeometry(2.2, 2.4, 0.58), wMat)));
+    function bx(w, h, d, mat, x, y, z, rz) {
+      const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
+      m.position.set(x, y, z); if (rz) m.rotation.z = rz; return m;
+    }
 
-    /* shoulders */
-    const sh = new THREE.Mesh(new THREE.BoxGeometry(2.65, 0.42, 0.52), wMat);
-    sh.position.set(0, 1.28, 0); g.add(sh);
+    /* ── JACKET BODY ── */
+    g.add(bx(2.55, 2.85, 0.66, wMat, 0,  0,    0));          /* torso */
+    g.add(bx(3.25, 0.43, 0.62, wMat, 0,  1.55, 0));          /* shoulder strip */
+    g.add(bx(0.76, 1.12, 0.55, wMat, -1.58,  1.02, 0,  0.07)); /* left sleeve upper */
+    g.add(bx(0.71, 1.05, 0.50, wMat, -1.64, -0.05, 0,  0.09)); /* left sleeve lower */
+    g.add(bx(0.76, 1.12, 0.55, wMat,  1.58,  1.02, 0, -0.07)); /* right sleeve upper */
+    g.add(bx(0.71, 1.05, 0.50, wMat,  1.64, -0.05, 0, -0.09)); /* right sleeve lower */
 
-    /* left sleeve upper */
-    const lsu = new THREE.Mesh(new THREE.BoxGeometry(0.66, 0.95, 0.5), wMat);
-    lsu.position.set(-1.3, 0.9, 0); lsu.rotation.z = 0.06; g.add(lsu);
-    /* left sleeve lower */
-    const lsl = new THREE.Mesh(new THREE.BoxGeometry(0.61, 0.85, 0.46), wMat);
-    lsl.position.set(-1.36, 0.04, 0); lsl.rotation.z = 0.07; g.add(lsl);
+    /* ── V-COLLAR — dark, crossed at chest ── */
+    g.add(bx(0.80, 0.48, 0.22, dMat,  0,     1.60,  0.14));    /* neck band */
+    g.add(bx(0.23, 2.28, 0.14, dMat, -0.48,  0.72,  0.35,  0.44)); /* left collar panel */
+    g.add(bx(0.23, 2.28, 0.14, dMat,  0.48,  0.72,  0.35, -0.44)); /* right collar panel */
+    g.add(bx(0.07, 2.28, 0.05, dMat, -0.70,  0.62,  0.37,  0.44)); /* left collar edge */
+    g.add(bx(0.07, 2.28, 0.05, dMat,  0.70,  0.62,  0.37, -0.44)); /* right collar edge */
 
-    /* right sleeve upper */
-    const rsu = new THREE.Mesh(new THREE.BoxGeometry(0.66, 0.95, 0.5), wMat);
-    rsu.position.set(1.3, 0.9, 0); rsu.rotation.z = -0.06; g.add(rsu);
-    /* right sleeve lower */
-    const rsl = new THREE.Mesh(new THREE.BoxGeometry(0.61, 0.85, 0.46), wMat);
-    rsl.position.set(1.36, 0.04, 0); rsl.rotation.z = -0.07; g.add(rsl);
+    /* ── PANTS ── */
+    g.add(bx(2.48, 0.40, 0.66, wMat,  0,    -1.54,  0));       /* waist join */
+    g.add(bx(1.12, 2.90, 0.61, wMat, -0.59, -2.99,  0));       /* left leg */
+    g.add(bx(1.12, 2.90, 0.61, wMat,  0.59, -2.99,  0));       /* right leg */
+    g.add(bx(1.00, 0.24, 0.55, wMat, -0.59, -4.38,  0));       /* left ankle */
+    g.add(bx(1.00, 0.24, 0.55, wMat,  0.59, -4.38,  0));       /* right ankle */
 
-    /* left lapel */
-    const ll = new THREE.Mesh(new THREE.BoxGeometry(0.54, 1.45, 0.1), cMat);
-    ll.position.set(-0.3, 0.55, 0.31); ll.rotation.z = 0.38; g.add(ll);
-    /* right lapel */
-    const rl = new THREE.Mesh(new THREE.BoxGeometry(0.54, 1.45, 0.1), cMat);
-    rl.position.set(0.3, 0.55, 0.31); rl.rotation.z = -0.38; g.add(rl);
-
-    /* belt */
-    const belt = new THREE.Mesh(new THREE.BoxGeometry(2.35, 0.24, 0.65), bMat);
-    belt.position.set(0, -1.1, 0.02); g.add(belt);
-    /* knot */
-    const knot = new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.27, 0.14), bMat);
-    knot.position.set(0, -1.1, 0.37); g.add(knot);
-    /* tail L */
-    const tl = new THREE.Mesh(new THREE.BoxGeometry(0.21, 0.65, 0.07), bMat);
-    tl.position.set(-0.14, -1.5, 0.36); g.add(tl);
-    /* tail R */
-    const tr = new THREE.Mesh(new THREE.BoxGeometry(0.21, 0.65, 0.07), bMat);
-    tr.position.set(0.14, -1.5, 0.36); g.add(tr);
-
-    /* waist join */
-    const wj = new THREE.Mesh(new THREE.BoxGeometry(2.1, 0.32, 0.58), wMat);
-    wj.position.set(0, -1.42, 0); g.add(wj);
-
-    /* left leg */
-    const ll2 = new THREE.Mesh(new THREE.BoxGeometry(0.98, 2.2, 0.54), wMat);
-    ll2.position.set(-0.53, -2.5, 0); g.add(ll2);
-    /* right leg */
-    const rl2 = new THREE.Mesh(new THREE.BoxGeometry(0.98, 2.2, 0.54), wMat);
-    rl2.position.set(0.53, -2.5, 0); g.add(rl2);
-
-    g.position.set(0, 0.7, 0);
+    g.position.set(0, 0.85, 0);
     scene.add(g);
 
-    /* floor shadow */
-    const floor = new THREE.Mesh(new THREE.PlaneGeometry(20, 20), new THREE.ShadowMaterial({ opacity: 0.1 }));
+    /* subtle floor shadow */
+    const floor = new THREE.Mesh(new THREE.PlaneGeometry(20, 20), new THREE.ShadowMaterial({ opacity: 0.07 }));
     floor.rotation.x = -Math.PI / 2;
-    floor.position.y = -2.4;
+    floor.position.y = -3.7;
     floor.receiveShadow = true;
     scene.add(floor);
 
-    /* drag rotation */
+    /* ── DRAG / TOUCH CONTROLS ── */
     let isDown = false, sx = 0, sy = 0, rotY = 0.3, rotX = 0, tRotY = 0.3, tRotX = 0, autoSpin = true;
 
     canvas.addEventListener('mousedown', e => { isDown = true; autoSpin = false; sx = e.clientX; sy = e.clientY; });
@@ -1393,16 +1367,20 @@
       if (!isDown) return;
       tRotY += (e.clientX - sx) * 0.013;
       tRotX += (e.clientY - sy) * 0.006;
-      tRotX = Math.max(-0.45, Math.min(0.45, tRotX));
+      tRotX = Math.max(-0.5, Math.min(0.5, tRotX));
       sx = e.clientX; sy = e.clientY;
     });
     window.addEventListener('mouseup', () => { isDown = false; setTimeout(() => { autoSpin = true; }, 2200); });
+    canvas.addEventListener('touchstart', e => { autoSpin = false; sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
+    canvas.addEventListener('touchmove', e => {
+      tRotY += (e.touches[0].clientX - sx) * 0.015;
+      tRotX += (e.touches[0].clientY - sy) * 0.007;
+      tRotX = Math.max(-0.5, Math.min(0.5, tRotX));
+      sx = e.touches[0].clientX; sy = e.touches[0].clientY;
+    }, { passive: true });
+    canvas.addEventListener('touchend', () => { setTimeout(() => { autoSpin = true; }, 2200); });
 
-    canvas.addEventListener('touchstart', e => { autoSpin = false; sx = e.touches[0].clientX; }, { passive: true });
-    canvas.addEventListener('touchmove',  e => { tRotY += (e.touches[0].clientX - sx) * 0.015; sx = e.touches[0].clientX; }, { passive: true });
-    canvas.addEventListener('touchend',   () => { setTimeout(() => { autoSpin = true; }, 2200); });
-
-    /* animate */
+    /* ── RENDER LOOP ── */
     let t = 0;
     (function render() {
       requestAnimationFrame(render);
@@ -1412,14 +1390,14 @@
       rotX += (tRotX - rotX) * 0.08;
       g.rotation.y = rotY;
       g.rotation.x = rotX;
-      g.position.y = 0.7 + Math.sin(t * 0.65) * 0.045;
+      g.position.y = 0.85 + Math.sin(t * 0.65) * 0.04;
       renderer.render(scene, cam);
     })();
 
     /* resize */
     window.addEventListener('resize', () => {
       const w = container.offsetWidth || 480;
-      const h = Math.round(w * 0.88);
+      const h = Math.round(w * 1.25);
       renderer.setSize(w, h);
       cam.aspect = w / h;
       cam.updateProjectionMatrix();

@@ -3,643 +3,409 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Tawan Taekwondo Club — Vientiane's premier Taekwondo academy. Train with expert coaches in Kyorugi, Poomsae & Demonstration." />
   <title>Tawan Taekwondo Club — Vientiane, Laos</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --black:#030303;--dark:#0a0a0a;--d1:#111;--d2:#1a1a1a;--d3:#262626;
+      --gray:#4a4a4a;--mid:#888;--light:#d4d4d4;--surface:#f8f8f6;--white:#fff;
+      --red:#dc2626;--red-d:#b91c1c;--red-l:#ef4444;
+      --red-glow:rgba(220,38,38,.25);--red-dim:rgba(220,38,38,.08);
+      --font:'Outfit',system-ui,sans-serif;
+      --expo:cubic-bezier(.16,1,.3,1);--spring:cubic-bezier(.34,1.56,.64,1);
+      --r-xl:2rem;--r-lg:1.25rem;--r-md:.75rem;
+      --shadow:0 30px 60px -15px rgba(0,0,0,.5);
+      --shadow-sm:0 8px 30px -8px rgba(0,0,0,.25);
+    }
+    html{scroll-behavior:smooth}
+    body{font-family:var(--font);background:var(--white);color:var(--black);overflow-x:hidden;cursor:none}
+    ::-webkit-scrollbar{width:3px}
+    ::-webkit-scrollbar-track{background:var(--dark)}
+    ::-webkit-scrollbar-thumb{background:var(--red);border-radius:99px}
 
-    :root {
-      --black:    #0a0a0a;
-      --zinc-900: #111111;
-      --zinc-800: #1c1c1c;
-      --zinc-700: #2e2e2e;
-      --zinc-600: #4a4a4a;
-      --zinc-400: #888888;
-      --zinc-300: #b0b0b0;
-      --zinc-200: #d8d8d8;
-      --zinc-100: #f0f0f0;
-      --zinc-50:  #f8f8f8;
-      --surface:  #f7f7f5;
-      --white:    #ffffff;
-      --accent:   #b91c1c;
-      --accent-d: #991b1b;
-      --accent-l: #dc2626;
-      --font: 'Outfit', system-ui, sans-serif;
-      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-      --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
-      --radius-xl: 2rem;
-      --radius-lg: 1.25rem;
-      --radius-md: 0.75rem;
-      --shadow: 0 20px 40px -12px rgba(0,0,0,0.08);
-      --shadow-md: 0 8px 24px -6px rgba(0,0,0,0.1);
-    }
+    /* ── CURSOR ─────────────────────────────── */
+    .cur-dot{position:fixed;width:8px;height:8px;background:var(--red);border-radius:50%;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:width .15s,height .15s,opacity .2s}
+    .cur-ring{position:fixed;width:38px;height:38px;border:1.5px solid rgba(220,38,38,.55);border-radius:50%;pointer-events:none;z-index:99998;transform:translate(-50%,-50%);transition:width .25s var(--expo),height .25s var(--expo),opacity .25s;will-change:left,top}
+    body.cur-lg .cur-dot{width:12px;height:12px}
+    body.cur-lg .cur-ring{width:58px;height:58px;opacity:.45}
 
-    html { scroll-behavior: smooth; }
-    body { font-family: var(--font); background: var(--white); color: var(--black); overflow-x: hidden; }
-    ::-webkit-scrollbar { width: 5px; }
-    ::-webkit-scrollbar-track { background: var(--black); }
-    ::-webkit-scrollbar-thumb { background: var(--zinc-700); border-radius: 99px; }
+    /* ── PROGRESS ───────────────────────────── */
+    .progress{position:fixed;top:0;left:0;height:2px;background:var(--red);z-index:9999;width:0%;box-shadow:0 0 14px rgba(220,38,38,.7),0 0 28px rgba(220,38,38,.35)}
 
-    /* ─── NAV ────────────────────────────────────── */
-    nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 1.125rem 3rem;
-      transition: all 0.4s var(--ease-out);
-    }
-    nav.scrolled {
-      background: rgba(10,10,10,0.94);
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-      padding: 0.875rem 3rem;
-    }
-    .nav-logo {
-      display: flex; align-items: center; gap: 0.625rem;
-      text-decoration: none; color: var(--white);
-      font-size: 1.1rem; font-weight: 800; letter-spacing: -0.02em;
-    }
-    .nav-logo-badge {
-      width: 34px; height: 34px; background: var(--accent);
-      border-radius: 8px; display: flex; align-items: center;
-      justify-content: center; font-size: 0.85rem; font-weight: 900; color: white;
-    }
-    .nav-links { display: flex; align-items: center; gap: 2rem; list-style: none; }
-    .nav-links a {
-      color: rgba(255,255,255,0.65); text-decoration: none;
-      font-size: 0.85rem; font-weight: 500; transition: color 0.2s;
-    }
-    .nav-links a:hover { color: white; }
-    .nav-cta {
-      background: var(--accent); color: white;
-      border: none; border-radius: 99px;
-      padding: 0.6rem 1.375rem;
-      font-family: var(--font); font-size: 0.85rem; font-weight: 700;
-      cursor: pointer; text-decoration: none;
-      transition: all 0.2s var(--ease-spring);
-      display: flex; align-items: center; gap: 0.4rem;
-    }
-    .nav-cta:hover { background: var(--accent-l); transform: translateY(-1px); }
-    .nav-cta:active { transform: scale(0.97); }
-    .nav-cta svg { width: 14px; height: 14px; }
+    /* ── LOADER ─────────────────────────────── */
+    .loader{position:fixed;inset:0;background:var(--black);z-index:100000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:2rem;transition:opacity .6s var(--expo),visibility .6s}
+    .loader.out{opacity:0;visibility:hidden}
+    .loader-mark{font-size:5rem;font-weight:900;letter-spacing:-.06em;color:white;line-height:1}
+    .loader-mark span{color:var(--red-l)}
+    .loader-bar{width:180px;height:2px;background:rgba(255,255,255,.07);border-radius:99px;overflow:hidden}
+    .loader-fill{height:100%;background:linear-gradient(90deg,var(--red-d),var(--red-l));animation:lfill 1.5s var(--expo) .1s both}
+    @keyframes lfill{from{width:0}to{width:100%}}
 
-    /* ─── HERO ───────────────────────────────────── */
-    .hero {
-      position: relative; min-height: 100dvh;
-      display: flex; flex-direction: column; justify-content: flex-end;
-      overflow: hidden;
-    }
-    .hero-bg {
-      position: absolute; inset: 0;
-      background: url('photos/hero.jpg') center center/cover no-repeat;
-    }
-    .hero-bg::after {
-      content: '';
-      position: absolute; inset: 0;
-      background: linear-gradient(to top,
-        rgba(10,10,10,1) 0%,
-        rgba(10,10,10,0.65) 45%,
-        rgba(10,10,10,0.2) 100%);
-    }
-    .hero-grain {
-      position: absolute; inset: 0; z-index: 1; pointer-events: none;
-      opacity: 0.04;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-      background-size: 200px;
-    }
-    .hero-content {
-      position: relative; z-index: 2;
-      padding: 0 3.5rem 5rem;
-      max-width: 780px;
-    }
-    .hero-eyebrow {
-      display: inline-flex; align-items: center; gap: 0.5rem;
-      background: rgba(185,28,28,0.2);
-      border: 1px solid rgba(185,28,28,0.4);
-      border-radius: 99px; padding: 0.3rem 1rem;
-      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em;
-      text-transform: uppercase; color: #fca5a5;
-      margin-bottom: 1.75rem;
-      animation: fadeUp 0.8s var(--ease-out) 0.1s both;
-    }
-    .eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent-l); animation: blink 2s infinite; }
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+    /* ── NAV ────────────────────────────────── */
+    nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;align-items:center;justify-content:space-between;padding:1.375rem 3rem;transition:all .4s var(--expo)}
+    nav.scrolled{background:rgba(3,3,3,.9);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-bottom:1px solid rgba(255,255,255,.05);padding:.9rem 3rem}
+    .nav-logo{display:flex;align-items:center;gap:.75rem;text-decoration:none;color:white;font-size:1.05rem;font-weight:800;letter-spacing:-.02em}
+    .nav-mark{width:36px;height:36px;background:var(--red);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:.875rem;font-weight:900;color:white;box-shadow:0 0 18px rgba(220,38,38,.45);transition:all .3s var(--spring)}
+    .nav-logo:hover .nav-mark{transform:scale(1.1) rotate(-6deg);box-shadow:0 0 28px rgba(220,38,38,.65)}
+    .nav-links{display:flex;align-items:center;gap:2.25rem;list-style:none}
+    .nav-links a{color:rgba(255,255,255,.5);text-decoration:none;font-size:.8rem;font-weight:600;transition:color .2s;position:relative}
+    .nav-links a::after{content:'';position:absolute;bottom:-3px;left:0;right:0;height:1px;background:var(--red);transform:scaleX(0);transform-origin:right;transition:transform .3s var(--expo)}
+    .nav-links a:hover{color:white}
+    .nav-links a:hover::after{transform:scaleX(1);transform-origin:left}
+    .nav-url{font-size:.68rem;font-weight:600;letter-spacing:.06em;color:rgba(255,255,255,.2);text-decoration:none;transition:color .2s}
+    .nav-url:hover{color:rgba(255,255,255,.55)}
+    .nav-cta{display:inline-flex;align-items:center;gap:.45rem;background:var(--red);color:white;border:none;border-radius:99px;padding:.625rem 1.375rem;font-family:var(--font);font-size:.8rem;font-weight:700;cursor:none;text-decoration:none;transition:all .25s var(--spring);box-shadow:0 0 0 0 rgba(220,38,38,.4)}
+    .nav-cta:hover{background:var(--red-l);transform:translateY(-1px);box-shadow:0 8px 22px rgba(220,38,38,.45),0 0 0 4px rgba(220,38,38,.15)}
+    .nav-cta svg{width:14px;height:14px}
 
-    .hero-title {
-      font-size: clamp(3.25rem, 7vw, 7rem);
-      font-weight: 900; letter-spacing: -0.04em; line-height: 0.9;
-      color: white;
-      animation: fadeUp 0.8s var(--ease-out) 0.2s both;
-    }
-    .hero-title .red { color: var(--accent-l); }
-    .hero-tagline {
-      margin-top: 1.25rem;
-      font-size: 1.125rem; font-weight: 400;
-      color: rgba(255,255,255,0.55); letter-spacing: 0.01em;
-      animation: fadeUp 0.8s var(--ease-out) 0.3s both;
-    }
-    .hero-actions {
-      display: flex; align-items: center; gap: 0.875rem;
-      margin-top: 2.5rem;
-      animation: fadeUp 0.8s var(--ease-out) 0.42s both;
-    }
-    .btn-primary {
-      display: inline-flex; align-items: center; gap: 0.5rem;
-      background: var(--accent); color: white;
-      border: none; border-radius: 99px;
-      padding: 0.9rem 2rem;
-      font-family: var(--font); font-size: 0.9375rem; font-weight: 700;
-      cursor: pointer; text-decoration: none;
-      transition: all 0.22s var(--ease-spring);
-    }
-    .btn-primary:hover { background: var(--accent-l); transform: translateY(-2px); box-shadow: 0 12px 30px rgba(185,28,28,0.4); }
-    .btn-primary:active { transform: scale(0.97); }
-    .btn-primary svg { width: 18px; height: 18px; flex-shrink: 0; }
-    .btn-outline {
-      display: inline-flex; align-items: center; gap: 0.5rem;
-      background: transparent; color: rgba(255,255,255,0.8);
-      border: 1px solid rgba(255,255,255,0.25); border-radius: 99px;
-      padding: 0.9rem 2rem;
-      font-family: var(--font); font-size: 0.9375rem; font-weight: 600;
-      cursor: pointer; text-decoration: none;
-      transition: all 0.2s;
-    }
-    .btn-outline:hover { border-color: rgba(255,255,255,0.6); color: white; }
-    .btn-outline svg { width: 16px; height: 16px; }
+    /* ── HERO ───────────────────────────────── */
+    .hero{position:relative;min-height:100dvh;background:var(--black);display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden}
+    #hero-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:0}
+    .hero-bg{position:absolute;inset:0;z-index:1;background:url('photos/hero.jpg') center/cover no-repeat;will-change:transform}
+    .hero-bg::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 65% 0%,rgba(220,38,38,.1) 0%,transparent 55%),linear-gradient(to top,rgba(3,3,3,1) 0%,rgba(3,3,3,.72) 42%,rgba(3,3,3,.22) 100%)}
+    .hero-grain{position:absolute;inset:0;z-index:2;opacity:.04;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:180px}
+    .hero-content{position:relative;z-index:3;padding:0 4rem 5.5rem;max-width:940px}
+    .hero-eyebrow{display:inline-flex;align-items:center;gap:.625rem;background:rgba(220,38,38,.12);border:1px solid rgba(220,38,38,.3);border-radius:99px;padding:.3rem 1rem;font-size:.67rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:#fca5a5;margin-bottom:2rem;animation:up .9s var(--expo) .8s both}
+    .eyebrow-pulse{width:6px;height:6px;border-radius:50%;background:var(--red-l);animation:blink 2.5s ease-in-out infinite}
+    @keyframes blink{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.8)}}
+    .hero-title{font-size:clamp(4.5rem,11vw,9.5rem);font-weight:900;letter-spacing:-.05em;line-height:.87;color:white;animation:up .9s var(--expo) .95s both;text-shadow:0 4px 40px rgba(0,0,0,.5)}
+    .hero-title .red{color:var(--red-l);text-shadow:0 0 60px rgba(220,38,38,.4),0 4px 40px rgba(0,0,0,.5)}
+    .hero-tagline{font-size:clamp(1rem,1.4vw,1.2rem);font-weight:400;color:rgba(255,255,255,.42);letter-spacing:.02em;margin-top:1.5rem;animation:up .9s var(--expo) 1.1s both}
+    .hero-actions{display:flex;align-items:center;gap:1rem;margin-top:2.75rem;animation:up .9s var(--expo) 1.25s both}
+    .hero-stats{display:flex;gap:3rem;padding-top:3rem;margin-top:3rem;border-top:1px solid rgba(255,255,255,.08);animation:up .9s var(--expo) 1.4s both}
+    .stat-num{font-size:2.5rem;font-weight:900;letter-spacing:-.06em;color:white;line-height:1}
+    .stat-label{font-size:.67rem;font-weight:500;letter-spacing:.09em;text-transform:uppercase;color:rgba(255,255,255,.32);margin-top:.3rem}
+    .hero-scroll{position:absolute;bottom:2.5rem;right:4rem;z-index:3;display:flex;flex-direction:column;align-items:center;gap:.5rem;animation:up 1s var(--expo) 1.6s both}
+    .hero-scroll span{font-size:.56rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.22)}
+    .scroll-line{width:1px;height:50px;background:linear-gradient(to bottom,transparent,rgba(255,255,255,.4));animation:sline 2.5s ease-in-out infinite}
+    @keyframes sline{0%,100%{opacity:.2;transform:scaleY(.6);transform-origin:top}50%{opacity:1;transform:scaleY(1)}}
+    @keyframes up{from{opacity:0;transform:translateY(32px)}to{opacity:1;transform:translateY(0)}}
 
-    .hero-stats {
-      display: flex; gap: 2.5rem; padding-top: 3rem;
-      border-top: 1px solid rgba(255,255,255,0.1);
-      margin-top: 3rem;
-      animation: fadeUp 0.8s var(--ease-out) 0.55s both;
-    }
-    .hero-stat-num { font-size: 2.25rem; font-weight: 900; letter-spacing: -0.05em; color: white; }
-    .hero-stat-label { font-size: 0.72rem; font-weight: 500; color: rgba(255,255,255,0.4); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 0.2rem; }
+    /* ── BUTTONS ────────────────────────────── */
+    .btn-primary{display:inline-flex;align-items:center;gap:.5rem;background:var(--red);color:white;border:none;border-radius:99px;padding:1rem 2.25rem;font-family:var(--font);font-size:.9375rem;font-weight:700;cursor:none;text-decoration:none;transition:all .25s var(--spring)}
+    .btn-primary:hover{background:var(--red-l);transform:translateY(-3px) scale(1.02);box-shadow:0 16px 40px rgba(220,38,38,.45),0 0 0 5px rgba(220,38,38,.12)}
+    .btn-primary:active{transform:scale(.97)}
+    .btn-primary svg{width:18px;height:18px;flex-shrink:0}
+    .btn-outline{display:inline-flex;align-items:center;gap:.5rem;background:transparent;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.75);border-radius:99px;padding:1rem 2.25rem;font-family:var(--font);font-size:.9375rem;font-weight:600;cursor:none;text-decoration:none;transition:all .25s var(--expo)}
+    .btn-outline:hover{border-color:rgba(255,255,255,.55);color:white;background:rgba(255,255,255,.05)}
+    .btn-outline svg{width:16px;height:16px}
 
-    .hero-scroll {
-      position: absolute; bottom: 2rem; right: 3.5rem; z-index: 2;
-      display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
-      animation: fadeUp 1s var(--ease-out) 0.8s both;
-    }
-    .hero-scroll span { font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.3); }
-    .scroll-line { width: 1px; height: 40px; background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.4)); animation: scrollAnim 2s ease-in-out infinite; }
-    @keyframes scrollAnim { 0%,100%{opacity:0.3} 50%{opacity:1} }
+    /* ── TICKER ─────────────────────────────── */
+    .ticker{background:var(--red);overflow:hidden;padding:.875rem 0;position:relative;z-index:10}
+    .ticker-track{display:inline-flex;animation:tick 30s linear infinite}
+    .ticker-item{display:inline-flex;align-items:center;gap:1rem;padding:0 2.5rem;font-size:.7rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.9);white-space:nowrap}
+    .tick-sep{opacity:.35}
+    @keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
-    @keyframes fadeUp {
-      from { opacity:0; transform:translateY(22px); }
-      to   { opacity:1; transform:translateY(0); }
-    }
+    /* ── SECTIONS ───────────────────────────── */
+    .section{padding:7rem 4rem;position:relative;overflow:hidden}
+    .section--dark{background:var(--dark);color:white}
+    .section--surface{background:var(--surface)}
+    .section--white{background:var(--white)}
+    /* perspective grid floor */
+    .grid-bg::before{content:'';position:absolute;bottom:0;left:0;right:0;height:380px;background:linear-gradient(rgba(220,38,38,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(220,38,38,.04) 1px,transparent 1px);background-size:60px 60px;transform:perspective(600px) rotateX(38deg);transform-origin:bottom;mask-image:linear-gradient(to top,rgba(0,0,0,.55) 0%,transparent 100%);-webkit-mask-image:linear-gradient(to top,rgba(0,0,0,.55) 0%,transparent 100%);z-index:0;pointer-events:none}
+    .sec-inner{position:relative;z-index:1}
+    .lbl{display:inline-flex;align-items:center;gap:.6rem;font-size:.66rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--red);margin-bottom:1rem}
+    .lbl::before{content:'';width:20px;height:2px;background:var(--red);border-radius:99px}
+    .lbl--lt{color:#fca5a5}.lbl--lt::before{background:#fca5a5}
+    .h2{font-size:clamp(2.25rem,5vw,4.25rem);font-weight:900;letter-spacing:-.045em;line-height:.92}
+    .h2 span{color:var(--red)}.h2--w{color:white}.h2--w span{color:var(--red-l)}
+    .body{font-size:1rem;line-height:1.75;color:var(--gray)}
+    .body--m{color:rgba(255,255,255,.42)}
 
-    /* ─── TICKER ─────────────────────────────────── */
-    .ticker { background: var(--accent); overflow: hidden; padding: 0.8rem 0; }
-    .ticker-track { display: inline-flex; animation: ticker 30s linear infinite; }
-    .ticker-item {
-      display: inline-flex; align-items: center; gap: 1rem;
-      padding: 0 2.5rem;
-      font-size: 0.72rem; font-weight: 800; letter-spacing: 0.1em;
-      text-transform: uppercase; color: rgba(255,255,255,0.9);
-      white-space: nowrap;
-    }
-    .ticker-sep { opacity: 0.4; }
-    @keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+    /* reveal animations */
+    [data-r]{opacity:0;transform:translateY(28px);transition:opacity .75s var(--expo),transform .75s var(--expo)}
+    [data-r].vis{opacity:1;transform:translateY(0)}
+    [data-r][data-d="1"]{transition-delay:.1s}[data-r][data-d="2"]{transition-delay:.2s}
+    [data-r][data-d="3"]{transition-delay:.3s}[data-r][data-d="4"]{transition-delay:.4s}
+    [data-r][data-d="5"]{transition-delay:.5s}
 
-    /* ─── SHARED SECTION STYLES ─────────────────── */
-    .section { padding: 6rem 3.5rem; }
-    .section--dark { background: var(--black); color: white; }
-    .section--light { background: var(--surface); }
-    .section--white { background: var(--white); }
+    /* ── ABOUT ──────────────────────────────── */
+    .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:center;margin-top:4rem}
+    .about-img-wrap{position:relative}
+    .about-img-main{width:100%;border-radius:var(--r-xl);overflow:hidden;aspect-ratio:4/3;box-shadow:var(--shadow)}
+    .about-img-main img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .8s var(--expo)}
+    .about-img-main:hover img{transform:scale(1.04)}
+    .about-img-inset{position:absolute;bottom:-2rem;right:-2rem;width:48%;border-radius:var(--r-lg);overflow:hidden;aspect-ratio:3/4;border:4px solid white;box-shadow:var(--shadow)}
+    .about-img-inset img{width:100%;height:100%;object-fit:cover;display:block}
+    .about-badge{position:absolute;top:1.5rem;left:-1.5rem;background:var(--red);color:white;border-radius:var(--r-md);padding:1rem 1.25rem;box-shadow:0 8px 30px rgba(220,38,38,.4)}
+    .about-badge-num{font-size:1.75rem;font-weight:900;letter-spacing:-.05em;line-height:1}
+    .about-badge-lbl{font-size:.63rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;opacity:.8;margin-top:.2rem}
+    .about-text p{margin-bottom:1.25rem}
+    .about-founded{display:inline-flex;align-items:center;gap:.875rem;background:var(--dark);color:white;border-radius:var(--r-md);padding:1rem 1.5rem;margin-top:1.5rem;font-size:.875rem;font-weight:600;box-shadow:var(--shadow-sm)}
+    .about-founded-icon{font-size:1.4rem}
+    .pillars{display:grid;grid-template-columns:1fr 1fr;gap:.875rem;margin-top:2rem}
+    .pillar{background:var(--surface);border:1px solid rgba(0,0,0,.06);border-radius:var(--r-md);padding:1.25rem;transition:all .3s var(--expo);cursor:default}
+    .pillar:hover{border-color:rgba(220,38,38,.2);box-shadow:0 8px 30px rgba(0,0,0,.08);transform:translateY(-3px)}
+    .pillar-val{font-size:1.75rem;font-weight:900;letter-spacing:-.05em;color:var(--red)}
+    .pillar-name{font-size:.78rem;font-weight:600;color:var(--gray);margin-top:.2rem}
 
-    .label {
-      display: inline-flex; align-items: center; gap: 0.5rem;
-      font-size: 0.68rem; font-weight: 800; letter-spacing: 0.12em;
-      text-transform: uppercase; color: var(--accent);
-      margin-bottom: 0.875rem;
-    }
-    .label::before { content:''; width:18px; height:2px; background:var(--accent); border-radius:99px; }
-    .h2 {
-      font-size: clamp(2rem, 4.5vw, 3.75rem);
-      font-weight: 900; letter-spacing: -0.04em; line-height: 0.94;
-    }
-    .h2 span { color: var(--accent); }
-    .body-text { font-size: 1rem; line-height: 1.72; color: var(--zinc-600); }
-    .body-text--light { color: rgba(255,255,255,0.5); }
+    /* ── OVERVIEW ───────────────────────────── */
+    .overview-intro{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start;margin-top:3rem;margin-bottom:4rem}
+    .overview-desc{font-size:1rem;line-height:1.75;color:rgba(255,255,255,.45)}
+    .types-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:4rem;position:relative;z-index:1}
+    .type-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:var(--r-lg);padding:2rem 1.75rem;transition:border-color .3s,background .3s;position:relative;overflow:hidden;cursor:default;transform-style:preserve-3d;will-change:transform}
+    .type-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(220,38,38,.1) 0%,transparent 60%);opacity:0;transition:opacity .3s}
+    .type-card:hover::before{opacity:1}
+    .type-card:hover{background:rgba(220,38,38,.06);border-color:rgba(220,38,38,.25)}
+    .type-num{font-size:.62rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#fca5a5;margin-bottom:1.25rem}
+    .type-name{font-size:1.2rem;font-weight:800;color:white;letter-spacing:-.02em;margin-bottom:.75rem}
+    .type-desc{font-size:.85rem;line-height:1.65;color:rgba(255,255,255,.38)}
+    /* glare for tilt cards */
+    .glare{position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:10;opacity:0;transition:opacity .3s}
+    .benefits-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;position:relative;z-index:1}
+    .benefit-card{background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.06);border-radius:var(--r-lg);padding:2rem 1.5rem;position:relative;overflow:hidden;transition:all .3s var(--expo);cursor:default;transform-style:preserve-3d;will-change:transform}
+    .benefit-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--red);transform:scaleX(0);transform-origin:left;transition:transform .4s var(--expo)}
+    .benefit-card:hover::after{transform:scaleX(1)}
+    .benefit-card:hover{background:rgba(255,255,255,.05);transform:translateY(-4px);box-shadow:0 20px 40px rgba(0,0,0,.3)}
+    .benefit-icon{width:46px;height:46px;border-radius:14px;background:rgba(220,38,38,.12);border:1px solid rgba(220,38,38,.2);display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem}
+    .benefit-icon svg{width:22px;height:22px;color:#fca5a5}
+    .benefit-title{font-size:1rem;font-weight:800;color:white;margin-bottom:.5rem;letter-spacing:-.02em}
+    .benefit-desc{font-size:.82rem;line-height:1.65;color:rgba(255,255,255,.38)}
 
-    .reveal {
-      opacity: 0; transform: translateY(24px);
-      transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
-    }
-    .reveal.visible { opacity: 1; transform: translateY(0); }
-    .d1{transition-delay:.1s} .d2{transition-delay:.2s} .d3{transition-delay:.3s} .d4{transition-delay:.4s} .d5{transition-delay:.5s}
+    /* ── SHOWCASE ───────────────────────────── */
+    .showcase-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:1rem;border-radius:var(--r-xl);overflow:hidden;margin-top:3rem}
+    .showcase-main{position:relative;aspect-ratio:4/3;overflow:hidden}
+    .showcase-main img,.showcase-sub img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .7s var(--expo)}
+    .showcase-main:hover img,.showcase-sub:hover img{transform:scale(1.05)}
+    .showcase-col{display:flex;flex-direction:column;gap:1rem}
+    .showcase-sub{position:relative;flex:1;overflow:hidden;min-height:200px}
+    .showcase-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.72) 0%,transparent 55%);display:flex;align-items:flex-end;padding:1.25rem}
+    .showcase-cap{font-size:.78rem;font-weight:700;color:rgba(255,255,255,.85)}
 
-    /* ─── ABOUT ──────────────────────────────────── */
-    .about-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 5rem;
-      align-items: center; margin-top: 3.5rem;
-    }
-    .about-img-stack { position: relative; }
-    .about-img-main {
-      width: 100%; border-radius: var(--radius-xl);
-      overflow: hidden; aspect-ratio: 4/3;
-      box-shadow: var(--shadow);
-    }
-    .about-img-main img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .about-img-inset {
-      position: absolute; bottom: -1.5rem; right: -1.5rem;
-      width: 52%; border-radius: var(--radius-lg);
-      overflow: hidden; aspect-ratio: 3/4;
-      border: 4px solid white;
-      box-shadow: var(--shadow);
-    }
-    .about-img-inset img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .about-founded {
-      display: inline-flex; align-items: center; gap: 0.75rem;
-      background: var(--black); color: white;
-      border-radius: var(--radius-md);
-      padding: 0.875rem 1.25rem;
-      margin-top: 1.5rem;
-      font-size: 0.85rem; font-weight: 600;
-    }
-    .about-founded-icon { color: var(--accent); font-size: 1.25rem; }
-    .about-text p { margin-bottom: 1.125rem; }
-    .about-pillars { display: grid; grid-template-columns: 1fr 1fr; gap: 0.875rem; margin-top: 2rem; }
-    .pillar {
-      background: var(--surface); border: 1px solid var(--zinc-200);
-      border-radius: var(--radius-md); padding: 1.125rem;
-      transition: all 0.25s var(--ease-out);
-    }
-    .pillar:hover { border-color: var(--zinc-300); box-shadow: var(--shadow-md); transform: translateY(-2px); }
-    .pillar-name { font-size: 0.85rem; font-weight: 700; color: var(--black); margin-bottom: 0.2rem; }
-    .pillar-val { font-size: 1.5rem; font-weight: 900; letter-spacing: -0.04em; color: var(--accent); }
+    /* ── SCHEDULE ───────────────────────────── */
+    .schedule-layout{display:grid;grid-template-columns:1.3fr 1fr;gap:5rem;align-items:start;margin-top:3rem}
+    .sched-days{display:flex;flex-direction:column}
+    .sched-day{display:flex;align-items:stretch;border-bottom:1px solid rgba(0,0,0,.06);padding:1.375rem 0}
+    .sched-day:first-child{border-top:1px solid rgba(0,0,0,.06)}
+    .sched-day-name{width:120px;flex-shrink:0;font-size:.7rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--mid);padding-top:.1rem}
+    .sched-classes{display:flex;flex-direction:column;gap:.5rem;flex:1}
+    .sched-item{display:flex;align-items:center;justify-content:space-between;background:var(--surface);border-radius:var(--r-md);padding:.875rem 1.125rem;transition:background .2s}
+    .sched-item:hover{background:rgba(220,38,38,.05)}
+    .sched-class-name{font-size:.875rem;font-weight:700;color:var(--dark)}
+    .sched-time{font-size:.78rem;font-weight:600;color:var(--mid)}
+    .sched-badge{font-size:.62rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;border-radius:99px;padding:.2rem .65rem;white-space:nowrap}
+    .sched-badge--j{background:#eff6ff;color:#1d4ed8}
+    .sched-badge--a{background:rgba(220,38,38,.08);color:var(--red)}
+    .sched-badge--all{background:var(--surface);color:var(--mid);border:1px solid rgba(0,0,0,.08)}
+    .sched-cta-box{background:var(--dark);color:white;border-radius:var(--r-xl);padding:2.75rem;position:sticky;top:5.5rem;box-shadow:var(--shadow)}
+    .sched-cta-box h3{font-size:1.875rem;font-weight:900;letter-spacing:-.04em;line-height:1.05;margin-bottom:1rem}
+    .sched-cta-box p{font-size:.875rem;color:rgba(255,255,255,.42);line-height:1.7;margin-bottom:1.75rem}
+    .sched-cta-box .btn-primary{width:100%;justify-content:center}
+    .sched-note{font-size:.75rem;color:rgba(255,255,255,.22);margin-top:1rem;text-align:center}
 
-    /* ─── TAEKWONDO OVERVIEW ─────────────────────── */
-    .overview-intro {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 4rem;
-      align-items: start; margin-top: 3rem; margin-bottom: 4rem;
-    }
-    .overview-desc { font-size: 1rem; line-height: 1.72; color: rgba(255,255,255,0.55); }
-    .types-grid {
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;
-      margin-bottom: 4rem;
-    }
-    .type-card {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: var(--radius-lg);
-      padding: 1.75rem 1.5rem;
-      transition: all 0.25s var(--ease-out);
-    }
-    .type-card:hover {
-      background: rgba(185,28,28,0.1);
-      border-color: rgba(185,28,28,0.3);
-      transform: translateY(-3px);
-    }
-    .type-number {
-      font-size: 0.65rem; font-weight: 800; letter-spacing: 0.12em;
-      text-transform: uppercase; color: var(--accent);
-      margin-bottom: 1rem;
-    }
-    .type-name { font-size: 1.1rem; font-weight: 800; color: white; letter-spacing: -0.02em; margin-bottom: 0.625rem; }
-    .type-desc { font-size: 0.85rem; line-height: 1.6; color: rgba(255,255,255,0.45); }
+    /* ── PRICING ────────────────────────────── */
+    .pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-top:3.5rem}
+    .price-card{background:white;border:1.5px solid rgba(0,0,0,.08);border-radius:var(--r-xl);padding:2.25rem;position:relative;transition:all .3s var(--expo);transform-style:preserve-3d;will-change:transform;cursor:default}
+    .price-card:hover{box-shadow:var(--shadow);transform:translateY(-6px)}
+    .price-card--feat{background:var(--dark);color:white;border-color:var(--dark);box-shadow:var(--shadow)}
+    .price-card--feat:hover{box-shadow:0 30px 60px rgba(0,0,0,.45)}
+    .price-badge{position:absolute;top:-.875rem;left:50%;transform:translateX(-50%);background:var(--red);color:white;font-size:.62rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;border-radius:99px;padding:.28rem .875rem;white-space:nowrap;box-shadow:0 4px 14px rgba(220,38,38,.4)}
+    .price-sessions{font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mid);margin-bottom:.875rem}
+    .price-card--feat .price-sessions{color:rgba(255,255,255,.32)}
+    .price-amount{font-size:2.875rem;font-weight:900;letter-spacing:-.06em;color:var(--dark);line-height:1}
+    .price-card--feat .price-amount{color:white}
+    .price-cur{font-size:1.1rem;font-weight:700;vertical-align:super;line-height:1}
+    .price-period{font-size:.8rem;font-weight:500;color:var(--mid)}
+    .price-card--feat .price-period{color:rgba(255,255,255,.32)}
+    .price-div{border:none;border-top:1px solid rgba(0,0,0,.07);margin:1.5rem 0}
+    .price-card--feat .price-div{border-color:rgba(255,255,255,.08)}
+    .price-perks{display:flex;flex-direction:column;gap:.625rem;margin-bottom:1.75rem}
+    .price-perk{display:flex;align-items:center;gap:.625rem;font-size:.875rem;color:var(--gray)}
+    .price-card--feat .price-perk{color:rgba(255,255,255,.68)}
+    .perk-check{width:18px;height:18px;border-radius:50%;flex-shrink:0;background:rgba(220,38,38,.1);border:1px solid rgba(220,38,38,.2);display:flex;align-items:center;justify-content:center}
+    .perk-check svg{width:9px;height:9px;color:var(--red)}
+    .price-card .btn-primary{width:100%;justify-content:center}
+    .price-card--default .btn-primary{background:rgba(0,0,0,.06);color:var(--dark);box-shadow:none}
+    .price-card--default .btn-primary:hover{background:var(--dark);color:white;box-shadow:0 8px 20px rgba(0,0,0,.2)}
+    .pricing-extras{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-top:1.25rem}
+    .extras-card{background:var(--surface);border:1px solid rgba(0,0,0,.06);border-radius:var(--r-lg);padding:1.75rem}
+    .extras-card h4{font-size:1rem;font-weight:800;color:var(--dark);margin-bottom:.3rem}
+    .extras-card .price-line{font-size:1.625rem;font-weight:900;letter-spacing:-.04em;color:var(--red);margin-bottom:.3rem}
+    .extras-card p{font-size:.82rem;color:var(--gray);line-height:1.6}
 
-    .benefits-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
-    .benefit-card {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: var(--radius-lg);
-      padding: 1.75rem 1.5rem;
-      position: relative; overflow: hidden;
-      transition: all 0.25s var(--ease-out);
-    }
-    .benefit-card::before {
-      content: '';
-      position: absolute; top: 0; left: 0; right: 0; height: 2px;
-      background: var(--accent); opacity: 0;
-      transition: opacity 0.25s;
-    }
-    .benefit-card:hover::before { opacity: 1; }
-    .benefit-card:hover { background: rgba(255,255,255,0.06); transform: translateY(-3px); }
-    .benefit-icon {
-      width: 44px; height: 44px; border-radius: 12px;
-      background: rgba(185,28,28,0.15); border: 1px solid rgba(185,28,28,0.25);
-      display: flex; align-items: center; justify-content: center;
-      margin-bottom: 1rem;
-    }
-    .benefit-icon svg { width: 22px; height: 22px; color: #fca5a5; }
-    .benefit-title { font-size: 1rem; font-weight: 800; color: white; margin-bottom: 0.5rem; letter-spacing: -0.02em; }
-    .benefit-desc { font-size: 0.83rem; line-height: 1.6; color: rgba(255,255,255,0.45); }
+    /* ── EQUIPMENT ──────────────────────────── */
+    .equip-layout{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start;margin-top:3rem}
+    .dobok-section h3,.gear-section h3{font-size:1.125rem;font-weight:800;color:var(--dark);margin-bottom:1rem}
+    .size-grid{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.75rem}
+    .size-chip{background:var(--surface);border:1.5px solid rgba(0,0,0,.08);border-radius:99px;padding:.35rem .875rem;font-size:.85rem;font-weight:700;color:var(--dark);transition:all .2s;cursor:default}
+    .size-chip:hover{background:var(--dark);color:white;border-color:var(--dark)}
+    .dobok-tag{display:inline-flex;align-items:baseline;gap:.375rem;background:var(--dark);color:white;border-radius:var(--r-md);padding:1rem 1.5rem}
+    .dobok-tag .amt{font-size:1.75rem;font-weight:900;letter-spacing:-.04em}
+    .dobok-tag .lbl-t{font-size:.8rem;color:rgba(255,255,255,.5)}
+    .gear-list{display:flex;flex-direction:column;gap:.5rem}
+    .gear-item{display:flex;align-items:center;gap:.75rem;padding:.875rem 1.125rem;background:var(--surface);border:1px solid rgba(0,0,0,.06);border-radius:var(--r-md);font-size:.875rem;font-weight:600;color:var(--dark)}
+    .gear-dot{width:8px;height:8px;border-radius:50%;background:var(--red);flex-shrink:0}
+    .gear-tag{margin-left:auto;font-size:.62rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--mid);background:white;border:1px solid rgba(0,0,0,.08);border-radius:99px;padding:.2rem .6rem}
 
-    /* ─── SCHEDULE ───────────────────────────────── */
-    .schedule-layout { display: grid; grid-template-columns: 1.2fr 1fr; gap: 5rem; align-items: start; margin-top: 3rem; }
-    .schedule-days { display: flex; flex-direction: column; gap: 0; }
-    .schedule-day {
-      display: flex; align-items: stretch;
-      border-bottom: 1px solid var(--zinc-100);
-      padding: 1.25rem 0;
-      transition: background 0.15s;
-    }
-    .schedule-day:first-child { border-top: 1px solid var(--zinc-100); }
-    .schedule-day-name {
-      width: 110px; flex-shrink: 0;
-      font-size: 0.72rem; font-weight: 800; letter-spacing: 0.08em;
-      text-transform: uppercase; color: var(--zinc-400);
-      padding-top: 0.125rem;
-    }
-    .schedule-classes { display: flex; flex-direction: column; gap: 0.5rem; flex: 1; }
-    .schedule-class-item {
-      display: flex; align-items: center; justify-content: space-between;
-      background: var(--surface); border-radius: var(--radius-md);
-      padding: 0.75rem 1rem;
-    }
-    .sched-class-name { font-size: 0.875rem; font-weight: 700; color: var(--black); }
-    .sched-time { font-size: 0.8rem; font-weight: 600; color: var(--zinc-600); }
-    .sched-badge {
-      display: inline-block;
-      font-size: 0.65rem; font-weight: 800; letter-spacing: 0.06em;
-      text-transform: uppercase; border-radius: 99px;
-      padding: 0.18rem 0.6rem; white-space: nowrap;
-    }
-    .sched-badge--junior { background: #eff6ff; color: #1d4ed8; }
-    .sched-badge--adult { background: rgba(185,28,28,0.08); color: var(--accent); }
-    .sched-badge--all { background: var(--zinc-100); color: var(--zinc-600); }
+    /* ── FOUNDERS ───────────────────────────── */
+    .founders-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:4rem}
+    .founder-card{border-radius:var(--r-xl);overflow:hidden;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);position:relative;transition:transform .4s var(--expo),box-shadow .4s}
+    .founder-card:hover{transform:translateY(-6px);box-shadow:0 30px 60px rgba(0,0,0,.4)}
+    .founder-img{height:420px;overflow:hidden;position:relative}
+    .founder-img img{width:100%;height:100%;object-fit:cover;object-position:top;display:block;transition:transform .75s var(--expo)}
+    .founder-card:hover .founder-img img{transform:scale(1.05)}
+    .founder-img::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(6,6,6,.92) 0%,rgba(6,6,6,.3) 50%,transparent 100%)}
+    .founder-body{padding:1.75rem 2rem 2rem;position:relative}
+    .founder-role{font-size:.65rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--red-l);margin-bottom:.5rem}
+    .founder-name{font-size:1.75rem;font-weight:900;letter-spacing:-.04em;color:white;line-height:1.1;margin-bottom:.875rem}
+    .founder-bio{font-size:.85rem;line-height:1.7;color:rgba(255,255,255,.45)}
+    .founder-badge{display:inline-flex;align-items:center;gap:.5rem;background:rgba(220,38,38,.15);border:1px solid rgba(220,38,38,.3);border-radius:99px;padding:.25rem .875rem;font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#fca5a5;margin-top:1.25rem}
 
-    .schedule-cta-box {
-      background: var(--black); border-radius: var(--radius-xl);
-      padding: 2.5rem; color: white; position: sticky; top: 6rem;
-    }
-    .schedule-cta-box .h3 {
-      font-size: 1.75rem; font-weight: 900; letter-spacing: -0.04em;
-      line-height: 1.05; margin-bottom: 1rem;
-    }
-    .schedule-cta-box p { font-size: 0.9rem; color: rgba(255,255,255,0.5); line-height: 1.65; margin-bottom: 1.5rem; }
-    .schedule-cta-box .btn-primary { width: 100%; justify-content: center; }
-    .schedule-note { font-size: 0.78rem; color: rgba(255,255,255,0.3); margin-top: 1rem; text-align: center; }
+    /* ── COACHES — 3D FLIP ──────────────────── */
+    .coaches-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;margin-top:3rem;position:relative;z-index:1}
+    .coach-card{perspective:900px;aspect-ratio:3/4;cursor:default}
+    .coach-card-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .75s var(--expo);border-radius:var(--r-lg)}
+    .coach-card:hover .coach-card-inner{transform:rotateY(180deg)}
+    .coach-front,.coach-back{position:absolute;inset:0;border-radius:var(--r-lg);overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+    .coach-front{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}
+    .coach-front img{width:100%;height:70%;object-fit:cover;display:block;filter:grayscale(15%);transition:filter .3s}
+    .coach-card:hover .coach-front img{filter:grayscale(0%)}
+    .coach-front-body{padding:1rem}
+    .coach-role-tag{display:inline-block;background:rgba(220,38,38,.15);color:#fca5a5;font-size:.58rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;border-radius:99px;padding:.18rem .6rem;margin-bottom:.5rem}
+    .coach-role-tag--head{background:rgba(220,38,38,.28)}
+    .coach-name-f{font-size:1.05rem;font-weight:800;color:white;letter-spacing:-.02em}
+    .coach-spec-f{font-size:.73rem;color:rgba(255,255,255,.32);margin-top:.25rem;line-height:1.4}
+    .coach-back{transform:rotateY(180deg);background:linear-gradient(135deg,var(--red-d) 0%,var(--red) 55%,var(--red-l) 100%);display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:1.75rem}
+    .coach-back-role{font-size:.58rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:.625rem}
+    .coach-back-name{font-size:2rem;font-weight:900;letter-spacing:-.05em;color:white;line-height:1;margin-bottom:.875rem}
+    .coach-back-spec{font-size:.82rem;line-height:1.6;color:rgba(255,255,255,.75);margin-bottom:1.25rem}
+    .coach-back-link{display:inline-flex;align-items:center;gap:.4rem;font-size:.78rem;font-weight:700;color:white;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.4);padding-bottom:.1rem;transition:border-color .2s}
+    .coach-back-link:hover{border-color:white}
+    .coach-back-link svg{width:12px;height:12px}
 
-    /* ─── PRICING ────────────────────────────────── */
-    .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-top: 3.5rem; }
-    .price-card {
-      background: var(--white); border: 1.5px solid var(--zinc-200);
-      border-radius: var(--radius-xl); padding: 2.25rem;
-      position: relative; transition: all 0.3s var(--ease-out);
-    }
-    .price-card:hover { box-shadow: var(--shadow); transform: translateY(-4px); }
-    .price-card--featured {
-      background: var(--black); color: white;
-      border-color: var(--black);
-    }
-    .price-card--featured:hover { box-shadow: 0 24px 48px rgba(0,0,0,0.2); }
-    .price-badge {
-      position: absolute; top: -0.75rem; left: 50%; transform: translateX(-50%);
-      background: var(--accent); color: white;
-      font-size: 0.65rem; font-weight: 800; letter-spacing: 0.08em;
-      text-transform: uppercase; border-radius: 99px;
-      padding: 0.25rem 0.875rem; white-space: nowrap;
-    }
-    .price-sessions { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--zinc-400); margin-bottom: 0.75rem; }
-    .price-card--featured .price-sessions { color: rgba(255,255,255,0.4); }
-    .price-amount {
-      font-size: 2.75rem; font-weight: 900; letter-spacing: -0.05em;
-      color: var(--black); line-height: 1;
-    }
-    .price-card--featured .price-amount { color: white; }
-    .price-currency { font-size: 1rem; font-weight: 700; vertical-align: super; line-height: 1; }
-    .price-period { font-size: 0.8rem; font-weight: 500; color: var(--zinc-400); }
-    .price-card--featured .price-period { color: rgba(255,255,255,0.4); }
-    .price-divider { border: none; border-top: 1px solid var(--zinc-100); margin: 1.5rem 0; }
-    .price-card--featured .price-divider { border-color: rgba(255,255,255,0.1); }
-    .price-perks { display: flex; flex-direction: column; gap: 0.625rem; margin-bottom: 1.75rem; }
-    .price-perk { display: flex; align-items: center; gap: 0.625rem; font-size: 0.875rem; color: var(--zinc-700); }
-    .price-card--featured .price-perk { color: rgba(255,255,255,0.75); }
-    .perk-check {
-      width: 18px; height: 18px; border-radius: 50%; flex-shrink: 0;
-      background: rgba(185,28,28,0.1); border: 1px solid rgba(185,28,28,0.2);
-      display: flex; align-items: center; justify-content: center;
-    }
-    .perk-check svg { width: 9px; height: 9px; color: var(--accent); }
-    .price-card .btn-primary { width: 100%; justify-content: center; }
-    .price-card--default .btn-primary { background: var(--zinc-100); color: var(--black); }
-    .price-card--default .btn-primary:hover { background: var(--zinc-200); }
+    /* ── GALLERY SLIDER ─────────────────────── */
+    .gallery-slider-wrap{position:relative;width:100%;border-radius:var(--r-xl);overflow:hidden;margin-top:3rem;aspect-ratio:16/7;background:var(--dark);box-shadow:var(--shadow);user-select:none}
+    .gallery-slides{display:flex;width:100%;height:100%;transition:transform .75s cubic-bezier(.16,1,.3,1)}
+    .gallery-slide{min-width:100%;height:100%;position:relative;flex-shrink:0}
+    .gallery-slide img{width:100%;height:100%;object-fit:cover;display:block}
+    .gallery-slide-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.72) 0%,transparent 52%)}
+    .gallery-caption{position:absolute;bottom:2rem;left:2.5rem;right:2.5rem;display:flex;align-items:flex-end;justify-content:space-between}
+    .gallery-caption-text{font-size:1.2rem;font-weight:800;color:white;letter-spacing:-.02em}
+    .gallery-caption-num{font-size:.68rem;font-weight:700;letter-spacing:.14em;color:rgba(255,255,255,.4)}
+    .gallery-nav{position:absolute;top:50%;transform:translateY(-50%);width:50px;height:50px;border-radius:50%;background:rgba(0,0,0,.38);border:1.5px solid rgba(255,255,255,.18);backdrop-filter:blur(14px);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .25s;z-index:10;color:white;outline:none}
+    .gallery-nav:hover{background:rgba(220,38,38,.7);border-color:var(--red);transform:translateY(-50%) scale(1.1)}
+    .gallery-nav svg{width:20px;height:20px}
+    .gallery-nav--prev{left:1.25rem}
+    .gallery-nav--next{right:1.25rem}
+    .gallery-dots{display:flex;gap:.5rem;justify-content:center;margin-top:1.5rem}
+    .gallery-dot{width:7px;height:7px;border-radius:99px;background:rgba(0,0,0,.15);border:none;cursor:pointer;transition:all .35s;padding:0}
+    .gallery-dot.active{width:26px;background:var(--red)}
+    .gallery-thumbs{display:flex;gap:.625rem;margin-top:1rem;overflow-x:auto;padding-bottom:.25rem;scrollbar-width:none}
+    .gallery-thumbs::-webkit-scrollbar{display:none}
+    .gallery-thumb{min-width:84px;height:58px;border-radius:var(--r-md);overflow:hidden;cursor:pointer;border:2px solid transparent;transition:all .25s;flex-shrink:0;opacity:.45}
+    .gallery-thumb.active{border-color:var(--red);opacity:1;box-shadow:0 0 0 3px rgba(220,38,38,.2)}
+    .gallery-thumb img{width:100%;height:100%;object-fit:cover;display:block}
 
-    .pricing-extras { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-top: 1.25rem; }
-    .extras-card {
-      background: var(--surface); border: 1px solid var(--zinc-200);
-      border-radius: var(--radius-lg); padding: 1.5rem;
-    }
-    .extras-card h4 { font-size: 1rem; font-weight: 800; color: var(--black); margin-bottom: 0.25rem; }
-    .extras-card .price-line { font-size: 1.5rem; font-weight: 900; letter-spacing: -0.04em; color: var(--accent); margin-bottom: 0.25rem; }
-    .extras-card p { font-size: 0.83rem; color: var(--zinc-500); line-height: 1.55; }
+    /* ── 3D DOBOK VIEWER ────────────────────── */
+    .dobok-3d-wrap{display:grid;grid-template-columns:1fr 1fr;gap:3.5rem;align-items:center;margin-top:3rem}
+    .dobok-canvas-col{display:flex;flex-direction:column;align-items:center}
+    .dobok-canvas-container{border-radius:var(--r-xl);overflow:hidden;position:relative;background:linear-gradient(145deg,#f7f5f1 0%,#eceae4 100%);border:1px solid rgba(0,0,0,.07);box-shadow:var(--shadow-sm);width:100%}
+    .dobok-canvas-container canvas{width:100%!important;height:auto!important;display:block;cursor:grab}
+    .dobok-canvas-container canvas:active{cursor:grabbing}
+    .dobok-hint{position:absolute;bottom:1rem;left:50%;transform:translateX(-50%);display:inline-flex;align-items:center;gap:.45rem;background:rgba(0,0,0,.5);backdrop-filter:blur(10px);color:rgba(255,255,255,.9);font-size:.65rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;border-radius:99px;padding:.35rem .95rem;pointer-events:none;white-space:nowrap}
+    .dobok-badge-row{display:flex;justify-content:center;gap:.5rem;margin-top:1rem}
+    .dobok-badge{display:inline-flex;align-items:center;gap:.4rem;background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.2);border-radius:99px;padding:.28rem .875rem;font-size:.64rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--red)}
+    .dobok-details-col h3{font-size:1.375rem;font-weight:800;color:var(--dark);margin-bottom:.75rem;letter-spacing:-.02em}
+    .gear-section-standalone{margin-top:3.5rem;padding-top:3rem;border-top:1px solid rgba(0,0,0,.07)}
+    .gear-section-standalone h3{font-size:1.125rem;font-weight:800;color:var(--dark);margin-bottom:1rem}
 
-    /* ─── EQUIPMENT ──────────────────────────────── */
-    .equipment-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; margin-top: 3rem; }
-    .dobok-section h3 { font-size: 1.125rem; font-weight: 800; color: var(--black); margin-bottom: 1rem; }
-    .size-grid {
-      display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.75rem;
-    }
-    .size-chip {
-      background: var(--surface); border: 1.5px solid var(--zinc-200);
-      border-radius: 99px; padding: 0.35rem 0.875rem;
-      font-size: 0.85rem; font-weight: 700; color: var(--black);
-      transition: all 0.2s;
-    }
-    .size-chip:hover { background: var(--black); color: white; border-color: var(--black); }
-    .dobok-price-tag {
-      display: inline-flex; align-items: baseline; gap: 0.375rem;
-      background: var(--black); color: white;
-      border-radius: var(--radius-md); padding: 1rem 1.5rem;
-    }
-    .dobok-price-tag .amount { font-size: 1.75rem; font-weight: 900; letter-spacing: -0.04em; }
-    .dobok-price-tag .label-text { font-size: 0.8rem; color: rgba(255,255,255,0.5); }
-    .gear-section h3 { font-size: 1.125rem; font-weight: 800; color: var(--black); margin-bottom: 1rem; }
-    .gear-list { display: flex; flex-direction: column; gap: 0.5rem; }
-    .gear-item {
-      display: flex; align-items: center; gap: 0.75rem;
-      padding: 0.875rem 1.125rem;
-      background: var(--surface); border: 1px solid var(--zinc-200);
-      border-radius: var(--radius-md);
-      font-size: 0.875rem; font-weight: 600; color: var(--black);
-    }
-    .gear-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
-    .gear-tag {
-      margin-left: auto;
-      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.06em;
-      text-transform: uppercase; color: var(--zinc-400);
-      background: var(--zinc-100); border-radius: 99px;
-      padding: 0.2rem 0.6rem;
-    }
+    /* ── CONTACT ────────────────────────────── */
+    .contact-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:6rem;align-items:start;margin-top:4rem}
+    .contact-channels{display:flex;flex-direction:column;gap:1rem}
+    .contact-btn{display:flex;align-items:center;gap:1rem;padding:1.375rem 1.5rem;border:1.5px solid rgba(0,0,0,.08);border-radius:var(--r-lg);text-decoration:none;color:var(--dark);transition:all .25s var(--expo);background:white}
+    .contact-btn:hover{border-color:var(--dark);box-shadow:var(--shadow-sm);transform:translateX(5px)}
+    .contact-btn--wa{border-color:#25d366}
+    .contact-btn--wa:hover{background:#f0fdf4;border-color:#16a34a}
+    .contact-btn--fb{border-color:#1877f2}
+    .contact-btn--fb:hover{background:#eff6ff;border-color:#1d4ed8}
+    .contact-btn-icon{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .contact-btn-icon--wa{background:#25d366}
+    .contact-btn-icon--email{background:var(--surface)}
+    .contact-btn-icon--fb{background:#1877f2}
+    .contact-btn-label{font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--mid)}
+    .contact-btn-value{font-size:.9rem;font-weight:700;color:var(--dark)}
+    .contact-btn svg{width:16px;height:16px;margin-left:auto;color:var(--light);transition:transform .2s,color .2s}
+    .contact-btn:hover svg{transform:translateX(4px);color:var(--mid)}
+    .contact-info-box{background:var(--surface);border-radius:var(--r-xl);padding:2.5rem;border:1px solid rgba(0,0,0,.06)}
+    .contact-info-box h3{font-size:1.25rem;font-weight:800;margin-bottom:1.5rem}
+    .info-row{display:flex;gap:.875rem;margin-bottom:1.25rem;padding-bottom:1.25rem;border-bottom:1px solid rgba(0,0,0,.06)}
+    .info-row:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+    .info-icon{width:38px;height:38px;border-radius:10px;background:white;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+    .info-icon svg{width:17px;height:17px;color:var(--red)}
+    .info-label{font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--mid);margin-bottom:.25rem}
+    .info-val{font-size:.9rem;font-weight:600;color:var(--dark);line-height:1.45}
 
-    /* ─── COACHES ────────────────────────────────── */
-    .coaches-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; margin-top: 3rem; }
-    .coach-card {
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: var(--radius-xl); overflow: hidden;
-      background: rgba(255,255,255,0.03);
-      transition: all 0.3s var(--ease-out);
-    }
-    .coach-card:hover {
-      background: rgba(255,255,255,0.07);
-      border-color: rgba(255,255,255,0.15);
-      transform: translateY(-4px);
-    }
-    .coach-top {
-      aspect-ratio: 3/4;
-      display: flex; align-items: center; justify-content: center;
-      background: rgba(255,255,255,0.025);
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-      position: relative; overflow: hidden;
-    }
-    .coach-top img {
-      width: 100%; height: 100%; object-fit: cover; display: block;
-      transition: transform 0.6s var(--ease-out);
-      filter: grayscale(20%);
-    }
-    .coach-card:hover .coach-top img { transform: scale(1.05); filter: grayscale(0%); }
-    .coach-monogram {
-      font-size: 4rem; font-weight: 900; letter-spacing: -0.05em;
-      color: rgba(255,255,255,0.07);
-      position: absolute;
-    }
-    .coach-accent-bar {
-      position: absolute; bottom: 0; left: 0; right: 0;
-      height: 3px; background: var(--accent); opacity: 0;
-      transition: opacity 0.3s;
-    }
-    .coach-card:hover .coach-accent-bar { opacity: 1; }
-    .coach-body { padding: 1.25rem; }
-    .coach-role-tag {
-      display: inline-block;
-      background: rgba(185,28,28,0.15); color: #fca5a5;
-      font-size: 0.62rem; font-weight: 800; letter-spacing: 0.08em;
-      text-transform: uppercase; border-radius: 99px;
-      padding: 0.18rem 0.625rem; margin-bottom: 0.625rem;
-    }
-    .coach-role-tag--head { background: rgba(185,28,28,0.25); }
-    .coach-name { font-size: 1.1rem; font-weight: 800; color: white; letter-spacing: -0.02em; }
-    .coach-specialty { font-size: 0.78rem; color: rgba(255,255,255,0.4); margin-top: 0.3rem; line-height: 1.5; }
+    /* ── FOOTER ─────────────────────────────── */
+    footer{background:var(--black);border-top:1px solid rgba(255,255,255,.05);padding:5rem 4rem 2.5rem}
+    .footer-url{text-align:center;margin-bottom:4rem;padding-bottom:4rem;border-bottom:1px solid rgba(255,255,255,.06)}
+    .footer-url-lbl{font-size:.62rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.22);margin-bottom:.875rem}
+    .footer-url-link{font-size:clamp(1.75rem,4vw,3.75rem);font-weight:900;letter-spacing:-.04em;color:white;text-decoration:none;transition:color .3s;display:inline-block}
+    .footer-url-link:hover{color:var(--red-l)}
+    .footer-url-link span{color:var(--red-l)}
+    .footer-top{display:grid;grid-template-columns:2fr 1fr 1fr;gap:4rem;margin-bottom:3.5rem}
+    .footer-brand{color:rgba(255,255,255,.38);font-size:.875rem;line-height:1.75;margin-top:1rem;max-width:28ch}
+    .footer-col-title{font-size:.66rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.22);margin-bottom:1.25rem}
+    .footer-links{list-style:none;display:flex;flex-direction:column;gap:.625rem}
+    .footer-links a{color:rgba(255,255,255,.42);text-decoration:none;font-size:.875rem;transition:color .2s}
+    .footer-links a:hover{color:white}
+    .footer-bottom{display:flex;align-items:center;justify-content:space-between;padding-top:2rem;border-top:1px solid rgba(255,255,255,.06)}
+    .footer-copy{font-size:.75rem;color:rgba(255,255,255,.18)}
+    .footer-social{display:flex;gap:.625rem}
+    .social-link{width:34px;height:34px;border-radius:9px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.38);text-decoration:none;font-size:.75rem;transition:all .2s}
+    .social-link:hover{background:rgba(255,255,255,.1);color:white;border-color:rgba(255,255,255,.14)}
 
-    /* ─── COMPETITION SHOWCASE ───────────────────── */
-    .showcase-grid {
-      display: grid; grid-template-columns: 1.3fr 1fr; gap: 1rem;
-      margin-top: 3rem; border-radius: var(--radius-xl); overflow: hidden;
+    /* ── RESPONSIVE ─────────────────────────── */
+    @media(max-width:1100px){.coaches-grid{grid-template-columns:repeat(3,1fr)}.benefits-grid{grid-template-columns:1fr 1fr}}
+    @media(max-width:960px){
+      nav{padding:1rem 1.5rem}nav.scrolled{padding:.75rem 1.5rem}
+      .nav-links,.nav-url{display:none}
+      .section{padding:5rem 2rem}
+      .hero-content{padding:0 2rem 4rem}
+      .about-grid,.overview-intro,.schedule-layout,.dobok-3d-wrap,.contact-grid,.founders-grid{grid-template-columns:1fr;gap:2.5rem}
+      .gallery-slider-wrap{aspect-ratio:4/3}
+      .about-img-inset,.about-badge{display:none}
+      .types-grid{grid-template-columns:1fr 1fr}
+      .pricing-grid,.pricing-extras{grid-template-columns:1fr!important}
+      .coaches-grid{grid-template-columns:repeat(2,1fr)}
+      .gallery-grid{grid-template-columns:1fr 1fr}
+      .footer-top{grid-template-columns:1fr 1fr;gap:2.5rem}
+      .showcase-grid{grid-template-columns:1fr}
+      body{cursor:auto}.cur-dot,.cur-ring{display:none}
     }
-    .showcase-main {
-      position: relative; aspect-ratio: 4/3; overflow: hidden;
-    }
-    .showcase-main img { width:100%; height:100%; object-fit:cover; display:block; transition: transform 0.6s var(--ease-out); }
-    .showcase-main:hover img { transform: scale(1.04); }
-    .showcase-col { display: flex; flex-direction: column; gap: 1rem; }
-    .showcase-sub { position: relative; flex: 1; overflow: hidden; min-height: 200px; }
-    .showcase-sub img { width:100%; height:100%; object-fit:cover; display:block; transition: transform 0.6s var(--ease-out); }
-    .showcase-sub:hover img { transform: scale(1.04); }
-    .showcase-overlay {
-      position: absolute; inset: 0;
-      background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 60%);
-      display: flex; align-items: flex-end; padding: 1.25rem;
-    }
-    .showcase-caption { font-size: 0.78rem; font-weight: 700; color: rgba(255,255,255,0.8); }
-
-    /* ─── CONTACT ────────────────────────────────── */
-    .contact-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 5rem; align-items: start; margin-top: 3.5rem; }
-    .contact-channels { display: flex; flex-direction: column; gap: 1rem; }
-    .contact-btn {
-      display: flex; align-items: center; gap: 1rem;
-      padding: 1.25rem 1.5rem;
-      border: 1.5px solid var(--zinc-200); border-radius: var(--radius-lg);
-      text-decoration: none; color: var(--black);
-      transition: all 0.25s var(--ease-out);
-      background: white;
-    }
-    .contact-btn:hover { border-color: var(--black); box-shadow: var(--shadow-md); transform: translateX(4px); }
-    .contact-btn--wa { border-color: #25d366; }
-    .contact-btn--wa:hover { background: #f0fdf4; border-color: #16a34a; }
-    .contact-btn--fb { border-color: #1877f2; }
-    .contact-btn--fb:hover { background: #eff6ff; border-color: #1d4ed8; }
-    .contact-btn-icon {
-      width: 44px; height: 44px; border-radius: 12px;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0; font-size: 1.25rem;
-    }
-    .contact-btn-icon--wa { background: #25d366; }
-    .contact-btn-icon--email { background: var(--zinc-100); }
-    .contact-btn-icon--fb { background: #1877f2; }
-    .contact-btn-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--zinc-400); }
-    .contact-btn-value { font-size: 0.925rem; font-weight: 700; color: var(--black); }
-    .contact-btn svg { width: 16px; height: 16px; margin-left: auto; color: var(--zinc-300); transition: transform 0.2s; }
-    .contact-btn:hover svg { transform: translateX(3px); color: var(--zinc-600); }
-
-    .contact-info-box {
-      background: var(--surface); border-radius: var(--radius-xl);
-      padding: 2.25rem; border: 1px solid var(--zinc-200);
-    }
-    .contact-info-box h3 { font-size: 1.25rem; font-weight: 800; margin-bottom: 1.25rem; }
-    .info-row { display: flex; gap: 0.75rem; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--zinc-100); }
-    .info-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-    .info-icon { width: 36px; height: 36px; border-radius: 10px; background: var(--zinc-100); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .info-icon svg { width: 16px; height: 16px; color: var(--accent); }
-    .info-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--zinc-400); margin-bottom: 0.2rem; }
-    .info-val { font-size: 0.9rem; font-weight: 600; color: var(--black); line-height: 1.4; }
-
-    /* ─── FOOTER ─────────────────────────────────── */
-    footer {
-      background: var(--black);
-      border-top: 1px solid rgba(255,255,255,0.06);
-      padding: 4rem 3.5rem 2.25rem;
-    }
-    .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 4rem; margin-bottom: 3.5rem; }
-    .footer-brand { color: rgba(255,255,255,0.5); font-size: 0.875rem; line-height: 1.7; margin-top: 0.875rem; max-width: 28ch; }
-    .footer-col-title { font-size: 0.68rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 1.125rem; }
-    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
-    .footer-links a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 0.875rem; transition: color 0.2s; }
-    .footer-links a:hover { color: white; }
-    .footer-bottom { display: flex; align-items: center; justify-content: space-between; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.06); }
-    .footer-copy { font-size: 0.78rem; color: rgba(255,255,255,0.25); }
-    .footer-social { display: flex; gap: 0.625rem; }
-    .social-link {
-      width: 32px; height: 32px; border-radius: 8px;
-      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08);
-      display: flex; align-items: center; justify-content: center;
-      color: rgba(255,255,255,0.4); text-decoration: none; font-size: 0.75rem;
-      transition: all 0.2s;
-    }
-    .social-link:hover { background: rgba(255,255,255,0.12); color: white; }
-
-    /* ─── RESPONSIVE ─────────────────────────────── */
-    @media (max-width: 1100px) {
-      .coaches-grid { grid-template-columns: repeat(3, 1fr); }
-      .benefits-grid { grid-template-columns: 1fr 1fr; }
-    }
-    @media (max-width: 960px) {
-      nav { padding: 1rem 1.5rem; }
-      nav.scrolled { padding: 0.75rem 1.5rem; }
-      .nav-links { display: none; }
-      .section { padding: 4rem 1.75rem; }
-      .hero-content { padding: 0 1.75rem 4.5rem; }
-      .about-grid, .overview-intro, .schedule-layout, .equipment-layout,
-      .contact-grid, .showcase-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-      .about-img-inset { display: none; }
-      .types-grid { grid-template-columns: 1fr 1fr; }
-      .pricing-grid { grid-template-columns: 1fr; }
-      .pricing-extras { grid-template-columns: 1fr; }
-      .coaches-grid { grid-template-columns: repeat(2, 1fr); }
-      .footer-top { grid-template-columns: 1fr 1fr; gap: 2.5rem; }
-    }
-    @media (max-width: 640px) {
-      .hero-stats { gap: 1.5rem; }
-      .hero-actions { flex-direction: column; align-items: flex-start; }
-      .types-grid { grid-template-columns: 1fr; }
-      .benefits-grid { grid-template-columns: 1fr; }
-      .coaches-grid { grid-template-columns: repeat(2, 1fr); }
-      .about-pillars { grid-template-columns: 1fr 1fr; }
-      .size-grid { gap: 0.375rem; }
-      .footer-top { grid-template-columns: 1fr; }
+    @media(max-width:640px){
+      .hero-stats{gap:1.5rem}.hero-actions{flex-direction:column;align-items:flex-start}
+      .types-grid,.benefits-grid,.gallery-grid{grid-template-columns:1fr}
+      .gallery-item--wide{grid-column:span 1}
+      .coaches-grid{grid-template-columns:1fr 1fr}
+      .footer-top{grid-template-columns:1fr}
+      .footer-url-link{font-size:1.75rem}
     }
   </style>
 </head>
 <body>
 
-<!-- ─── NAV ─── -->
+<div class="cur-dot" id="curDot"></div>
+<div class="cur-ring" id="curRing"></div>
+<div class="progress" id="progress"></div>
+
+<!-- LOADER -->
+<div class="loader" id="loader">
+  <div class="loader-mark">Tawan<span>TKD</span></div>
+  <div class="loader-bar"><div class="loader-fill"></div></div>
+</div>
+
+<!-- NAV -->
 <nav id="nav">
-  <a href="#" class="nav-logo">
-    <div class="nav-logo-badge">TK</div>
+  <a href="#home" class="nav-logo">
+    <div class="nav-mark">TK</div>
     Tawan TKD Club
   </a>
   <ul class="nav-links">
@@ -647,337 +413,203 @@
     <li><a href="#overview">Taekwondo</a></li>
     <li><a href="#schedule">Schedule</a></li>
     <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#founders">Founders</a></li>
     <li><a href="#coaches">Coaches</a></li>
+    <li><a href="#gallery">Gallery</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
+  <a href="https://tawantaekwondo.la" class="nav-url">tawantaekwondo.la</a>
   <a href="https://wa.me/02022112211" target="_blank" rel="noopener" class="nav-cta">
     <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.555 4.116 1.526 5.845L0 24l6.334-1.507A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.89 0-3.663-.5-5.194-1.378L3 21.5l.908-3.726A10.018 10.018 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
     Join Now
   </a>
 </nav>
 
-<!-- ─── HERO ─── -->
+<!-- HERO -->
 <section class="hero" id="home">
-  <div class="hero-bg"></div>
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-bg" id="heroBg"></div>
   <div class="hero-grain"></div>
   <div class="hero-content">
-    <div class="hero-eyebrow">
-      <span class="eyebrow-dot"></span>
-      Vientiane, Laos &nbsp;·&nbsp; Since 2010
-    </div>
-    <h1 class="hero-title">
-      Tawan<br>
-      <span class="red">Taekwondo</span><br>
-      Club
-    </h1>
+    <div class="hero-eyebrow"><span class="eyebrow-pulse"></span>Vientiane, Laos &nbsp;·&nbsp; Since 2010</div>
+    <h1 class="hero-title">Tawan<br><span class="red">Taekwondo</span><br>Club</h1>
     <p class="hero-tagline">Where Discipline Shapes Who You Are.</p>
     <div class="hero-actions">
       <a href="https://wa.me/02022112211" target="_blank" rel="noopener" class="btn-primary">
-        <svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.555 4.116 1.526 5.845L0 24l6.334-1.507A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.89 0-3.663-.5-5.194-1.378L3 21.5l.908-3.726A10.018 10.018 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.555 4.116 1.526 5.845L0 24l6.334-1.507A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.89 0-3.663-.5-5.194-1.378L3 21.5l.908-3.726A10.018 10.018 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
         Message on WhatsApp
       </a>
       <a href="https://www.facebook.com/profile.php?id=100057081595469" target="_blank" rel="noopener" class="btn-outline">
-        <svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-        View Facebook Page
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        Facebook Page
       </a>
     </div>
     <div class="hero-stats">
-      <div>
-        <div class="hero-stat-num">100+</div>
-        <div class="hero-stat-label">Active Students</div>
-      </div>
-      <div>
-        <div class="hero-stat-num">15+</div>
-        <div class="hero-stat-label">Years in Vientiane</div>
-      </div>
-      <div>
-        <div class="hero-stat-num">5</div>
-        <div class="hero-stat-label">Expert Coaches</div>
-      </div>
+      <div><div class="stat-num" data-count="100">0</div><div class="stat-label">Active Students</div></div>
+      <div><div class="stat-num" data-count="15">0</div><div class="stat-label">Years in Vientiane</div></div>
+      <div><div class="stat-num" data-count="5">0</div><div class="stat-label">Expert Coaches</div></div>
     </div>
   </div>
-  <div class="hero-scroll">
-    <span>Scroll</span>
-    <div class="scroll-line"></div>
-  </div>
+  <div class="hero-scroll"><span>Scroll</span><div class="scroll-line"></div></div>
 </section>
 
-<!-- ─── TICKER ─── -->
+<!-- TICKER -->
 <div class="ticker" aria-hidden="true">
   <div class="ticker-track">
-    <span class="ticker-item">Tawan Taekwondo Club <span class="ticker-sep">—</span></span>
-    <span class="ticker-item">Founded 12 June 2010 <span class="ticker-sep">—</span></span>
-    <span class="ticker-item">Budo Centre, Vientiane <span class="ticker-sep">—</span></span>
-    <span class="ticker-item">All Ages Welcome <span class="ticker-sep">—</span></span>
-    <span class="ticker-item">Kyorugi · Poomsae · Self-Defense <span class="ticker-sep">—</span></span>
-    <span class="ticker-item">9th Lao TKD Federation Championship <span class="ticker-sep">—</span></span>
-    <span class="ticker-item">Tawan Taekwondo Club <span class="ticker-sep">—</span></span>
-    <span class="ticker-item">Founded 12 June 2010 <span class="ticker-sep">—</span></span>
-    <span class="ticker-item">Budo Centre, Vientiane <span class="ticker-sep">—</span></span>
-    <span class="ticker-item">All Ages Welcome <span class="ticker-sep">—</span></span>
-    <span class="ticker-item">Kyorugi · Poomsae · Self-Defense <span class="ticker-sep">—</span></span>
-    <span class="ticker-item">9th Lao TKD Federation Championship <span class="ticker-sep">—</span></span>
+    <span class="ticker-item">Tawan Taekwondo Club <span class="tick-sep">—</span></span>
+    <span class="ticker-item">Founded 12 June 2010 <span class="tick-sep">—</span></span>
+    <span class="ticker-item">Budo Centre, Vientiane <span class="tick-sep">—</span></span>
+    <span class="ticker-item">All Ages Welcome <span class="tick-sep">—</span></span>
+    <span class="ticker-item">Kyorugi · Poomsae · Demonstration <span class="tick-sep">—</span></span>
+    <span class="ticker-item">9th Lao TKD Federation Championship <span class="tick-sep">—</span></span>
+    <span class="ticker-item">tawantaekwondo.la <span class="tick-sep">—</span></span>
+    <span class="ticker-item">Tawan Taekwondo Club <span class="tick-sep">—</span></span>
+    <span class="ticker-item">Founded 12 June 2010 <span class="tick-sep">—</span></span>
+    <span class="ticker-item">Budo Centre, Vientiane <span class="tick-sep">—</span></span>
+    <span class="ticker-item">All Ages Welcome <span class="tick-sep">—</span></span>
+    <span class="ticker-item">Kyorugi · Poomsae · Demonstration <span class="tick-sep">—</span></span>
+    <span class="ticker-item">9th Lao TKD Federation Championship <span class="tick-sep">—</span></span>
+    <span class="ticker-item">tawantaekwondo.la <span class="tick-sep">—</span></span>
   </div>
 </div>
 
-<!-- ─── ABOUT ─── -->
+<!-- ABOUT -->
 <section class="section section--white" id="about">
-  <div class="label reveal">About Us</div>
-  <h2 class="h2 reveal d1">Vientiane's home of<br><span>Taekwondo</span></h2>
-
+  <div class="lbl" data-r>Tawan Taekwondo Club</div>
+  <h2 class="h2" data-r data-d="1">Vientiane's home of<br><span>Taekwondo</span></h2>
   <div class="about-grid">
-    <div class="about-img-stack reveal">
-      <div class="about-img-main">
-        <img src="photos/group.jpg"
-             alt="Tawan Taekwondo Club team at the 9th Lao Taekwondo Federation Championship" />
-      </div>
-      <div class="about-img-inset">
-        <img src="photos/founder.jpg"
-             alt="Southida Phommavong, founder of Tawan Taekwondo Club" />
-      </div>
+    <div class="about-img-wrap" data-r>
+      <div class="about-img-main"><img src="photos/group.jpg" alt="Tawan TKD Club team" /></div>
+      <div class="about-img-inset"><img src="photos/southida-trophy.jpg" alt="Founder Southida Phommavong" /></div>
+      <div class="about-badge"><div class="about-badge-num">15+</div><div class="about-badge-lbl">Years Active</div></div>
     </div>
-
-    <div class="about-text reveal d2">
-      <p class="body-text">
-        Tawan Taekwondo Club was founded on <strong>12 June 2010</strong> by <strong>Southida Phommavong</strong> with a simple belief: that Taekwondo is not only a sport, but a path to building better people. Based at the <strong>Budo Centre, Vientiane</strong>, the club has grown over 15 years into a home for more than <strong>100 active students</strong> of all ages and skill levels.
-      </p>
-      <p class="body-text">
-        From first-time beginners stepping onto the mat to competitive athletes representing Laos at national level — every student trains in an environment that values discipline, respect, and continuous improvement. We are proud to have participated in the Lao Taekwondo Federation Championship and continue to build the next generation of Lao martial artists.
-      </p>
-
-      <div class="about-founded">
-        <span class="about-founded-icon">&#127358;</span>
-        Founded by Southida Phommavong &nbsp;·&nbsp; 12 June 2010
-      </div>
-
-      <div class="about-pillars">
-        <div class="pillar reveal d1">
-          <div class="pillar-val">100+</div>
-          <div class="pillar-name">Active Students</div>
-        </div>
-        <div class="pillar reveal d2">
-          <div class="pillar-val">15+</div>
-          <div class="pillar-name">Years Established</div>
-        </div>
-        <div class="pillar reveal d3">
-          <div class="pillar-val">5</div>
-          <div class="pillar-name">Dedicated Coaches</div>
-        </div>
-        <div class="pillar reveal d4">
-          <div class="pillar-val">All</div>
-          <div class="pillar-name">Ages Welcome</div>
-        </div>
+    <div class="about-text" data-r data-d="2">
+      <p class="body">Tawan Taekwondo Club was founded on <strong>12 June 2010</strong> by <strong>Southida Phommavong</strong> with a simple belief: that Taekwondo is not only a sport, but a path to building better people. Based at the <strong>Budo Centre, Vientiane</strong>, the club has grown over 15 years into a home for more than <strong>100 active students</strong> of all ages and skill levels.</p>
+      <p class="body">From first-time beginners stepping onto the mat to competitive athletes representing Laos at national level — every student trains in an environment that values discipline, respect, and continuous improvement.</p>
+      <div class="about-founded"><span class="about-founded-icon">&#127358;</span>Founded by Southida Phommavong &nbsp;·&nbsp; 12 June 2010</div>
+      <div class="pillars">
+        <div class="pillar" data-r data-d="1"><div class="pillar-val">100+</div><div class="pillar-name">Active Students</div></div>
+        <div class="pillar" data-r data-d="2"><div class="pillar-val">15+</div><div class="pillar-name">Years Established</div></div>
+        <div class="pillar" data-r data-d="3"><div class="pillar-val">5</div><div class="pillar-name">Dedicated Coaches</div></div>
+        <div class="pillar" data-r data-d="4"><div class="pillar-val">All</div><div class="pillar-name">Ages Welcome</div></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ─── TAEKWONDO OVERVIEW ─── -->
-<section class="section section--dark" id="overview">
-  <div class="label reveal" style="color:#fca5a5">What Is Taekwondo</div>
-  <div class="overview-intro">
-    <h2 class="h2 reveal d1" style="color:white">More than kicks.<br><span>A complete</span> discipline.</h2>
-    <p class="overview-desc reveal d2">
-      Taekwondo is a Korean martial art and Olympic sport known for its emphasis on head-height kicks, fast kicking combinations, and jumping and spinning kicks. It develops the full person — body, mind, and character — through structured training, progressive belt ranks, and both individual and team competition.
-    </p>
-  </div>
-
-  <div class="label reveal" style="color:#fca5a5;margin-bottom:1.25rem">Disciplines We Teach</div>
-  <div class="types-grid">
-    <div class="type-card reveal">
-      <div class="type-number">01 &nbsp;·&nbsp; Sparring</div>
-      <div class="type-name">Kyorugi (Olympic)</div>
-      <div class="type-desc">Full-contact sparring following World Taekwondo rules — the format used in the Olympic Games. Trains speed, timing, footwork, and strategic thinking under pressure.</div>
+<!-- OVERVIEW -->
+<section class="section section--dark grid-bg" id="overview">
+  <div class="sec-inner">
+    <div class="lbl lbl--lt" data-r>What Is Taekwondo</div>
+    <div class="overview-intro">
+      <h2 class="h2 h2--w" data-r data-d="1">More than kicks.<br><span>A complete</span> discipline.</h2>
+      <p class="overview-desc" data-r data-d="2">Taekwondo is a traditional Korean martial art and a globally recognized combat sport, famous for its dynamic, high-flying kicks and fast-paced footwork. Translated literally, it means "the way of the foot and the fist" (Tae = foot, Kwon = fist, Do = way). Beyond the physical aspect, it emphasizes mental discipline, respect, and self-defense.</p>
     </div>
-    <div class="type-card reveal d1">
-      <div class="type-number">02 &nbsp;·&nbsp; Forms</div>
-      <div class="type-name">Poomsae</div>
-      <div class="type-desc">A sequence of offensive and defensive techniques performed in a set pattern. Develops precision, balance, breath control, and the deepest understanding of Taekwondo movement.</div>
-    </div>
-    <div class="type-card reveal d2">
-      <div class="type-number">03 &nbsp;·&nbsp; Practical</div>
-      <div class="type-name">Self-Defense</div>
-      <div class="type-desc">Applied Taekwondo techniques in realistic scenarios. Builds situational awareness, practical response skills, and the confidence to move safely in the world.</div>
-    </div>
-  </div>
-
-  <div class="label reveal" style="color:#fca5a5;margin-bottom:1.25rem;margin-top:3.5rem">Why Train With Us</div>
-  <div class="benefits-grid">
-    <div class="benefit-card reveal">
-      <div class="benefit-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+    <div class="lbl lbl--lt" data-r style="margin-bottom:1.25rem">Disciplines We Teach</div>
+    <div class="types-grid">
+      <div class="type-card" data-r data-tilt><div class="glare"></div>
+        <div class="type-num">01 · Sparring</div>
+        <div class="type-name">Kyorugi</div>
+        <div class="type-desc">Full-contact sparring following World Taekwondo rules — the format used in the Olympic Games. Trains speed, timing, footwork, and strategic thinking under pressure.</div>
       </div>
-      <div class="benefit-title">Mobility &amp; Flexibility</div>
-      <div class="benefit-desc">Dynamic kicking and stretching routines progressively extend your range of motion and keep joints healthy for life.</div>
-    </div>
-    <div class="benefit-card reveal d1">
-      <div class="benefit-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+      <div class="type-card" data-r data-d="1" data-tilt><div class="glare"></div>
+        <div class="type-num">02 · Forms</div>
+        <div class="type-name">Poomsae</div>
+        <div class="type-desc">A sequence of offensive and defensive techniques performed in a set pattern. Develops precision, balance, breath control, and the deepest understanding of Taekwondo movement.</div>
       </div>
-      <div class="benefit-title">Sharper Cognitive Function</div>
-      <div class="benefit-desc">Pattern memorisation, split-second reaction training, and strategic sparring sharpen focus, memory, and mental clarity.</div>
-    </div>
-    <div class="benefit-card reveal d2">
-      <div class="benefit-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 3a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3H6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3V6a3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/></svg>
+      <div class="type-card" data-r data-d="2" data-tilt><div class="glare"></div>
+        <div class="type-num">03 · Demonstration</div>
+        <div class="type-name">Kyukpa &amp; Showmanship</div>
+        <div class="type-desc">Acrobatic board-breaking and choreographed performance routines that showcase the power, precision, and artistry of Taekwondo. A thrilling blend of athleticism and spectacle.</div>
       </div>
-      <div class="benefit-title">Strength &amp; Power</div>
-      <div class="benefit-desc">Full-body conditioning through kicking combinations, core exercises, and resistance training builds functional strength in every session.</div>
     </div>
-    <div class="benefit-card reveal d3">
-      <div class="benefit-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+    <div class="lbl lbl--lt" data-r style="margin-bottom:1.25rem;margin-top:3.5rem">Why Train With Us</div>
+    <div class="benefits-grid">
+      <div class="benefit-card" data-r>
+        <div class="benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+        <div class="benefit-title">Mobility &amp; Flexibility</div>
+        <div class="benefit-desc">Dynamic kicking and stretching routines progressively extend your range of motion and keep joints healthy for life.</div>
       </div>
-      <div class="benefit-title">Cardiovascular Fitness</div>
-      <div class="benefit-desc">High-intensity interval training within each session significantly improves heart health, endurance, and overall fitness levels.</div>
+      <div class="benefit-card" data-r data-d="1">
+        <div class="benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg></div>
+        <div class="benefit-title">Sharper Cognitive Function</div>
+        <div class="benefit-desc">Pattern memorisation, split-second reaction training, and strategic sparring sharpen focus, memory, and mental clarity.</div>
+      </div>
+      <div class="benefit-card" data-r data-d="2">
+        <div class="benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 3a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3H6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3V6a3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/></svg></div>
+        <div class="benefit-title">Strength &amp; Power</div>
+        <div class="benefit-desc">Full-body conditioning through kicking combinations, core exercises, and resistance training builds functional strength in every session.</div>
+      </div>
+      <div class="benefit-card" data-r data-d="3">
+        <div class="benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+        <div class="benefit-title">Cardiovascular Fitness</div>
+        <div class="benefit-desc">High-intensity interval training within each session significantly improves heart health, endurance, and overall fitness levels.</div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ─── COMPETITION SHOWCASE ─── -->
+<!-- SHOWCASE -->
 <section class="section section--white" style="padding-top:0">
-  <div class="showcase-grid reveal">
+  <div class="showcase-grid" data-r>
     <div class="showcase-main">
-      <img src="photos/group.jpg"
-           alt="Tawan Taekwondo Club at the 9th Lao Taekwondo Federation Championship" />
-      <div class="showcase-overlay">
-        <div class="showcase-caption">9th Lao Taekwondo Federation Championship · 02 May 2026</div>
-      </div>
+      <img src="photos/group.jpg" alt="9th Lao Taekwondo Federation Championship" />
+      <div class="showcase-overlay"><div class="showcase-cap">9th Lao Taekwondo Federation Championship · 02 May 2026</div></div>
     </div>
     <div class="showcase-col">
       <div class="showcase-sub">
-        <img src="photos/founder.jpg"
-             alt="Founder Southida Phommavong with Coach Alex" />
-        <div class="showcase-overlay">
-          <div class="showcase-caption">Kyorugi · Full Contact Sparring</div>
-        </div>
+        <img src="photos/competition.jpg" alt="Coach and student during competition" />
+        <div class="showcase-overlay"><div class="showcase-cap">Kyorugi · Full Contact Sparring</div></div>
       </div>
-      <div class="showcase-sub" style="background:var(--black);display:flex;align-items:center;justify-content:center;padding:2rem;">
-        <div style="text-align:center">
-          <div style="font-size:2.5rem;font-weight:900;letter-spacing:-0.05em;color:white;line-height:1">Lao TKD<br>Federation</div>
-          <div style="font-size:0.75rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-top:0.5rem">Championship Participants</div>
-        </div>
+      <div class="showcase-sub">
+        <img src="photos/southida-trophy.jpg" alt="Founder holding a trophy" />
+        <div class="showcase-overlay"><div class="showcase-cap">Founder Southida Phommavong</div></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ─── SCHEDULE ─── -->
-<section class="section section--light" id="schedule">
-  <div class="label reveal">Class Schedule</div>
+<!-- SCHEDULE -->
+<section class="section section--surface" id="schedule">
+  <div class="lbl" data-r>Class Schedule</div>
   <div class="schedule-layout">
     <div>
-      <h2 class="h2 reveal d1">Train on your<br><span>schedule</span></h2>
-      <p class="body-text reveal d2" style="margin-top:1rem;margin-bottom:2.5rem">We run 6 days a week across junior and adult sessions. All classes are held at the <strong>Budo Centre, Vientiane</strong>.</p>
-
-      <div class="schedule-days reveal d2">
-        <div class="schedule-day">
-          <div class="schedule-day-name">Monday</div>
-          <div class="schedule-classes">
-            <div class="schedule-class-item">
-              <div>
-                <div class="sched-class-name">All Classes</div>
-                <div class="sched-time">5:30 PM – 7:00 PM</div>
-              </div>
-              <span class="sched-badge sched-badge--all">All Levels</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="schedule-day">
-          <div class="schedule-day-name">Wednesday</div>
-          <div class="schedule-classes">
-            <div class="schedule-class-item">
-              <div>
-                <div class="sched-class-name">All Classes</div>
-                <div class="sched-time">5:30 PM – 7:00 PM</div>
-              </div>
-              <span class="sched-badge sched-badge--all">All Levels</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="schedule-day">
-          <div class="schedule-day-name">Friday</div>
-          <div class="schedule-classes">
-            <div class="schedule-class-item">
-              <div>
-                <div class="sched-class-name">All Classes</div>
-                <div class="sched-time">5:30 PM – 7:00 PM</div>
-              </div>
-              <span class="sched-badge sched-badge--all">All Levels</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="schedule-day">
-          <div class="schedule-day-name">Saturday</div>
-          <div class="schedule-classes">
-            <div class="schedule-class-item">
-              <div>
-                <div class="sched-class-name">Junior Class</div>
-                <div class="sched-time">1:00 PM – 2:25 PM</div>
-              </div>
-              <span class="sched-badge sched-badge--junior">Junior</span>
-            </div>
-            <div class="schedule-class-item">
-              <div>
-                <div class="sched-class-name">Teenager / Adult Class</div>
-                <div class="sched-time">2:30 PM – 4:00 PM</div>
-              </div>
-              <span class="sched-badge sched-badge--adult">Teen · Adult</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="schedule-day">
-          <div class="schedule-day-name">Sunday</div>
-          <div class="schedule-classes">
-            <div class="schedule-class-item">
-              <div>
-                <div class="sched-class-name">Junior Class</div>
-                <div class="sched-time">1:00 PM – 2:25 PM</div>
-              </div>
-              <span class="sched-badge sched-badge--junior">Junior</span>
-            </div>
-            <div class="schedule-class-item">
-              <div>
-                <div class="sched-class-name">Teenager / Adult Class</div>
-                <div class="sched-time">2:30 PM – 4:00 PM</div>
-              </div>
-              <span class="sched-badge sched-badge--adult">Teen · Adult</span>
-            </div>
-          </div>
-        </div>
+      <h2 class="h2" data-r data-d="1">Train on your<br><span>schedule</span></h2>
+      <p class="body" data-r data-d="2" style="margin-top:1rem;margin-bottom:2.5rem">We run 6 days a week across junior and adult sessions. All classes are held at the <strong>Budo Centre, Vientiane</strong>.</p>
+      <div class="sched-days" data-r data-d="2">
+        <div class="sched-day"><div class="sched-day-name">Monday</div><div class="sched-classes"><div class="sched-item"><div><div class="sched-class-name">All Classes</div><div class="sched-time">5:30 PM – 7:00 PM</div></div><span class="sched-badge sched-badge--all">All Levels</span></div></div></div>
+        <div class="sched-day"><div class="sched-day-name">Wednesday</div><div class="sched-classes"><div class="sched-item"><div><div class="sched-class-name">All Classes</div><div class="sched-time">5:30 PM – 7:00 PM</div></div><span class="sched-badge sched-badge--all">All Levels</span></div></div></div>
+        <div class="sched-day"><div class="sched-day-name">Friday</div><div class="sched-classes"><div class="sched-item"><div><div class="sched-class-name">All Classes</div><div class="sched-time">5:30 PM – 7:00 PM</div></div><span class="sched-badge sched-badge--all">All Levels</span></div></div></div>
+        <div class="sched-day"><div class="sched-day-name">Saturday</div><div class="sched-classes"><div class="sched-item"><div><div class="sched-class-name">Junior Class</div><div class="sched-time">1:00 PM – 2:25 PM</div></div><span class="sched-badge sched-badge--j">Junior</span></div><div class="sched-item"><div><div class="sched-class-name">Teenager / Adult Class</div><div class="sched-time">2:30 PM – 4:00 PM</div></div><span class="sched-badge sched-badge--a">Teen · Adult</span></div></div></div>
+        <div class="sched-day"><div class="sched-day-name">Sunday</div><div class="sched-classes"><div class="sched-item"><div><div class="sched-class-name">Junior Class</div><div class="sched-time">1:00 PM – 2:25 PM</div></div><span class="sched-badge sched-badge--j">Junior</span></div><div class="sched-item"><div><div class="sched-class-name">Teenager / Adult Class</div><div class="sched-time">2:30 PM – 4:00 PM</div></div><span class="sched-badge sched-badge--a">Teen · Adult</span></div></div></div>
       </div>
     </div>
-
-    <div class="reveal d3">
-      <div class="schedule-cta-box">
-        <div class="h3">Ready to start?</div>
+    <div data-r data-d="3">
+      <div class="sched-cta-box">
+        <div class="h3" style="font-size:1.875rem;font-weight:900;letter-spacing:-.04em;line-height:1.05;margin-bottom:1rem;color:white">Ready to start?</div>
         <p>Message us on WhatsApp to book your first session. No experience required — just show up ready to learn.</p>
         <a href="https://wa.me/02022112211" target="_blank" rel="noopener" class="btn-primary">
           <svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.555 4.116 1.526 5.845L0 24l6.334-1.507A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.89 0-3.663-.5-5.194-1.378L3 21.5l.908-3.726A10.018 10.018 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
           Book via WhatsApp
         </a>
-        <div class="schedule-note">Or email us at yeealal@gmail.com</div>
+        <div class="sched-note">Or email us at yeealal@gmail.com</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ─── PRICING ─── -->
+<!-- PRICING -->
 <section class="section section--white" id="pricing">
-  <div class="label reveal">Membership</div>
-  <h2 class="h2 reveal d1">Simple, transparent<br><span>pricing</span></h2>
-  <p class="body-text reveal d2" style="margin-top:0.875rem;max-width:50ch">All prices in Lao Kip. Registration fee of <strong>50,000 Kip</strong> applies once — and includes your free club t-shirt.</p>
-
+  <div class="lbl" data-r>Membership</div>
+  <h2 class="h2" data-r data-d="1">Simple, transparent<br><span>pricing</span></h2>
+  <p class="body" data-r data-d="2" style="margin-top:.875rem;max-width:50ch">All prices in Lao Kip. A one-time registration fee of <strong>50,000 Kip</strong> applies on joining. Club t-shirt is available separately.</p>
   <div class="pricing-grid">
-    <div class="price-card price-card--default reveal">
+    <div class="price-card price-card--default" data-r data-tilt>
+      <div class="glare"></div>
       <div class="price-sessions">2 Sessions / Week</div>
-      <div class="price-amount"><span class="price-currency">₭</span>450,000</div>
+      <div class="price-amount"><span class="price-cur">₭</span>450,000</div>
       <div class="price-period">per month</div>
-      <hr class="price-divider" />
+      <hr class="price-div" />
       <div class="price-perks">
         <div class="price-perk"><div class="perk-check"><svg viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>2 classes per week</div>
         <div class="price-perk"><div class="perk-check"><svg viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>All age groups</div>
@@ -986,13 +618,13 @@
       </div>
       <a href="https://wa.me/02022112211" target="_blank" rel="noopener" class="btn-primary">Get Started</a>
     </div>
-
-    <div class="price-card price-card--featured reveal d1">
+    <div class="price-card price-card--feat" data-r data-d="1" data-tilt>
+      <div class="glare"></div>
       <div class="price-badge">Most Popular</div>
       <div class="price-sessions">3 Sessions / Week</div>
-      <div class="price-amount"><span class="price-currency">₭</span>550,000</div>
+      <div class="price-amount"><span class="price-cur">₭</span>550,000</div>
       <div class="price-period">per month</div>
-      <hr class="price-divider" />
+      <hr class="price-div" />
       <div class="price-perks">
         <div class="price-perk"><div class="perk-check"><svg viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>3 classes per week</div>
         <div class="price-perk"><div class="perk-check"><svg viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>All age groups</div>
@@ -1002,12 +634,12 @@
       </div>
       <a href="https://wa.me/02022112211" target="_blank" rel="noopener" class="btn-primary">Get Started</a>
     </div>
-
-    <div class="price-card price-card--default reveal d2">
+    <div class="price-card price-card--default" data-r data-d="2" data-tilt>
+      <div class="glare"></div>
       <div class="price-sessions">5 Sessions / Week</div>
-      <div class="price-amount"><span class="price-currency">₭</span>750,000</div>
+      <div class="price-amount"><span class="price-cur">₭</span>750,000</div>
       <div class="price-period">per month</div>
-      <hr class="price-divider" />
+      <hr class="price-div" />
       <div class="price-perks">
         <div class="price-perk"><div class="perk-check"><svg viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>5 classes per week</div>
         <div class="price-perk"><div class="perk-check"><svg viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>All age groups</div>
@@ -1018,18 +650,22 @@
       <a href="https://wa.me/02022112211" target="_blank" rel="noopener" class="btn-primary">Get Started</a>
     </div>
   </div>
-
-  <div class="pricing-extras reveal d3">
+  <div class="pricing-extras" data-r data-d="3" style="grid-template-columns:1fr 1fr 1fr">
     <div class="extras-card">
       <h4>Registration Fee</h4>
       <div class="price-line">₭ 50,000</div>
-      <p>One-time fee on joining. Includes your <strong>free Tawan TKD club t-shirt</strong>.</p>
+      <p>One-time fee on joining. Does not include a club t-shirt.</p>
+    </div>
+    <div class="extras-card">
+      <h4>Club T-Shirt</h4>
+      <div class="price-line">₭ 200,000</div>
+      <p>Official Tawan TKD club t-shirt. Available to all members. Contact us to order your size.</p>
     </div>
     <div class="extras-card">
       <h4>Taekwondo Dobok</h4>
       <div class="price-line">₭ 500,000</div>
-      <p>Price for the Taekwondo uniform (Dobok) only. Available in sizes 110–190. For optional protective gear pricing, please contact us directly.</p>
-      <a href="https://wa.me/02022112211" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:0.4rem;margin-top:0.875rem;font-size:0.8rem;font-weight:700;color:var(--accent);text-decoration:none;">
+      <p>Taekwondo uniform (Dobok). Available in sizes 110–190. Contact us for protective gear pricing.</p>
+      <a href="https://wa.me/02022112211" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:.4rem;margin-top:.875rem;font-size:.8rem;font-weight:700;color:var(--red);text-decoration:none">
         Ask about gear pricing
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:13px;height:13px"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </a>
@@ -1037,215 +673,284 @@
   </div>
 </section>
 
-<!-- ─── EQUIPMENT ─── -->
-<section class="section section--light" id="equipment">
-  <div class="label reveal">Gear & Equipment</div>
-  <h2 class="h2 reveal d1">Everything you need<br><span>to train</span></h2>
+<!-- EQUIPMENT -->
+<section class="section section--surface" id="equipment">
+  <div class="lbl" data-r>Gear &amp; Equipment</div>
+  <h2 class="h2" data-r data-d="1">Everything you need<br><span>to train</span></h2>
 
-  <div class="equipment-layout">
-    <div>
-      <div class="dobok-section reveal d1">
-        <h3>Taekwondo Dobok (Uniform)</h3>
-        <p class="body-text" style="margin-bottom:1.25rem">Available in all standard sizes. Includes all sizes below — ask your coach which size is right for you.</p>
-        <div class="size-grid">
-          <div class="size-chip">110</div>
-          <div class="size-chip">120</div>
-          <div class="size-chip">130</div>
-          <div class="size-chip">140</div>
-          <div class="size-chip">150</div>
-          <div class="size-chip">160</div>
-          <div class="size-chip">170</div>
-          <div class="size-chip">180</div>
-          <div class="size-chip">190</div>
+  <!-- 3D Dobok Viewer -->
+  <div class="dobok-3d-wrap" data-r data-d="2">
+    <div class="dobok-canvas-col">
+      <div class="dobok-canvas-container">
+        <canvas id="dobok-canvas"></canvas>
+        <div class="dobok-hint">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M7 11.5a4.5 4.5 0 0 1 9 0v1a4.5 4.5 0 0 1-9 0v-1z"/><path d="M12 16v5M8 21h8"/></svg>
+          Drag to rotate 360°
         </div>
-        <div class="dobok-price-tag">
-          <div>
-            <div class="label-text">Included in</div>
-            <div class="amount">Equipment Package</div>
+      </div>
+      <div class="dobok-badge-row">
+        <span class="dobok-badge">&#9654; Interactive 3D Model</span>
+      </div>
+    </div>
+    <div class="dobok-details-col" data-r data-d="3">
+      <h3>Taekwondo Dobok (Uniform)</h3>
+      <p class="body" style="margin-bottom:1.25rem">Traditional Taekwondo uniform crafted for full range of motion. Available in all standard sizes — ask your coach which is right for you.</p>
+      <div class="size-grid">
+        <div class="size-chip">110</div><div class="size-chip">120</div><div class="size-chip">130</div>
+        <div class="size-chip">140</div><div class="size-chip">150</div><div class="size-chip">160</div>
+        <div class="size-chip">170</div><div class="size-chip">180</div><div class="size-chip">190</div>
+      </div>
+      <div class="dobok-tag" style="margin-top:1.5rem"><div><div class="lbl-t">Uniform Price</div><div class="amt">₭ 500,000</div></div></div>
+    </div>
+  </div>
+
+  <!-- Protective Gear -->
+  <div class="gear-section-standalone" data-r data-d="4">
+    <h3>Optional Protective Gear</h3>
+    <p class="body" style="margin-bottom:1.25rem">Recommended for sparring and competition training. Ask your coach what's needed for your level.</p>
+    <div class="gear-list">
+      <div class="gear-item"><div class="gear-dot"></div>Chest Guard<span class="gear-tag">Contact for price</span></div>
+      <div class="gear-item"><div class="gear-dot"></div>Mouth Guard<span class="gear-tag">Contact for price</span></div>
+      <div class="gear-item"><div class="gear-dot"></div>Head Guard<span class="gear-tag">Contact for price</span></div>
+      <div class="gear-item"><div class="gear-dot"></div>Arm &amp; Shin Guard<span class="gear-tag">Contact for price</span></div>
+      <div class="gear-item"><div class="gear-dot"></div>Glove<span class="gear-tag">Contact for price</span></div>
+      <div class="gear-item"><div class="gear-dot"></div>Groin Guard<span class="gear-tag">Contact for price</span></div>
+      <div class="gear-item"><div class="gear-dot"></div>Foot Guard<span class="gear-tag">Contact for price</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOUNDERS -->
+<section class="section section--dark" id="founders">
+  <div class="sec-inner">
+    <div class="lbl lbl--lt" data-r>Our Founders</div>
+    <h2 class="h2 h2--w" data-r data-d="1">The vision behind<br><span>Tawan TKD</span></h2>
+    <p class="body body--m" data-r data-d="2" style="margin-top:1rem;max-width:54ch">Tawan Taekwondo Club was built on the dedication and expertise of two passionate martial artists who brought their dream of a world-class club to Vientiane.</p>
+    <div class="founders-grid">
+      <div class="founder-card" data-r>
+        <div class="founder-img"><img src="photos/founder.jpg" alt="Ms Southida Phommavong — Founder" /></div>
+        <div class="founder-body">
+          <div class="founder-role">Founder &amp; Club Director</div>
+          <div class="founder-name">Ms Southida<br>Phommavong</div>
+          <div class="founder-bio">Southida founded Tawan Taekwondo Club on 12 June 2010 with a vision to bring disciplined, high-quality Taekwondo training to Vientiane. Her leadership and passion have shaped the club into a home for over 100 students across all ages and skill levels.</div>
+          <div class="founder-badge">&#127358; Founded 12 June 2010</div>
+        </div>
+      </div>
+      <div class="founder-card" data-r data-d="1">
+        <div class="founder-img"><img src="photos/co-founder.jpg" alt="Mr Detdavong Boutnakho — Co-Founder" /></div>
+        <div class="founder-body">
+          <div class="founder-role">Co-Founder &amp; Master Instructor</div>
+          <div class="founder-name">Mr Detdavong<br>Boutnakho</div>
+          <div class="founder-bio">Master Detdavong co-founded the club alongside Southida, bringing deep technical expertise and a lifelong commitment to Taekwondo. His mastery of both Kyorugi and Poomsae has set the standard for every coach and student at the club.</div>
+          <div class="founder-badge">&#11088; Master Instructor</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COACHES -->
+<section class="section section--dark grid-bg" id="coaches">
+  <div class="sec-inner">
+    <div class="lbl lbl--lt" data-r>The Coaching Team</div>
+    <h2 class="h2 h2--w" data-r data-d="1">Guided by<br><span>dedicated coaches</span></h2>
+    <p class="body body--m" data-r data-d="2" style="margin-top:1rem;max-width:52ch">Every coach at Tawan TKD is committed to your growth — from your first white belt session to competing on the national stage. <em style="color:rgba(255,255,255,.3);font-style:normal;font-size:.85rem">Hover each card to learn more.</em></p>
+    <div class="coaches-grid">
+      <div class="coach-card" data-r>
+        <div class="coach-card-inner">
+          <div class="coach-front">
+            <img src="photos/coach-alex.jpg" alt="Coach Alex" />
+            <div class="coach-front-body">
+              <div class="coach-role-tag coach-role-tag--head">Head Coach</div>
+              <div class="coach-name-f">Alex</div>
+              <div class="coach-spec-f">4th Dan Black Belt · Lead instructor</div>
+            </div>
+          </div>
+          <div class="coach-back">
+            <div class="coach-back-role">Head Coach · 4th Dan Black Belt</div>
+            <div class="coach-back-name">Alex</div>
+            <div class="coach-back-spec">Lead instructor &amp; overall program director. Oversees all training programs and student progression at Tawan TKD.</div>
+            <a href="https://wa.me/02022112211" target="_blank" rel="noopener" class="coach-back-link">Train with Alex <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+          </div>
+        </div>
+      </div>
+      <div class="coach-card" data-r data-d="1">
+        <div class="coach-card-inner">
+          <div class="coach-front">
+            <img src="photos/coach-alan.jpg" alt="Coach Alan" />
+            <div class="coach-front-body">
+              <div class="coach-role-tag">Coach</div>
+              <div class="coach-name-f">Alan</div>
+              <div class="coach-spec-f">4th Dan Black Belt · Kyorugi specialist</div>
+            </div>
+          </div>
+          <div class="coach-back">
+            <div class="coach-back-role">Coach · 4th Dan Black Belt</div>
+            <div class="coach-back-name">Alan</div>
+            <div class="coach-back-spec">Kyorugi sparring &amp; competition preparation specialist. Prepares athletes for national-level tournaments.</div>
+            <a href="https://wa.me/02022112211" target="_blank" rel="noopener" class="coach-back-link">Train with Alan <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+          </div>
+        </div>
+      </div>
+      <div class="coach-card" data-r data-d="2">
+        <div class="coach-card-inner">
+          <div class="coach-front">
+            <img src="photos/coach-bird.jpg" alt="Coach Bird" />
+            <div class="coach-front-body">
+              <div class="coach-role-tag">Coach</div>
+              <div class="coach-name-f">Bird</div>
+              <div class="coach-spec-f">4th Dan Black Belt · Foundations &amp; juniors</div>
+            </div>
+          </div>
+          <div class="coach-back">
+            <div class="coach-back-role">Coach · 4th Dan Black Belt</div>
+            <div class="coach-back-name">Bird</div>
+            <div class="coach-back-spec">Foundations, technique &amp; junior development. Specialises in building a strong technical base for new students of all ages.</div>
+            <a href="https://wa.me/02022112211" target="_blank" rel="noopener" class="coach-back-link">Train with Bird <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+          </div>
+        </div>
+      </div>
+      <div class="coach-card" data-r data-d="3">
+        <div class="coach-card-inner">
+          <div class="coach-front">
+            <img src="photos/coach-bom.jpg" alt="Coach Bom" />
+            <div class="coach-front-body">
+              <div class="coach-role-tag">Coach</div>
+              <div class="coach-name-f">Bom</div>
+              <div class="coach-spec-f">3rd Dan Black Belt · Youth class support</div>
+            </div>
+          </div>
+          <div class="coach-back">
+            <div class="coach-back-role">Coach · 3rd Dan Black Belt</div>
+            <div class="coach-back-name">Bom</div>
+            <div class="coach-back-spec">Substitute instructor &amp; youth class support. Ensures consistent quality training for all junior and beginner students.</div>
+            <a href="https://wa.me/02022112211" target="_blank" rel="noopener" class="coach-back-link">Train with Bom <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+          </div>
+        </div>
+      </div>
+      <div class="coach-card" data-r data-d="4">
+        <div class="coach-card-inner">
+          <div class="coach-front">
+            <img src="photos/coach-gno.jpg" alt="Coach Gno" />
+            <div class="coach-front-body">
+              <div class="coach-role-tag">Poomsae Coach</div>
+              <div class="coach-name-f">Gno</div>
+              <div class="coach-spec-f">3rd Dan Black Belt · Poomsae specialist</div>
+            </div>
+          </div>
+          <div class="coach-back">
+            <div class="coach-back-role">Poomsae Coach · 3rd Dan Black Belt</div>
+            <div class="coach-back-name">Gno</div>
+            <div class="coach-back-spec">Poomsae forms specialist &amp; pattern instruction. Develops precision, balance, and mastery of Taekwondo movement sequences.</div>
+            <a href="https://wa.me/02022112211" target="_blank" rel="noopener" class="coach-back-link">Train with Gno <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
           </div>
         </div>
       </div>
     </div>
-
-    <div class="gear-section reveal d2">
-      <h3>Optional Protective Gear</h3>
-      <p class="body-text" style="margin-bottom:1.25rem">Recommended for sparring and competition training. Ask your coach what's needed for your class level.</p>
-      <div class="gear-list">
-        <div class="gear-item"><div class="gear-dot"></div>Chest Guard <span class="gear-tag">Contact for price</span></div>
-        <div class="gear-item"><div class="gear-dot"></div>Mouth Guard <span class="gear-tag">Contact for price</span></div>
-        <div class="gear-item"><div class="gear-dot"></div>Head Guard <span class="gear-tag">Contact for price</span></div>
-        <div class="gear-item"><div class="gear-dot"></div>Arm &amp; Shin Guard <span class="gear-tag">Contact for price</span></div>
-        <div class="gear-item"><div class="gear-dot"></div>Glove <span class="gear-tag">Contact for price</span></div>
-        <div class="gear-item"><div class="gear-dot"></div>Groin Guard <span class="gear-tag">Contact for price</span></div>
-        <div class="gear-item"><div class="gear-dot"></div>Foot Guard <span class="gear-tag">Contact for price</span></div>
-      </div>
-    </div>
   </div>
 </section>
 
-<!-- ─── COACHES ─── -->
-<section class="section section--dark" id="coaches">
-  <div class="label reveal" style="color:#fca5a5">The Coaching Team</div>
-  <h2 class="h2 reveal d1" style="color:white">Guided by<br><span>dedicated coaches</span></h2>
-  <p class="body-text body-text--light reveal d2" style="margin-top:1rem;max-width:52ch">Every coach at Tawan TKD is committed to your growth — from your very first white belt session to competing on the national stage.</p>
+<!-- GALLERY -->
+<section class="section section--surface" id="gallery">
+  <div class="lbl" data-r>Photo Gallery</div>
+  <h2 class="h2" data-r data-d="1">Life at<br><span>Tawan TKD</span></h2>
+  <p class="body" data-r data-d="2" style="margin-top:.875rem;max-width:52ch">Training, competing, and growing together — a glimpse into everyday life at our club.</p>
 
-  <div class="coaches-grid">
-    <div class="coach-card reveal">
-      <div class="coach-top">
-        <img src="photos/coach-alex.jpg" alt="Coach Alex — Head Coach" />
-        <div class="coach-accent-bar"></div>
-      </div>
-      <div class="coach-body">
-        <div class="coach-role-tag coach-role-tag--head">Head Coach</div>
-        <div class="coach-name">Alex</div>
-        <div class="coach-specialty">Lead instructor &amp; overall program director</div>
-      </div>
+  <div class="gallery-slider-wrap" data-r data-d="3">
+    <div class="gallery-slides" id="gallerySlides">
+      <div class="gallery-slide"><img src="photos/club-overview.jpg" alt="Our Club" /><div class="gallery-slide-overlay"></div><div class="gallery-caption"><span class="gallery-caption-text">Our Club</span><span class="gallery-caption-num">01 / 08</span></div></div>
+      <div class="gallery-slide"><img src="photos/competition.jpg" alt="Competition Day" /><div class="gallery-slide-overlay"></div><div class="gallery-caption"><span class="gallery-caption-text">Competition Day</span><span class="gallery-caption-num">02 / 08</span></div></div>
+      <div class="gallery-slide"><img src="photos/group.jpg" alt="Team Photo" /><div class="gallery-slide-overlay"></div><div class="gallery-caption"><span class="gallery-caption-text">Team Photo</span><span class="gallery-caption-num">03 / 08</span></div></div>
+      <div class="gallery-slide"><img src="photos/group-pic.jpg" alt="Our Team" /><div class="gallery-slide-overlay"></div><div class="gallery-caption"><span class="gallery-caption-text">Our Team</span><span class="gallery-caption-num">04 / 08</span></div></div>
+      <div class="gallery-slide"><img src="photos/group-picture.jpg" alt="Together We Train" /><div class="gallery-slide-overlay"></div><div class="gallery-caption"><span class="gallery-caption-text">Together We Train</span><span class="gallery-caption-num">05 / 08</span></div></div>
+      <div class="gallery-slide"><img src="photos/group-photo.jpg" alt="Club Members" /><div class="gallery-slide-overlay"></div><div class="gallery-caption"><span class="gallery-caption-text">Club Members</span><span class="gallery-caption-num">06 / 08</span></div></div>
+      <div class="gallery-slide"><img src="photos/mini-warrior.jpg" alt="Mini Warriors" /><div class="gallery-slide-overlay"></div><div class="gallery-caption"><span class="gallery-caption-text">Mini Warriors</span><span class="gallery-caption-num">07 / 08</span></div></div>
+      <div class="gallery-slide"><img src="photos/founder-and-alex.jpg" alt="Founder &amp; Coach Alex" /><div class="gallery-slide-overlay"></div><div class="gallery-caption"><span class="gallery-caption-text">Founder &amp; Coach Alex</span><span class="gallery-caption-num">08 / 08</span></div></div>
     </div>
-    <div class="coach-card reveal d1">
-      <div class="coach-top">
-        <img src="photos/coach-alan.jpg" alt="Coach Alan — Head Coach" />
-        <div class="coach-accent-bar"></div>
-      </div>
-      <div class="coach-body">
-        <div class="coach-role-tag coach-role-tag--head">Head Coach</div>
-        <div class="coach-name">Alan</div>
-        <div class="coach-specialty">Kyorugi sparring &amp; competition preparation</div>
-      </div>
-    </div>
-    <div class="coach-card reveal d2">
-      <div class="coach-top">
-        <img src="photos/coach-bird.jpg" alt="Coach Bird" />
-        <div class="coach-accent-bar"></div>
-      </div>
-      <div class="coach-body">
-        <div class="coach-role-tag">Coach</div>
-        <div class="coach-name">Bird</div>
-        <div class="coach-specialty">Foundations, technique &amp; junior development</div>
-      </div>
-    </div>
-    <div class="coach-card reveal d3">
-      <div class="coach-top">
-        <div class="coach-monogram">B</div>
-        <div class="coach-accent-bar"></div>
-      </div>
-      <div class="coach-body">
-        <div class="coach-role-tag">Coach</div>
-        <div class="coach-name">Bom</div>
-        <div class="coach-specialty">Substitute instructor &amp; youth class support</div>
-      </div>
-    </div>
-    <div class="coach-card reveal d4">
-      <div class="coach-top">
-        <div class="coach-monogram">G</div>
-        <div class="coach-accent-bar"></div>
-      </div>
-      <div class="coach-body">
-        <div class="coach-role-tag">Poomsae Coach</div>
-        <div class="coach-name">Genoz</div>
-        <div class="coach-specialty">Poomsae forms specialist &amp; pattern instruction</div>
-      </div>
-    </div>
+    <button class="gallery-nav gallery-nav--prev" id="gallPrev" aria-label="Previous slide">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <button class="gallery-nav gallery-nav--next" id="gallNext" aria-label="Next slide">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
+    </button>
+  </div>
+
+  <div class="gallery-dots" id="gallDots"></div>
+
+  <div class="gallery-thumbs" id="gallThumbs">
+    <div class="gallery-thumb active"><img src="photos/club-overview.jpg" alt="Our Club" /></div>
+    <div class="gallery-thumb"><img src="photos/competition.jpg" alt="Competition Day" /></div>
+    <div class="gallery-thumb"><img src="photos/group.jpg" alt="Team Photo" /></div>
+    <div class="gallery-thumb"><img src="photos/group-pic.jpg" alt="Our Team" /></div>
+    <div class="gallery-thumb"><img src="photos/group-picture.jpg" alt="Together We Train" /></div>
+    <div class="gallery-thumb"><img src="photos/group-photo.jpg" alt="Club Members" /></div>
+    <div class="gallery-thumb"><img src="photos/mini-warrior.jpg" alt="Mini Warriors" /></div>
+    <div class="gallery-thumb"><img src="photos/founder-and-alex.jpg" alt="Founder &amp; Coach Alex" /></div>
   </div>
 </section>
 
-<!-- ─── CONTACT ─── -->
+<!-- CONTACT -->
 <section class="section section--white" id="contact">
-  <div class="label reveal">Get In Touch</div>
-  <h2 class="h2 reveal d1">We'd love to<br><span>hear from you</span></h2>
-
+  <div class="lbl" data-r>Get In Touch</div>
+  <h2 class="h2" data-r data-d="1">We'd love to<br><span>hear from you</span></h2>
   <div class="contact-grid">
     <div>
-      <p class="body-text reveal d2" style="margin-bottom:2rem">Have questions about classes, pricing, or equipment? Reach us directly through any of the channels below. We respond fastest on WhatsApp.</p>
-
+      <p class="body" data-r data-d="2" style="margin-bottom:2rem">Have questions about classes, pricing, or equipment? Reach us directly through any of the channels below. We respond fastest on WhatsApp.</p>
       <div class="contact-channels">
-        <a href="https://wa.me/02022112211" target="_blank" rel="noopener" class="contact-btn contact-btn--wa reveal d2">
-          <div class="contact-btn-icon contact-btn-icon--wa">
-            <svg viewBox="0 0 24 24" fill="white" style="width:22px;height:22px"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.555 4.116 1.526 5.845L0 24l6.334-1.507A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.89 0-3.663-.5-5.194-1.378L3 21.5l.908-3.726A10.018 10.018 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
-          </div>
-          <div>
-            <div class="contact-btn-label">WhatsApp</div>
-            <div class="contact-btn-value">+020 2211 2211</div>
-          </div>
+        <a href="https://wa.me/02022112211" target="_blank" rel="noopener" class="contact-btn contact-btn--wa" data-r data-d="2">
+          <div class="contact-btn-icon contact-btn-icon--wa"><svg viewBox="0 0 24 24" fill="white" style="width:22px;height:22px"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.555 4.116 1.526 5.845L0 24l6.334-1.507A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.89 0-3.663-.5-5.194-1.378L3 21.5l.908-3.726A10.018 10.018 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg></div>
+          <div><div class="contact-btn-label">WhatsApp</div><div class="contact-btn-value">+020 2211 2211</div></div>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
-
-        <a href="mailto:yeealal@gmail.com" class="contact-btn reveal d3">
-          <div class="contact-btn-icon contact-btn-icon--email">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#b91c1c" stroke-width="2" style="width:20px;height:20px"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-          </div>
-          <div>
-            <div class="contact-btn-label">Email</div>
-            <div class="contact-btn-value">yeealal@gmail.com</div>
-          </div>
+        <a href="mailto:yeealal@gmail.com" class="contact-btn" data-r data-d="3">
+          <div class="contact-btn-icon contact-btn-icon--email"><svg viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2" style="width:20px;height:20px"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+          <div><div class="contact-btn-label">Email</div><div class="contact-btn-value">yeealal@gmail.com</div></div>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
-
-        <a href="https://www.facebook.com/profile.php?id=100057081595469" target="_blank" rel="noopener" class="contact-btn contact-btn--fb reveal d4">
-          <div class="contact-btn-icon contact-btn-icon--fb">
-            <svg viewBox="0 0 24 24" fill="white" style="width:20px;height:20px"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-          </div>
-          <div>
-            <div class="contact-btn-label">Facebook Page</div>
-            <div class="contact-btn-value">Tawan TKD Club</div>
-          </div>
+        <a href="https://www.facebook.com/profile.php?id=100057081595469" target="_blank" rel="noopener" class="contact-btn contact-btn--fb" data-r data-d="4">
+          <div class="contact-btn-icon contact-btn-icon--fb"><svg viewBox="0 0 24 24" fill="white" style="width:20px;height:20px"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></div>
+          <div><div class="contact-btn-label">Facebook</div><div class="contact-btn-value">Tawan TKD Club</div></div>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
       </div>
     </div>
-
-    <div class="contact-info-box reveal d3">
-      <h3>Visit Us</h3>
-      <div class="info-row">
-        <div class="info-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+    <div data-r data-d="3">
+      <div class="contact-info-box">
+        <h3>Club Information</h3>
+        <div class="info-row">
+          <div class="info-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+          <div><div class="info-label">Location</div><div class="info-val">Budo Centre, Vientiane, Laos</div></div>
         </div>
-        <div>
-          <div class="info-label">Location</div>
-          <div class="info-val">Budo Centre<br>Vientiane, Laos</div>
+        <div class="info-row">
+          <div class="info-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+          <div><div class="info-label">Training Days</div><div class="info-val">Mon, Wed, Fri · Sat &amp; Sun (Junior + Adult)</div></div>
         </div>
-      </div>
-      <div class="info-row">
-        <div class="info-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <div class="info-row">
+          <div class="info-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+          <div><div class="info-label">Founded</div><div class="info-val">12 June 2010 by Southida Phommavong</div></div>
         </div>
-        <div>
-          <div class="info-label">Class Days</div>
-          <div class="info-val">Mon · Wed · Fri (5:30–7:00 PM)<br>Sat · Sun (1:00–4:00 PM)</div>
-        </div>
-      </div>
-      <div class="info-row">
-        <div class="info-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        </div>
-        <div>
-          <div class="info-label">Who Can Join</div>
-          <div class="info-val">All ages · All levels welcome<br>No prior experience needed</div>
-        </div>
-      </div>
-      <div class="info-row">
-        <div class="info-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-        </div>
-        <div>
-          <div class="info-label">Founded</div>
-          <div class="info-val">12 June 2010<br>by Southida Phommavong</div>
+        <div class="info-row">
+          <div class="info-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
+          <div><div class="info-label">Website</div><div class="info-val">tawantaekwondo.la</div></div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ─── FOOTER ─── -->
+<!-- FOOTER -->
 <footer>
+  <div class="footer-url">
+    <div class="footer-url-lbl">Our Website</div>
+    <a href="https://tawantaekwondo.la" class="footer-url-link">tawan<span>taekwondo</span>.la</a>
+  </div>
   <div class="footer-top">
     <div>
-      <a href="#" class="nav-logo" style="display:inline-flex">
-        <div class="nav-logo-badge">TK</div>
+      <div class="nav-logo" style="text-decoration:none;color:white;display:inline-flex">
+        <div class="nav-mark">TK</div>
         Tawan TKD Club
-      </a>
-      <p class="footer-brand">
-        Vientiane's home of Taekwondo since 2010. Founded by Southida Phommavong at Budo Centre, Vientiane, Laos. Where discipline shapes who you are.
-      </p>
+      </div>
+      <div class="footer-brand">Vientiane's home of Taekwondo. Building discipline, confidence, and champions since 2010.</div>
     </div>
     <div>
       <div class="footer-col-title">Quick Links</div>
@@ -1253,85 +958,486 @@
         <li><a href="#about">About Us</a></li>
         <li><a href="#overview">Taekwondo</a></li>
         <li><a href="#schedule">Schedule</a></li>
-        <li><a href="#pricing">Pricing</a></li>
-        <li><a href="#equipment">Equipment</a></li>
+        <li><a href="#pricing">Membership</a></li>
+        <li><a href="#founders">Founders</a></li>
         <li><a href="#coaches">Coaches</a></li>
-        <li><a href="#contact">Contact</a></li>
+        <li><a href="#gallery">Gallery</a></li>
       </ul>
     </div>
     <div>
       <div class="footer-col-title">Contact</div>
       <ul class="footer-links">
-        <li><a href="https://wa.me/02022112211" target="_blank" rel="noopener">WhatsApp: +020 2211 2211</a></li>
+        <li><a href="https://wa.me/02022112211">WhatsApp</a></li>
         <li><a href="mailto:yeealal@gmail.com">yeealal@gmail.com</a></li>
-        <li><a href="https://www.facebook.com/profile.php?id=100057081595469" target="_blank" rel="noopener">Facebook: Tawan TKD Club</a></li>
-        <li><a href="#contact">Budo Centre, Vientiane</a></li>
+        <li><a href="https://www.facebook.com/profile.php?id=100057081595469" target="_blank" rel="noopener">Facebook Page</a></li>
+        <li><a href="#">tawantaekwondo.la</a></li>
       </ul>
     </div>
   </div>
   <div class="footer-bottom">
-    <div class="footer-copy">2026 Tawan Taekwondo Club · Founded 12 June 2010 · Vientiane, Laos</div>
+    <div class="footer-copy">© 2025 Tawan Taekwondo Club · Vientiane, Laos · All rights reserved</div>
     <div class="footer-social">
-      <a href="https://wa.me/02022112211" target="_blank" rel="noopener" class="social-link" aria-label="WhatsApp">WA</a>
-      <a href="https://www.facebook.com/profile.php?id=100057081595469" target="_blank" rel="noopener" class="social-link" aria-label="Facebook">FB</a>
-      <a href="mailto:yeealal@gmail.com" class="social-link" aria-label="Email">@</a>
+      <a href="https://wa.me/02022112211" class="social-link" title="WhatsApp">W</a>
+      <a href="https://www.facebook.com/profile.php?id=100057081595469" target="_blank" rel="noopener" class="social-link" title="Facebook">f</a>
+      <a href="mailto:yeealal@gmail.com" class="social-link" title="Email">@</a>
     </div>
   </div>
 </footer>
 
 <script>
-  // Nav scroll shrink
+(function(){
+  /* ── LOADER ───────────────────────────── */
+  window.addEventListener('load', () => {
+    setTimeout(() => document.getElementById('loader').classList.add('out'), 1600);
+  });
+
+  /* ── CURSOR ───────────────────────────── */
+  const dot = document.getElementById('curDot');
+  const ring = document.getElementById('curRing');
+  let rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => {
+    dot.style.left = e.clientX + 'px';
+    dot.style.top  = e.clientY + 'px';
+    rx += (e.clientX - rx) * 0.12;
+    ry += (e.clientY - ry) * 0.12;
+    ring.style.left = e.clientX + 'px';
+    ring.style.top  = e.clientY + 'px';
+  });
+  document.querySelectorAll('a,button,[data-tilt],.pillar,.size-chip,.gallery-item,.coach-card').forEach(el => {
+    el.addEventListener('mouseenter', () => document.body.classList.add('cur-lg'));
+    el.addEventListener('mouseleave', () => document.body.classList.remove('cur-lg'));
+  });
+
+  /* ── SCROLL PROGRESS ──────────────────── */
+  const prog = document.getElementById('progress');
+  window.addEventListener('scroll', () => {
+    const pct = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight) * 100;
+    prog.style.width = pct + '%';
+  }, { passive: true });
+
+  /* ── NAV ──────────────────────────────── */
   const nav = document.getElementById('nav');
   window.addEventListener('scroll', () => {
     nav.classList.toggle('scrolled', window.scrollY > 60);
   }, { passive: true });
 
-  // Intersection observer reveal
-  const reveals = document.querySelectorAll('.reveal');
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
-    });
-  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
-  reveals.forEach(el => io.observe(el));
+  /* ── THREE.JS HERO ────────────────────── */
+  if (window.THREE && window.innerWidth > 768) {
+    const canvas = document.getElementById('hero-canvas');
+    const scene  = new THREE.Scene();
+    const cam    = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
+    cam.position.z = 6;
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-  // Magnetic buttons
-  document.querySelectorAll('.btn-primary, .btn-outline').forEach(btn => {
-    btn.addEventListener('mousemove', e => {
-      const r = btn.getBoundingClientRect();
-      const x = ((e.clientX - r.left) / r.width - 0.5) * 7;
-      const y = ((e.clientY - r.top)  / r.height - 0.5) * 7;
-      btn.style.transform = `translate(${x}px,${y}px) translateY(-2px)`;
-    });
-    btn.addEventListener('mouseleave', () => { btn.style.transform = ''; });
-  });
+    /* lights */
+    scene.add(new THREE.AmbientLight(0x111111));
+    const rLight = new THREE.PointLight(0xdc2626, 4, 25);
+    rLight.position.set(4, 3, 4);
+    scene.add(rLight);
+    const wLight = new THREE.PointLight(0xffffff, 1.5, 25);
+    wLight.position.set(-4, -2, 3);
+    scene.add(wLight);
 
-  // Counter animation
-  function animateCount(el, target, suffix) {
-    let start = 0;
-    const duration = 1800;
-    const step = timestamp => {
-      if (!start) start = timestamp;
-      const progress = Math.min((timestamp - start) / duration, 1);
-      const ease = 1 - Math.pow(1 - progress, 3);
-      el.textContent = Math.floor(ease * target) + suffix;
-      if (progress < 1) requestAnimationFrame(step);
-    };
-    requestAnimationFrame(step);
+    /* large background wireframe */
+    const bigGeo = new THREE.IcosahedronGeometry(3.5, 1);
+    const bigMat = new THREE.MeshBasicMaterial({ color: 0xdc2626, wireframe: true, transparent: true, opacity: 0.06 });
+    const bigMesh = new THREE.Mesh(bigGeo, bigMat);
+    bigMesh.position.set(4.5, 0.5, -4);
+    scene.add(bigMesh);
+
+    /* floating shapes */
+    const shapes = [];
+    const geos   = [
+      new THREE.OctahedronGeometry(.7, 0),
+      new THREE.TetrahedronGeometry(.6, 0),
+      new THREE.IcosahedronGeometry(.5, 0),
+      new THREE.OctahedronGeometry(.9, 0),
+      new THREE.IcosahedronGeometry(.65, 0),
+      new THREE.TetrahedronGeometry(.75, 0),
+      new THREE.OctahedronGeometry(.55, 0),
+    ];
+    geos.forEach((g, i) => {
+      const wire = i % 2 === 0;
+      const mat  = new THREE.MeshPhongMaterial({
+        color: 0xdc2626, wireframe: wire,
+        transparent: true, opacity: wire ? 0.55 : 0.12,
+        shininess: 120, specular: 0xff5555,
+      });
+      const m = new THREE.Mesh(g, mat);
+      m.position.set((Math.random()-.5)*18, (Math.random()-.5)*10, (Math.random()-.5)*4 - 1);
+      m.userData = {
+        rx: (Math.random()-.5)*.009,
+        ry: (Math.random()-.5)*.009,
+        rz: (Math.random()-.5)*.006,
+        baseY: m.position.y,
+        amp: .12 + Math.random()*.2,
+        freq: .28 + Math.random()*.35,
+        off:  Math.random()*Math.PI*2,
+      };
+      shapes.push(m);
+      scene.add(m);
+    });
+
+    /* particles */
+    const N = 350, pPos = new Float32Array(N * 3);
+    for (let i = 0; i < N; i++) {
+      pPos[i*3]   = (Math.random()-.5)*24;
+      pPos[i*3+1] = (Math.random()-.5)*15;
+      pPos[i*3+2] = (Math.random()-.5)*7 - 2;
+    }
+    const pGeo = new THREE.BufferGeometry();
+    pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+    const particles = new THREE.Points(pGeo, new THREE.PointsMaterial({ color: 0xdc2626, size: .03, transparent: true, opacity: .55 }));
+    scene.add(particles);
+
+    /* mouse */
+    let mx = 0, my = 0;
+    document.addEventListener('mousemove', e => {
+      mx = (e.clientX / window.innerWidth  - .5) * 2;
+      my = -(e.clientY / window.innerHeight - .5) * 2;
+    });
+
+    /* animate */
+    let t = 0;
+    (function loop() {
+      requestAnimationFrame(loop);
+      t += .01;
+      bigMesh.rotation.x += .0012;
+      bigMesh.rotation.y += .0008;
+      shapes.forEach(s => {
+        s.rotation.x += s.userData.rx;
+        s.rotation.y += s.userData.ry;
+        s.rotation.z += s.userData.rz;
+        s.position.y  = s.userData.baseY + Math.sin(t * s.userData.freq * 10 + s.userData.off) * s.userData.amp;
+      });
+      particles.rotation.y += .00008;
+      cam.position.x += (mx * .6 - cam.position.x) * .04;
+      cam.position.y += (my * .35 - cam.position.y) * .04;
+      cam.lookAt(scene.position);
+      renderer.render(scene, cam);
+    })();
+
+    window.addEventListener('resize', () => {
+      cam.aspect = window.innerWidth / window.innerHeight;
+      cam.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
   }
-  const statNums = document.querySelectorAll('.hero-stat-num');
-  const statsIo = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        const text = e.target.textContent;
-        const num = parseInt(text);
-        const suffix = text.replace(num, '');
-        animateCount(e.target, num, suffix);
-        statsIo.unobserve(e.target);
+
+  /* ── HERO PARALLAX ────────────────────── */
+  const heroBg = document.getElementById('heroBg');
+  if (heroBg) {
+    window.addEventListener('scroll', () => {
+      const y = window.scrollY;
+      heroBg.style.transform = `translateY(${y * .35}px) scale(1.05)`;
+    }, { passive: true });
+  }
+
+  /* ── 3D CARD TILT ─────────────────────── */
+  document.querySelectorAll('[data-tilt]').forEach(card => {
+    const str   = 14;
+    const glare = card.querySelector('.glare');
+    card.addEventListener('mouseenter', () => {
+      card.style.transition = 'box-shadow .3s,border-color .3s';
+    });
+    card.addEventListener('mousemove', e => {
+      const r = card.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width;
+      const y = (e.clientY - r.top)  / r.height;
+      const rX = (0.5 - y) * str;
+      const rY = (x - 0.5) * str;
+      card.style.transform = `perspective(900px) rotateX(${rX}deg) rotateY(${rY}deg) scale(1.02) translateZ(8px)`;
+      if (glare) {
+        glare.style.opacity = '1';
+        glare.style.background = `radial-gradient(circle at ${x*100}% ${y*100}%, rgba(255,255,255,.18) 0%, transparent 65%)`;
       }
     });
+    card.addEventListener('mouseleave', () => {
+      card.style.transition = 'transform .5s var(--expo),box-shadow .5s,border-color .3s';
+      card.style.transform  = 'perspective(900px) rotateX(0deg) rotateY(0deg) scale(1) translateZ(0)';
+      if (glare) { glare.style.opacity = '0'; }
+    });
+  });
+
+  /* ── SCROLL REVEAL (GSAP + fallback) ─── */
+  if (window.gsap && window.ScrollTrigger) {
+    gsap.registerPlugin(ScrollTrigger);
+
+    /* generic reveal for [data-r] elements */
+    gsap.utils.toArray('[data-r]').forEach(el => {
+      const delay = parseFloat(el.dataset.d || 0) * 0.1;
+      gsap.fromTo(el,
+        { opacity: 0, y: 36 },
+        { opacity: 1, y: 0, duration: 0.85, delay,
+          ease: 'power3.out',
+          scrollTrigger: { trigger: el, start: 'top 88%', once: true }
+        }
+      );
+    });
+
+    /* founder cards — slide in from sides */
+    gsap.utils.toArray('.founder-card').forEach((card, i) => {
+      gsap.fromTo(card,
+        { opacity: 0, x: i === 0 ? -60 : 60 },
+        { opacity: 1, x: 0, duration: 1, ease: 'power3.out',
+          scrollTrigger: { trigger: card, start: 'top 85%', once: true }
+        }
+      );
+    });
+
+    /* showcase images — clip-path reveal */
+    gsap.utils.toArray('.showcase-main img, .showcase-sub img').forEach((img, i) => {
+      gsap.fromTo(img,
+        { clipPath: 'inset(100% 0% 0% 0%)', scale: 1.1 },
+        { clipPath: 'inset(0% 0% 0% 0%)', scale: 1,
+          duration: 1.1, delay: i * 0.15, ease: 'power3.out',
+          scrollTrigger: { trigger: img, start: 'top 85%', once: true }
+        }
+      );
+    });
+
+    /* gallery slider reveal */
+    gsap.fromTo('.gallery-slider-wrap',
+      { opacity: 0, y: 40 },
+      { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out',
+        scrollTrigger: { trigger: '.gallery-slider-wrap', start: 'top 82%', once: true }
+      }
+    );
+
+    /* coach cards — staggered entrance */
+    gsap.fromTo('.coach-card',
+      { opacity: 0, y: 50 },
+      { opacity: 1, y: 0, duration: 0.75, stagger: 0.1, ease: 'power3.out',
+        scrollTrigger: { trigger: '.coaches-grid', start: 'top 82%', once: true }
+      }
+    );
+
+    /* headings — clean fade-up */
+    document.querySelectorAll('.h2').forEach(h => {
+      gsap.fromTo(h,
+        { opacity: 0, y: 28 },
+        { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out',
+          scrollTrigger: { trigger: h, start: 'top 88%', once: true }
+        }
+      );
+    });
+
+  } else {
+    /* fallback: IntersectionObserver */
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('vis'); observer.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('[data-r]').forEach(el => observer.observe(el));
+  }
+
+  /* ── STAT COUNTERS ────────────────────── */
+  const counters = document.querySelectorAll('[data-count]');
+  const cObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const el  = e.target;
+      const end = parseInt(el.dataset.count, 10);
+      const dur = 1800;
+      const step = 16;
+      const inc  = end / (dur / step);
+      let cur = 0;
+      const t = setInterval(() => {
+        cur += inc;
+        if (cur >= end) { cur = end; clearInterval(t); }
+        el.textContent = Math.floor(cur) + (el.dataset.count === '100' || el.dataset.count === '15' ? '+' : '');
+      }, step);
+      cObs.unobserve(el);
+    });
   }, { threshold: 0.5 });
-  statNums.forEach(el => statsIo.observe(el));
+  counters.forEach(c => cObs.observe(c));
+
+  /* ── GALLERY SLIDER ──────────────────── */
+  (function(){
+    const track  = document.getElementById('gallerySlides');
+    const dotsEl = document.getElementById('gallDots');
+    const thumbsEl = document.getElementById('gallThumbs');
+    if (!track) return;
+    const total  = track.children.length;
+    const thumbs = thumbsEl ? Array.from(thumbsEl.querySelectorAll('.gallery-thumb')) : [];
+    let cur = 0, timer;
+
+    for (let i = 0; i < total; i++) {
+      const d = document.createElement('button');
+      d.className = 'gallery-dot' + (i === 0 ? ' active' : '');
+      d.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+      d.addEventListener('click', () => goTo(i));
+      dotsEl.appendChild(d);
+    }
+
+    function goTo(n) {
+      cur = ((n % total) + total) % total;
+      track.style.transform = 'translateX(-' + (cur * 100) + '%)';
+      dotsEl.querySelectorAll('.gallery-dot').forEach((d, i) => d.classList.toggle('active', i === cur));
+      thumbs.forEach((t, i) => t.classList.toggle('active', i === cur));
+      if (thumbs[cur]) thumbs[cur].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      clearInterval(timer);
+      timer = setInterval(() => goTo(cur + 1), 5000);
+    }
+
+    document.getElementById('gallPrev').addEventListener('click', () => goTo(cur - 1));
+    document.getElementById('gallNext').addEventListener('click', () => goTo(cur + 1));
+    thumbs.forEach((t, i) => t.addEventListener('click', () => goTo(i)));
+
+    let tx = 0;
+    track.addEventListener('touchstart', e => { tx = e.changedTouches[0].clientX; }, { passive: true });
+    track.addEventListener('touchend',   e => { const dx = e.changedTouches[0].clientX - tx; if (Math.abs(dx) > 40) goTo(dx < 0 ? cur + 1 : cur - 1); }, { passive: true });
+
+    timer = setInterval(() => goTo(cur + 1), 5000);
+  })();
+
+  /* ── 3D DOBOK MODEL ──────────────────── */
+  (function(){
+    const canvas = document.getElementById('dobok-canvas');
+    if (!canvas || !window.THREE) return;
+
+    const container = canvas.parentElement;
+    const W = container.offsetWidth || 480;
+    const H = Math.round(W * 0.88);
+
+    const scene    = new THREE.Scene();
+    scene.background = new THREE.Color(0xf4f2ee);
+
+    const cam = new THREE.PerspectiveCamera(42, W / H, 0.1, 100);
+    cam.position.set(0, 0.8, 9.5);
+    cam.lookAt(0, 0, 0);
+
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+    renderer.setSize(W, H);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+    /* lights */
+    scene.add(new THREE.AmbientLight(0xffffff, 0.55));
+    const key = new THREE.DirectionalLight(0xffffff, 1.4);
+    key.position.set(5, 10, 7);
+    key.castShadow = true;
+    scene.add(key);
+    const fill = new THREE.DirectionalLight(0xddeeff, 0.5);
+    fill.position.set(-6, 2, 4);
+    scene.add(fill);
+    const rim = new THREE.DirectionalLight(0xff2222, 0.18);
+    rim.position.set(0, -5, -6);
+    scene.add(rim);
+
+    /* materials */
+    const wMat = new THREE.MeshPhongMaterial({ color: 0xf0ede8, shininess: 22, specular: 0x999999 });
+    const cMat = new THREE.MeshPhongMaterial({ color: 0xe5e1da, shininess: 14, specular: 0x777777 });
+    const bMat = new THREE.MeshPhongMaterial({ color: 0x0f0f0f, shininess: 90, specular: 0x444444 });
+
+    const g = new THREE.Group();
+
+    /* torso */
+    g.add(Object.assign(new THREE.Mesh(new THREE.BoxGeometry(2.2, 2.4, 0.58), wMat)));
+
+    /* shoulders */
+    const sh = new THREE.Mesh(new THREE.BoxGeometry(2.65, 0.42, 0.52), wMat);
+    sh.position.set(0, 1.28, 0); g.add(sh);
+
+    /* left sleeve upper */
+    const lsu = new THREE.Mesh(new THREE.BoxGeometry(0.66, 0.95, 0.5), wMat);
+    lsu.position.set(-1.3, 0.9, 0); lsu.rotation.z = 0.06; g.add(lsu);
+    /* left sleeve lower */
+    const lsl = new THREE.Mesh(new THREE.BoxGeometry(0.61, 0.85, 0.46), wMat);
+    lsl.position.set(-1.36, 0.04, 0); lsl.rotation.z = 0.07; g.add(lsl);
+
+    /* right sleeve upper */
+    const rsu = new THREE.Mesh(new THREE.BoxGeometry(0.66, 0.95, 0.5), wMat);
+    rsu.position.set(1.3, 0.9, 0); rsu.rotation.z = -0.06; g.add(rsu);
+    /* right sleeve lower */
+    const rsl = new THREE.Mesh(new THREE.BoxGeometry(0.61, 0.85, 0.46), wMat);
+    rsl.position.set(1.36, 0.04, 0); rsl.rotation.z = -0.07; g.add(rsl);
+
+    /* left lapel */
+    const ll = new THREE.Mesh(new THREE.BoxGeometry(0.54, 1.45, 0.1), cMat);
+    ll.position.set(-0.3, 0.55, 0.31); ll.rotation.z = 0.38; g.add(ll);
+    /* right lapel */
+    const rl = new THREE.Mesh(new THREE.BoxGeometry(0.54, 1.45, 0.1), cMat);
+    rl.position.set(0.3, 0.55, 0.31); rl.rotation.z = -0.38; g.add(rl);
+
+    /* belt */
+    const belt = new THREE.Mesh(new THREE.BoxGeometry(2.35, 0.24, 0.65), bMat);
+    belt.position.set(0, -1.1, 0.02); g.add(belt);
+    /* knot */
+    const knot = new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.27, 0.14), bMat);
+    knot.position.set(0, -1.1, 0.37); g.add(knot);
+    /* tail L */
+    const tl = new THREE.Mesh(new THREE.BoxGeometry(0.21, 0.65, 0.07), bMat);
+    tl.position.set(-0.14, -1.5, 0.36); g.add(tl);
+    /* tail R */
+    const tr = new THREE.Mesh(new THREE.BoxGeometry(0.21, 0.65, 0.07), bMat);
+    tr.position.set(0.14, -1.5, 0.36); g.add(tr);
+
+    /* waist join */
+    const wj = new THREE.Mesh(new THREE.BoxGeometry(2.1, 0.32, 0.58), wMat);
+    wj.position.set(0, -1.42, 0); g.add(wj);
+
+    /* left leg */
+    const ll2 = new THREE.Mesh(new THREE.BoxGeometry(0.98, 2.2, 0.54), wMat);
+    ll2.position.set(-0.53, -2.5, 0); g.add(ll2);
+    /* right leg */
+    const rl2 = new THREE.Mesh(new THREE.BoxGeometry(0.98, 2.2, 0.54), wMat);
+    rl2.position.set(0.53, -2.5, 0); g.add(rl2);
+
+    g.position.set(0, 0.7, 0);
+    scene.add(g);
+
+    /* floor shadow */
+    const floor = new THREE.Mesh(new THREE.PlaneGeometry(20, 20), new THREE.ShadowMaterial({ opacity: 0.1 }));
+    floor.rotation.x = -Math.PI / 2;
+    floor.position.y = -2.4;
+    floor.receiveShadow = true;
+    scene.add(floor);
+
+    /* drag rotation */
+    let isDown = false, sx = 0, sy = 0, rotY = 0.3, rotX = 0, tRotY = 0.3, tRotX = 0, autoSpin = true;
+
+    canvas.addEventListener('mousedown', e => { isDown = true; autoSpin = false; sx = e.clientX; sy = e.clientY; });
+    window.addEventListener('mousemove', e => {
+      if (!isDown) return;
+      tRotY += (e.clientX - sx) * 0.013;
+      tRotX += (e.clientY - sy) * 0.006;
+      tRotX = Math.max(-0.45, Math.min(0.45, tRotX));
+      sx = e.clientX; sy = e.clientY;
+    });
+    window.addEventListener('mouseup', () => { isDown = false; setTimeout(() => { autoSpin = true; }, 2200); });
+
+    canvas.addEventListener('touchstart', e => { autoSpin = false; sx = e.touches[0].clientX; }, { passive: true });
+    canvas.addEventListener('touchmove',  e => { tRotY += (e.touches[0].clientX - sx) * 0.015; sx = e.touches[0].clientX; }, { passive: true });
+    canvas.addEventListener('touchend',   () => { setTimeout(() => { autoSpin = true; }, 2200); });
+
+    /* animate */
+    let t = 0;
+    (function render() {
+      requestAnimationFrame(render);
+      t += 0.01;
+      if (autoSpin) tRotY += 0.006;
+      rotY += (tRotY - rotY) * 0.08;
+      rotX += (tRotX - rotX) * 0.08;
+      g.rotation.y = rotY;
+      g.rotation.x = rotX;
+      g.position.y = 0.7 + Math.sin(t * 0.65) * 0.045;
+      renderer.render(scene, cam);
+    })();
+
+    /* resize */
+    window.addEventListener('resize', () => {
+      const w = container.offsetWidth || 480;
+      const h = Math.round(w * 0.88);
+      renderer.setSize(w, h);
+      cam.aspect = w / h;
+      cam.updateProjectionMatrix();
+    });
+  })();
+
+})();
 </script>
 </body>
 </html>

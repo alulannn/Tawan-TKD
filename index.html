@@ -307,9 +307,8 @@
     /* ── 3D DOBOK VIEWER ────────────────────── */
     .dobok-3d-wrap{display:grid;grid-template-columns:1fr 1fr;gap:3.5rem;align-items:center;margin-top:3rem}
     .dobok-canvas-col{display:flex;flex-direction:column;align-items:center}
-    .dobok-canvas-container{border-radius:var(--r-xl);overflow:hidden;position:relative;background:#111318;border:1px solid rgba(255,255,255,.07);box-shadow:var(--shadow-sm);width:100%;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center}
-    .dobok-view-img{width:100%;height:100%;object-fit:contain;display:block;animation:dobokFloat 4s ease-in-out infinite}
-    @keyframes dobokFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+    .dobok-canvas-container{border-radius:var(--r-xl);overflow:hidden;position:relative;background:#111318;border:1px solid rgba(255,255,255,.07);box-shadow:var(--shadow-sm);width:100%;display:flex;align-items:center;justify-content:center}
+    .dobok-view-img{width:100%;height:auto;display:block}
     .dobok-hint{position:absolute;bottom:1rem;left:50%;transform:translateX(-50%);display:inline-flex;align-items:center;gap:.45rem;background:rgba(0,0,0,.5);backdrop-filter:blur(10px);color:rgba(255,255,255,.9);font-size:.65rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;border-radius:99px;padding:.35rem .95rem;pointer-events:none;white-space:nowrap}
     .dobok-badge-row{display:flex;justify-content:center;gap:.5rem;margin-top:1rem}
     .dobok-badge{display:inline-flex;align-items:center;gap:.4rem;background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.2);border-radius:99px;padding:.28rem .875rem;font-size:.64rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--red)}
@@ -663,7 +662,7 @@
   <div class="dobok-3d-wrap" data-r data-d="2">
     <div class="dobok-canvas-col">
       <div class="dobok-canvas-container">
-        <img src="photos/dobok.png" alt="Taekwondo Dobok" class="dobok-view-img" />
+        <canvas id="dobok-anim" class="dobok-view-img"></canvas>
         <div class="dobok-hint">&#8635;&nbsp; 360° Rotation</div>
       </div>
       <div class="dobok-badge-row">
@@ -1261,212 +1260,28 @@
     track.addEventListener('touchend',   e => { const dx = e.changedTouches[0].clientX - tx; if (Math.abs(dx) > 40) goTo(dx < 0 ? cur + 1 : cur - 1); }, { passive: true });
   })();
 
-  /* dobok model removed — replaced with SVG illustration */
+  /* dobok 360° panel animation */
   (function(){
-    const canvas = document.getElementById('dobok-canvas');
-    if (!canvas || !window.THREE) return;
-
-    const container = canvas.parentElement;
-    const W = container.offsetWidth || 480;
-    const H = Math.round(W * 1.4);
-
-    /* ── SCENE ── */
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x1c1c28);
-
-    const cam = new THREE.PerspectiveCamera(42, W / H, 0.1, 100);
-    cam.position.set(0, 0.9, 11);
-    cam.lookAt(0, 0.9, 0);
-
-    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
-    renderer.setSize(W, H);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.15;
-    renderer.outputEncoding = THREE.sRGBEncoding;
-
-    /* ── FABRIC TEXTURE ── */
-    function makeFabric(light) {
-      const sz = 512, cv = document.createElement('canvas');
-      cv.width = cv.height = sz;
-      const cx = cv.getContext('2d');
-      cx.fillStyle = light ? '#f0f0f0' : '#070710';
-      cx.fillRect(0, 0, sz, sz);
-      for (let i = 0; i < sz; i += 4) {
-        cx.fillStyle = light ? `rgba(0,0,0,${i%8===0?0.06:0.025})` : `rgba(255,255,255,${i%8===0?0.04:0.015})`;
-        cx.fillRect(0, i, sz, 2);
+    const canvas = document.getElementById('dobok-anim');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const img = new Image();
+    img.onload = function(){
+      const panelW = Math.round(img.naturalWidth / 4);
+      const panelH = Math.round(img.naturalHeight * 0.70);
+      canvas.width  = panelW;
+      canvas.height = panelH;
+      let frame = 0;
+      function draw(){
+        ctx.fillStyle = '#111318';
+        ctx.fillRect(0, 0, panelW, panelH);
+        ctx.drawImage(img, frame * panelW, 0, panelW, panelH, 0, 0, panelW, panelH);
+        frame = (frame + 1) % 4;
       }
-      for (let i = 0; i < sz; i += 4) {
-        cx.fillStyle = light ? `rgba(0,0,0,${i%8===0?0.05:0.018})` : `rgba(255,255,255,${i%8===0?0.03:0.01})`;
-        cx.fillRect(i, 0, 2, sz);
-      }
-      const id = cx.getImageData(0, 0, sz, sz);
-      for (let i = 0; i < id.data.length; i += 4) {
-        const n = (Math.random() - 0.5) * (light ? 7 : 4);
-        id.data[i]   = Math.min(255, Math.max(0, id.data[i]   + n));
-        id.data[i+1] = Math.min(255, Math.max(0, id.data[i+1] + n));
-        id.data[i+2] = Math.min(255, Math.max(0, id.data[i+2] + n));
-      }
-      cx.putImageData(id, 0, 0);
-      const t = new THREE.CanvasTexture(cv);
-      t.wrapS = t.wrapT = THREE.RepeatWrapping;
-      t.repeat.set(light ? 4 : 3, light ? 8 : 4);
-      return t;
-    }
-
-    function makeNormal() {
-      const sz = 256, cv = document.createElement('canvas');
-      cv.width = cv.height = sz;
-      const cx = cv.getContext('2d');
-      cx.fillStyle = 'rgb(128,128,255)';
-      cx.fillRect(0, 0, sz, sz);
-      for (let i = 0; i < sz; i += 4) {
-        const v = i % 8 === 0 ? 108 : 122;
-        cx.fillStyle = `rgba(${v},${v},252,0.7)`;
-        cx.fillRect(0, i, sz, 2);
-        cx.fillRect(i, 0, 2, sz);
-      }
-      const t = new THREE.CanvasTexture(cv);
-      t.wrapS = t.wrapT = THREE.RepeatWrapping;
-      t.repeat.set(4, 8);
-      return t;
-    }
-
-    const wTex = makeFabric(true);
-    const dTex = makeFabric(false);
-    const nTex = makeNormal();
-
-    /* ── PBR MATERIALS ── */
-    const wMat = new THREE.MeshStandardMaterial({
-      color: 0xf2f2f2, roughness: 0.87, metalness: 0.0,
-      map: wTex, normalMap: nTex, normalScale: new THREE.Vector2(0.4, 0.4)
-    });
-    const dMat = new THREE.MeshStandardMaterial({
-      color: 0x060609, roughness: 0.80, metalness: 0.04,
-      map: dTex, normalMap: nTex, normalScale: new THREE.Vector2(0.25, 0.25)
-    });
-    const mMat = new THREE.MeshStandardMaterial({ color: 0x555568, roughness: 0.65, metalness: 0.1 });
-    const rMat = new THREE.MeshStandardMaterial({ color: 0xcc1111, roughness: 0.75, metalness: 0 });
-    const sMat = new THREE.MeshStandardMaterial({ color: 0xbbbbcc, roughness: 0.92, metalness: 0 });
-
-    /* ── STUDIO LIGHTS ── */
-    scene.add(new THREE.HemisphereLight(0x9999bb, 0x333344, 0.55));
-    const key = new THREE.DirectionalLight(0xffffff, 2.5);
-    key.position.set(4, 10, 8); key.castShadow = true;
-    key.shadow.mapSize.width = key.shadow.mapSize.height = 2048;
-    key.shadow.bias = -0.001;
-    scene.add(key);
-    const fill = new THREE.DirectionalLight(0xaaccff, 0.85);
-    fill.position.set(-8, 3, 7); scene.add(fill);
-    const rimBack = new THREE.DirectionalLight(0xffffff, 1.2);
-    rimBack.position.set(0, 6, -9); scene.add(rimBack);
-    const rimLow = new THREE.DirectionalLight(0x4455aa, 0.3);
-    rimLow.position.set(2, -7, 4); scene.add(rimLow);
-
-    /* ── HELPERS ── */
-    const g = new THREE.Group();
-    const S = 3;
-    function bx(w,h,d,mat,x,y,z,rz){
-      const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d,S,S,S),mat);
-      m.position.set(x,y,z); if(rz)m.rotation.z=rz;
-      m.castShadow=m.receiveShadow=true; return m;
-    }
-    function sph(r,mat,x,y,z){
-      const m=new THREE.Mesh(new THREE.SphereGeometry(r,20,16),mat);
-      m.position.set(x,y,z); m.castShadow=m.receiveShadow=true; return m;
-    }
-    function cyl(rt,rb,h,mat,x,y,z,rz){
-      const m=new THREE.Mesh(new THREE.CylinderGeometry(rt,rb,h,14,2),mat);
-      m.position.set(x,y,z); if(rz)m.rotation.z=rz;
-      m.castShadow=m.receiveShadow=true; return m;
-    }
-
-    /* ── MANNEQUIN BODY (grey) ── */
-    g.add(sph(0.28, mMat, 0, 3.22, 0));                         /* head */
-    g.add(cyl(0.115, 0.14, 0.38, mMat, 0, 2.84, 0));            /* neck */
-
-    /* ── JACKET (fitted, matching reference) ── */
-    g.add(bx(1.40, 2.60, 0.55, wMat,  0,      1.22,  0));       /* torso */
-    g.add(bx(1.84, 0.38, 0.52, wMat,  0,      2.54,  0));       /* shoulder bar */
-    g.add(bx(0.36, 1.20, 0.38, wMat, -0.94,   1.85,  0,  0.08)); /* L sleeve upper */
-    g.add(bx(0.32, 1.10, 0.34, wMat, -1.00,   0.72,  0,  0.10)); /* L sleeve lower */
-    g.add(bx(0.30, 0.18, 0.32, wMat, -1.04,   0.15,  0,  0.10)); /* L cuff */
-    g.add(bx(0.36, 1.20, 0.38, wMat,  0.94,   1.85,  0, -0.08)); /* R sleeve upper */
-    g.add(bx(0.32, 1.10, 0.34, wMat,  1.00,   0.72,  0, -0.10)); /* R sleeve lower */
-    g.add(bx(0.30, 0.18, 0.32, wMat,  1.04,   0.15,  0, -0.10)); /* R cuff */
-    /* seam shadows at sleeve/body join */
-    g.add(bx(0.03, 2.60, 0.03, sMat, -0.72, 1.22, 0.29));
-    g.add(bx(0.03, 2.60, 0.03, sMat,  0.72, 1.22, 0.29));
-
-    /* ── V-COLLAR (black) ── */
-    g.add(bx(0.72, 0.46, 0.24, dMat,  0,      2.56,  0.14));    /* neck band */
-    g.add(bx(0.28, 2.10, 0.16, dMat, -0.42,   1.50,  0.30,  0.42)); /* L collar */
-    g.add(bx(0.28, 2.10, 0.16, dMat,  0.42,   1.50,  0.30, -0.42)); /* R collar */
-    g.add(bx(0.08, 2.08, 0.06, dMat, -0.63,   1.42,  0.32,  0.42)); /* L edge */
-    g.add(bx(0.08, 2.08, 0.06, dMat,  0.63,   1.42,  0.32, -0.42)); /* R edge */
-    g.add(bx(0.36, 0.22, 0.06, dMat,  0,      0.50,  0.30));    /* chest badge bg */
-    g.add(bx(0.28, 0.14, 0.04, rMat,  0,      0.50,  0.33));    /* chest badge red */
-
-    /* ── PANTS (slim, full-length) ── */
-    g.add(bx(1.32, 0.38, 0.55, wMat,  0,     -0.18,  0));       /* waist */
-    g.add(bx(0.56, 2.65, 0.50, wMat, -0.29,  -1.58,  0));       /* L leg */
-    g.add(bx(0.56, 2.65, 0.50, wMat,  0.29,  -1.58,  0));       /* R leg */
-    g.add(bx(0.52, 0.16, 0.48, sMat, -0.29,  -2.76,  0));       /* L knee crease */
-    g.add(bx(0.52, 0.16, 0.48, sMat,  0.29,  -2.76,  0));       /* R knee crease */
-
-    /* ── LOGO on left knee (red, like reference) ── */
-    g.add(bx(0.26, 0.22, 0.06, dMat, -0.29,  -1.20,  0.27));   /* badge bg */
-    g.add(bx(0.20, 0.15, 0.04, rMat, -0.29,  -1.20,  0.30));   /* red logo */
-
-    /* ── GREY HANDS visible at cuff ── */
-    g.add(sph(0.085, mMat, -1.07, 0.10, 0));
-    g.add(sph(0.085, mMat,  1.07, 0.10, 0));
-
-    g.position.set(0, 0.5, 0);
-    scene.add(g);
-
-    /* floor shadow */
-    const floor = new THREE.Mesh(new THREE.PlaneGeometry(24, 24), new THREE.ShadowMaterial({ opacity: 0.18 }));
-    floor.rotation.x = -Math.PI / 2;
-    floor.position.y = -2.4;
-    floor.receiveShadow = true;
-    scene.add(floor);
-
-    /* ── CONTROLS ── */
-    let isDown=false, sx=0, sy=0, rotY=0.25, rotX=0, tRotY=0.25, tRotX=0, autoSpin=true;
-
-    canvas.addEventListener('mousedown', e=>{isDown=true;autoSpin=false;sx=e.clientX;sy=e.clientY;});
-    window.addEventListener('mousemove', e=>{
-      if(!isDown) return;
-      tRotY+=(e.clientX-sx)*0.013; tRotX+=(e.clientY-sy)*0.006;
-      tRotX=Math.max(-0.5,Math.min(0.5,tRotX)); sx=e.clientX; sy=e.clientY;
-    });
-    window.addEventListener('mouseup', ()=>{isDown=false; setTimeout(()=>{autoSpin=true;},2200);});
-    canvas.addEventListener('touchstart', e=>{autoSpin=false;sx=e.touches[0].clientX;sy=e.touches[0].clientY;},{passive:true});
-    canvas.addEventListener('touchmove', e=>{
-      tRotY+=(e.touches[0].clientX-sx)*0.015; tRotX+=(e.touches[0].clientY-sy)*0.007;
-      tRotX=Math.max(-0.5,Math.min(0.5,tRotX)); sx=e.touches[0].clientX; sy=e.touches[0].clientY;
-    },{passive:true});
-    canvas.addEventListener('touchend', ()=>{setTimeout(()=>{autoSpin=true;},2200);});
-
-    /* ── RENDER LOOP ── */
-    let t=0;
-    (function render(){
-      requestAnimationFrame(render); t+=0.01;
-      if(autoSpin) tRotY+=0.006;
-      rotY+=(tRotY-rotY)*0.08; rotX+=(tRotX-rotX)*0.08;
-      g.rotation.y=rotY; g.rotation.x=rotX;
-      g.position.y=0.5+Math.sin(t*0.65)*0.04;
-      renderer.render(scene,cam);
-    })();
-
-    /* resize */
-    window.addEventListener('resize', ()=>{
-      const w=container.offsetWidth||480, h=Math.round(w*1.4);
-      renderer.setSize(w,h); cam.aspect=w/h; cam.updateProjectionMatrix();
-    });
+      draw();
+      setInterval(draw, 900);
+    };
+    img.src = 'photos/dobok.png';
   })();
 
 })();

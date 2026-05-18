@@ -307,8 +307,8 @@
     /* ── 3D DOBOK VIEWER ────────────────────── */
     .dobok-3d-wrap{display:grid;grid-template-columns:1fr 1fr;gap:3.5rem;align-items:center;margin-top:3rem}
     .dobok-canvas-col{display:flex;flex-direction:column;align-items:center}
-    .dobok-canvas-container{border-radius:var(--r-xl);overflow:hidden;position:relative;background:#111318;border:1px solid rgba(255,255,255,.07);box-shadow:var(--shadow-sm);width:100%;display:flex;align-items:center;justify-content:center}
-    .dobok-view-img{width:100%;height:auto;display:block}
+    .dobok-canvas-container{border-radius:var(--r-xl);overflow:hidden;position:relative;background:#111318;border:1px solid rgba(255,255,255,.06);box-shadow:var(--shadow-sm);width:100%;display:flex;align-items:center;justify-content:center;padding:2rem 0}
+    .dobok-view-img{height:360px;width:auto;display:block;filter:drop-shadow(0 8px 28px rgba(0,0,0,0.5))}
     .dobok-hint{position:absolute;bottom:1rem;left:50%;transform:translateX(-50%);display:inline-flex;align-items:center;gap:.45rem;background:rgba(0,0,0,.5);backdrop-filter:blur(10px);color:rgba(255,255,255,.9);font-size:.65rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;border-radius:99px;padding:.35rem .95rem;pointer-events:none;white-space:nowrap}
     .dobok-badge-row{display:flex;justify-content:center;gap:.5rem;margin-top:1rem}
     .dobok-badge{display:inline-flex;align-items:center;gap:.4rem;background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.2);border-radius:99px;padding:.28rem .875rem;font-size:.64rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--red)}
@@ -663,7 +663,6 @@
     <div class="dobok-canvas-col">
       <div class="dobok-canvas-container">
         <canvas id="dobok-anim" class="dobok-view-img"></canvas>
-        <div class="dobok-hint">&#8635;&nbsp; 360° Rotation</div>
       </div>
       <div class="dobok-badge-row">
         <span class="dobok-badge">&#9654; Official Dobok</span>
@@ -1260,28 +1259,32 @@
     track.addEventListener('touchend',   e => { const dx = e.changedTouches[0].clientX - tx; if (Math.abs(dx) > 40) goTo(dx < 0 ? cur + 1 : cur - 1); }, { passive: true });
   })();
 
-  /* dobok 360° panel animation */
+  /* dobok 360° smooth rotation */
   (function(){
     const canvas = document.getElementById('dobok-anim');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
-    const img = new Image();
+    const COLS = 6, ROWS = 2, TOTAL = COLS * ROWS; /* 12 frames, 30° each */
+    const FPS  = 10; /* frames per second → ~1.2s per full rotation */
+    const img  = new Image();
     img.onload = function(){
-      const panelW = Math.round(img.naturalWidth / 4);
-      const panelH = Math.round(img.naturalHeight * 0.70);
-      canvas.width  = panelW;
-      canvas.height = panelH;
-      let frame = 0;
-      function draw(){
-        ctx.fillStyle = '#111318';
-        ctx.fillRect(0, 0, panelW, panelH);
-        ctx.drawImage(img, frame * panelW, 0, panelW, panelH, 0, 0, panelW, panelH);
-        frame = (frame + 1) % 4;
+      const fW = img.naturalWidth  / COLS; /* 209 */
+      const fH = img.naturalHeight / ROWS; /* 627 */
+      canvas.width  = Math.round(fW);
+      canvas.height = Math.round(fH);
+      let t0 = null;
+      function animate(ts){
+        if (!t0) t0 = ts;
+        const idx = Math.floor(((ts - t0) / 1000 * FPS) % TOTAL);
+        const col = idx % COLS;
+        const row = Math.floor(idx / COLS);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, col * fW, row * fH, fW, fH, 0, 0, canvas.width, canvas.height);
+        requestAnimationFrame(animate);
       }
-      draw();
-      setInterval(draw, 900);
+      requestAnimationFrame(animate);
     };
-    img.src = 'photos/dobok.png';
+    img.src = 'photos/dobok.png?v=3';
   })();
 
 })();

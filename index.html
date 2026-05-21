@@ -308,7 +308,8 @@
     .dobok-3d-wrap{display:grid;grid-template-columns:1fr 1fr;gap:3.5rem;align-items:center;margin-top:3rem}
     .dobok-canvas-col{display:flex;flex-direction:column;align-items:center}
     .dobok-canvas-container{position:relative;width:100%;display:flex;align-items:center;justify-content:center;background:transparent;border:none;box-shadow:none;padding:0}
-    .dobok-view-img{width:auto;max-width:100%;height:auto;max-height:520px;display:block}
+    .dobok-view-img{width:auto;max-width:100%;height:auto;max-height:520px;display:block;pointer-events:none;-webkit-user-select:none;user-select:none}
+    .dobok-view-img::-webkit-media-controls,.dobok-view-img::-webkit-media-controls-panel,.dobok-view-img::-webkit-media-controls-play-button,.dobok-view-img::-webkit-media-controls-start-playback-button{display:none!important;-webkit-appearance:none}
     .dobok-hint{position:absolute;bottom:1rem;left:50%;transform:translateX(-50%);display:inline-flex;align-items:center;gap:.45rem;background:rgba(0,0,0,.5);backdrop-filter:blur(10px);color:rgba(255,255,255,.9);font-size:.65rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;border-radius:99px;padding:.35rem .95rem;pointer-events:none;white-space:nowrap}
     .dobok-badge-row{display:flex;justify-content:center;gap:.5rem;margin-top:1rem}
     .dobok-badge{display:inline-flex;align-items:center;gap:.4rem;background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.2);border-radius:99px;padding:.28rem .875rem;font-size:.64rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--red)}
@@ -555,7 +556,7 @@
   <div class="schedule-layout">
     <div>
       <h2 class="h2" data-r data-d="1">Train on your<br><span>schedule</span></h2>
-      <p class="body" data-r data-d="2" style="margin-top:1rem;margin-bottom:2.5rem">We run 6 days a week across junior and adult sessions. All classes are held at the <strong>Budo Centre, Vientiane</strong>.</p>
+      <p class="body" data-r data-d="2" style="margin-top:1rem;margin-bottom:2.5rem">We run 5 days a week across junior and adult sessions. All classes are held at the <strong>Budo Centre, Vientiane</strong>.</p>
       <div class="sched-days" data-r data-d="2">
         <div class="sched-day"><div class="sched-day-name">Monday</div><div class="sched-classes"><div class="sched-item"><div><div class="sched-class-name">All Classes</div><div class="sched-time">5:30 PM – 7:00 PM</div></div><span class="sched-badge sched-badge--all">All Levels</span></div></div></div>
         <div class="sched-day"><div class="sched-day-name">Wednesday</div><div class="sched-classes"><div class="sched-item"><div><div class="sched-class-name">All Classes</div><div class="sched-time">5:30 PM – 7:00 PM</div></div><span class="sched-badge sched-badge--all">All Levels</span></div></div></div>
@@ -662,7 +663,7 @@
   <div class="dobok-3d-wrap" data-r data-d="2">
     <div class="dobok-canvas-col">
       <div class="dobok-canvas-container">
-        <video id="dobok-anim" class="dobok-view-img" src="videos/dobok-360.mp4" autoplay loop muted playsinline></video>
+        <video id="dobok-anim" class="dobok-view-img" src="videos/dobok-360.mp4" autoplay loop muted playsinline disablepictureinpicture controlslist="nodownload nofullscreen noremoteplayback noplaybackrate" oncontextmenu="return false"></video>
       </div>
       <div class="dobok-badge-row">
         <span class="dobok-badge">&#9654; Official Dobok</span>

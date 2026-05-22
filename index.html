@@ -244,10 +244,15 @@
     .dobok-tag{display:inline-flex;align-items:baseline;gap:.375rem;background:var(--dark);color:white;border-radius:var(--r-md);padding:1rem 1.5rem}
     .dobok-tag .amt{font-size:1.75rem;font-weight:900;letter-spacing:-.04em}
     .dobok-tag .lbl-t{font-size:.8rem;color:rgba(255,255,255,.5)}
-    .gear-list{display:flex;flex-direction:column;gap:.5rem}
-    .gear-item{display:flex;align-items:center;gap:.75rem;padding:.875rem 1.125rem;background:var(--surface);border:1px solid rgba(0,0,0,.06);border-radius:var(--r-md);font-size:.875rem;font-weight:600;color:var(--dark)}
-    .gear-dot{width:8px;height:8px;border-radius:50%;background:var(--red);flex-shrink:0}
-    .gear-tag{margin-left:auto;font-size:.62rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--mid);background:white;border:1px solid rgba(0,0,0,.08);border-radius:99px;padding:.2rem .6rem}
+    .gear-list{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:1.5rem}
+    .gear-item{display:flex;flex-direction:column;background:white;border:1px solid rgba(0,0,0,.08);border-radius:var(--r-lg);overflow:hidden;transition:all .3s var(--expo);font-family:inherit}
+    .gear-item:hover{transform:translateY(-4px);box-shadow:var(--shadow-sm);border-color:rgba(220,38,38,.25)}
+    .gear-img{width:100%;aspect-ratio:1/1;background:var(--surface);display:flex;align-items:center;justify-content:center;overflow:hidden}
+    .gear-img img{width:88%;height:88%;object-fit:contain;display:block}
+    .gear-body{padding:.875rem 1rem 1rem;display:flex;flex-direction:column;gap:.25rem;border-top:1px solid rgba(0,0,0,.06)}
+    .gear-name{font-size:.85rem;font-weight:700;color:var(--dark);letter-spacing:-.01em}
+    .gear-price{font-size:1.05rem;font-weight:800;color:var(--red);letter-spacing:-.02em}
+    .gear-price small{font-size:.62rem;font-weight:700;color:var(--mid);letter-spacing:.06em;text-transform:uppercase;margin-left:.2rem}
 
     /* ── FOUNDERS ───────────────────────────── */
     .founders-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:4rem}
@@ -367,7 +372,7 @@
     .social-link:hover{background:rgba(255,255,255,.1);color:white;border-color:rgba(255,255,255,.14)}
 
     /* ── RESPONSIVE ─────────────────────────── */
-    @media(max-width:1100px){.coaches-grid{grid-template-columns:repeat(3,1fr)}.benefits-grid{grid-template-columns:1fr 1fr}}
+    @media(max-width:1100px){.coaches-grid{grid-template-columns:repeat(3,1fr)}.benefits-grid{grid-template-columns:1fr 1fr}.gear-list{grid-template-columns:repeat(3,1fr)}}
     @media(max-width:960px){
       nav{padding:1rem 1.5rem}nav.scrolled{padding:.75rem 1.5rem}
       .nav-links,.nav-url{display:none}
@@ -377,6 +382,7 @@
       .gallery-slider-wrap{aspect-ratio:4/3}
       .about-img-inset,.about-badge{display:none}
       .types-grid{grid-template-columns:1fr 1fr}
+      .gear-list{grid-template-columns:1fr 1fr}
       .pricing-grid,.pricing-extras{grid-template-columns:1fr!important}
       .coaches-grid{grid-template-columns:repeat(2,1fr)}
       .gallery-grid{grid-template-columns:1fr 1fr}
@@ -694,13 +700,13 @@
     <h3>Optional Protective Gear</h3>
     <p class="body" style="margin-bottom:1.25rem">Recommended for sparring and competition training. Ask your coach what's needed for your level.</p>
     <div class="gear-list">
-      <div class="gear-item"><div class="gear-dot"></div>Chest Guard<span class="gear-tag">Contact for price</span></div>
-      <div class="gear-item"><div class="gear-dot"></div>Mouth Guard<span class="gear-tag">Contact for price</span></div>
-      <div class="gear-item"><div class="gear-dot"></div>Head Guard<span class="gear-tag">Contact for price</span></div>
-      <div class="gear-item"><div class="gear-dot"></div>Arm &amp; Shin Guard<span class="gear-tag">Contact for price</span></div>
-      <div class="gear-item"><div class="gear-dot"></div>Glove<span class="gear-tag">Contact for price</span></div>
-      <div class="gear-item"><div class="gear-dot"></div>Groin Guard<span class="gear-tag">Contact for price</span></div>
-      <div class="gear-item"><div class="gear-dot"></div>Foot Guard<span class="gear-tag">Contact for price</span></div>
+      <div class="gear-item"><div class="gear-img"><img src="photos/gear/chest-guard.png" alt="Chest Guard" /></div><div class="gear-body"><div class="gear-name">Chest Guard</div><div class="gear-price">฿850 <small>THB</small></div></div></div>
+      <div class="gear-item"><div class="gear-img"><img src="photos/gear/mouth-guard.png" alt="Mouth Guard" /></div><div class="gear-body"><div class="gear-name">Mouth Guard</div><div class="gear-price">฿100 <small>THB</small></div></div></div>
+      <div class="gear-item"><div class="gear-img"><img src="photos/gear/head-guard.png" alt="Head Guard" /></div><div class="gear-body"><div class="gear-name">Head Guard</div><div class="gear-price">฿800–1,200 <small>THB</small></div></div></div>
+      <div class="gear-item"><div class="gear-img"><img src="photos/gear/arm-shin-guard.png" alt="Arm and Shin Guard" /></div><div class="gear-body"><div class="gear-name">Arm &amp; Shin Guard</div><div class="gear-price">฿850 <small>THB</small></div></div></div>
+      <div class="gear-item"><div class="gear-img"><img src="photos/gear/glove.png" alt="Glove" /></div><div class="gear-body"><div class="gear-name">Glove</div><div class="gear-price">฿550 <small>THB</small></div></div></div>
+      <div class="gear-item"><div class="gear-img"><img src="photos/gear/groin-guard.png" alt="Groin Guard" /></div><div class="gear-body"><div class="gear-name">Groin Guard</div><div class="gear-price">฿500 <small>THB</small></div></div></div>
+      <div class="gear-item"><div class="gear-img"><img src="photos/gear/foot-guard.png" alt="Foot Guard" /></div><div class="gear-body"><div class="gear-name">Foot Guard</div><div class="gear-price">฿650 <small>THB</small></div></div></div>
     </div>
   </div>
 </section>

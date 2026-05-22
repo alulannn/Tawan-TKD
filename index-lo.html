@@ -7,7 +7,7 @@
   <title>ສະໂມສອນ ຕະວັນ ເທຄວັນໂດ — ວຽງຈັນ, ລາວ</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Noto+Sans+Lao:wght@400;500;600;700;800&family=Noto+Serif+Lao:wght@500;600;700;800&display=swap" rel="stylesheet" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
@@ -391,6 +391,30 @@
       .coaches-grid{grid-template-columns:1fr 1fr}
       .footer-top{grid-template-columns:1fr}
       .footer-url-link{font-size:1.75rem}
+    }
+
+    /* ── LAO TYPOGRAPHY OVERRIDES ─────────────
+       Lao characters need looser tracking, taller line-height, and a
+       proper Lao font (Noto Sans/Serif Lao). Outfit doesn't cover Lao,
+       so the browser was using a generic system font. */
+    body{font-family:'Noto Sans Lao','Outfit',system-ui,sans-serif}
+    .hero-title,.h2,.h3{font-family:'Noto Serif Lao','Noto Sans Lao','Outfit',serif;font-weight:700;letter-spacing:0;line-height:1.25}
+    .hero-title{font-size:clamp(3rem,7.5vw,6.5rem);line-height:1.15;font-weight:700}
+    .h2{font-size:clamp(1.875rem,4.2vw,3.5rem);line-height:1.2}
+    .loader-mark{font-family:'Noto Serif Lao','Noto Sans Lao',sans-serif;font-size:3.25rem;letter-spacing:0;line-height:1.2;font-weight:700}
+    .lbl{font-family:'Noto Sans Lao',sans-serif;font-size:.75rem;letter-spacing:.04em;font-weight:700}
+    .nav-logo{font-family:'Noto Sans Lao','Outfit',sans-serif;font-weight:700;letter-spacing:0;font-size:.95rem}
+    .nav-links a{font-family:'Noto Sans Lao','Outfit',sans-serif;font-weight:500;letter-spacing:0;font-size:.85rem}
+    .nav-cta{font-family:'Noto Sans Lao','Outfit',sans-serif;font-weight:600;letter-spacing:0}
+    .hero-eyebrow,.stat-label,.ticker-item,.sched-day-name,.sched-badge,.type-num,.coach-role-tag,.about-badge-lbl,.footer-col-title,.footer-url-lbl,.price-sessions{font-family:'Noto Sans Lao','Outfit',sans-serif;letter-spacing:.04em}
+    .hero-tagline,.body,.overview-desc,.founder-bio,.coach-back-spec,.type-desc,.benefit-desc{font-family:'Noto Sans Lao','Outfit',sans-serif;line-height:1.7}
+    .type-name,.benefit-title,.sched-class-name,.coach-name-f,.coach-back-name,.founder-name,.founder-role,.gallery-caption-text,.info-label,.info-val,.contact-btn-label,.contact-btn-value,.price-perk,.btn-primary,.btn-outline,.coach-spec-f,.coach-back-role{font-family:'Noto Sans Lao','Outfit',sans-serif;letter-spacing:0;line-height:1.4}
+    .founder-name{line-height:1.3;font-weight:700}
+    .pillar-val,.about-badge-num,.stat-num,.price-amount{font-family:'Outfit',sans-serif}
+    .h2 br,.hero-title br{display:none}
+    @media (max-width:768px){
+      .hero-title{font-size:clamp(2.25rem,8vw,3.5rem);line-height:1.2}
+      .h2{font-size:clamp(1.5rem,5vw,2.25rem);line-height:1.25}
     }
   </style>
 </head>

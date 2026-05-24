@@ -245,14 +245,24 @@
     .dobok-tag .amt{font-size:1.75rem;font-weight:900;letter-spacing:-.04em}
     .dobok-tag .lbl-t{font-size:.8rem;color:rgba(255,255,255,.5)}
     .gear-list{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:1.5rem}
-    .gear-item{display:flex;flex-direction:column;background:white;border:1px solid rgba(0,0,0,.08);border-radius:var(--r-lg);overflow:hidden;transition:all .3s var(--expo);font-family:inherit}
-    .gear-item:hover{transform:translateY(-4px);box-shadow:var(--shadow-sm);border-color:rgba(220,38,38,.25)}
-    .gear-img{width:100%;aspect-ratio:1/1;background:var(--surface);display:flex;align-items:center;justify-content:center;overflow:hidden}
-    .gear-img img{width:88%;height:88%;object-fit:contain;display:block}
-    .gear-body{padding:.875rem 1rem 1rem;display:flex;flex-direction:column;gap:.25rem;border-top:1px solid rgba(0,0,0,.06)}
-    .gear-name{font-size:.85rem;font-weight:700;color:var(--dark);letter-spacing:-.01em}
-    .gear-price{font-size:1.05rem;font-weight:800;color:var(--red);letter-spacing:-.02em}
-    .gear-price small{font-size:.62rem;font-weight:700;color:var(--mid);letter-spacing:.06em;text-transform:uppercase;margin-left:.2rem}
+    .gear-item{position:relative;perspective:1100px;aspect-ratio:4/5;cursor:pointer;font-family:inherit}
+    .gear-card-inner{position:absolute;inset:0;transition:transform .8s var(--expo);transform-style:preserve-3d;will-change:transform}
+    .gear-item:hover .gear-card-inner,.gear-item.is-flipped .gear-card-inner{transform:rotateY(180deg)}
+    .gear-front,.gear-back{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:var(--r-lg);overflow:hidden;display:flex;flex-direction:column;border:1px solid rgba(0,0,0,.08)}
+    .gear-front{background:white}
+    .gear-front-hint{position:absolute;top:.7rem;right:.9rem;font-size:.55rem;letter-spacing:.15em;color:rgba(0,0,0,.32);text-transform:uppercase;z-index:2;font-weight:700}
+    .gear-img{flex:1;width:100%;background:var(--surface);display:flex;align-items:center;justify-content:center;overflow:hidden}
+    .gear-img img{width:84%;height:84%;object-fit:contain;display:block}
+    .gear-body{padding:.875rem 1rem 1rem;border-top:1px solid rgba(0,0,0,.06)}
+    .gear-name{font-size:.85rem;font-weight:700;color:var(--dark);letter-spacing:-.01em;line-height:1.25}
+    .gear-price{font-size:1rem;font-weight:800;color:var(--red);letter-spacing:-.02em;margin-top:.2rem}
+    .gear-price small{font-size:.6rem;font-weight:700;color:var(--mid);letter-spacing:.06em;text-transform:uppercase;margin-left:.2rem}
+    .gear-back{background:var(--dark);color:white;border-color:var(--dark);transform:rotateY(180deg);padding:1.25rem 1.125rem;justify-content:space-between}
+    .gear-back-hint{position:absolute;top:.7rem;right:.9rem;font-size:.55rem;letter-spacing:.15em;color:rgba(255,255,255,.3);text-transform:uppercase;font-weight:700}
+    .gear-back-title{font-size:.95rem;font-weight:800;color:white;margin-bottom:.55rem;letter-spacing:-.01em;line-height:1.25;padding-right:2rem}
+    .gear-back-desc{font-size:.74rem;font-weight:400;line-height:1.55;color:rgba(255,255,255,.72)}
+    .gear-back-price{font-size:1rem;font-weight:800;color:var(--red-l);margin-top:.75rem;border-top:1px solid rgba(255,255,255,.1);padding-top:.7rem}
+    .gear-back-price small{font-size:.58rem;font-weight:700;color:rgba(255,255,255,.45);letter-spacing:.06em;text-transform:uppercase;margin-left:.2rem}
 
     /* ── FOUNDERS ───────────────────────────── */
     .founders-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:4rem}
@@ -700,13 +710,13 @@
     <h3>Optional Protective Gear</h3>
     <p class="body" style="margin-bottom:1.25rem">Recommended for sparring and competition training. Ask your coach what's needed for your level.</p>
     <div class="gear-list">
-      <div class="gear-item"><div class="gear-img"><img src="photos/gear/chest-guard.png" alt="Chest Guard" /></div><div class="gear-body"><div class="gear-name">Chest Guard</div><div class="gear-price">฿850 <small>THB</small></div></div></div>
-      <div class="gear-item"><div class="gear-img"><img src="photos/gear/mouth-guard.png" alt="Mouth Guard" /></div><div class="gear-body"><div class="gear-name">Mouth Guard</div><div class="gear-price">฿100 <small>THB</small></div></div></div>
-      <div class="gear-item"><div class="gear-img"><img src="photos/gear/head-guard.png" alt="Head Guard" /></div><div class="gear-body"><div class="gear-name">Head Guard</div><div class="gear-price">฿800–1,200 <small>THB</small></div></div></div>
-      <div class="gear-item"><div class="gear-img"><img src="photos/gear/arm-shin-guard.png" alt="Arm and Shin Guard" /></div><div class="gear-body"><div class="gear-name">Arm &amp; Shin Guard</div><div class="gear-price">฿850 <small>THB</small></div></div></div>
-      <div class="gear-item"><div class="gear-img"><img src="photos/gear/glove.png" alt="Glove" /></div><div class="gear-body"><div class="gear-name">Glove</div><div class="gear-price">฿550 <small>THB</small></div></div></div>
-      <div class="gear-item"><div class="gear-img"><img src="photos/gear/groin-guard.png" alt="Groin Guard" /></div><div class="gear-body"><div class="gear-name">Groin Guard</div><div class="gear-price">฿500 <small>THB</small></div></div></div>
-      <div class="gear-item"><div class="gear-img"><img src="photos/gear/foot-guard.png" alt="Foot Guard" /></div><div class="gear-body"><div class="gear-name">Foot Guard</div><div class="gear-price">฿650 <small>THB</small></div></div></div>
+      <div class="gear-item"><div class="gear-card-inner"><div class="gear-front"><div class="gear-front-hint">Hover ↻</div><div class="gear-img"><img src="photos/gear/chest-guard.png" alt="Chest Guard" /></div><div class="gear-body"><div class="gear-name">Chest Guard</div><div class="gear-price">฿850 <small>THB</small></div></div></div><div class="gear-back"><div class="gear-back-hint">Info</div><div><div class="gear-back-title">Chest Guard (Hogu)</div><div class="gear-back-desc">The most essential piece of sparring gear. Shields the torso and ribs from full-power kicks during Kyorugi. Olympic-format electronic Hogus also automatically score valid contact in competition.</div></div><div class="gear-back-price">฿850 <small>THB</small></div></div></div></div>
+      <div class="gear-item"><div class="gear-card-inner"><div class="gear-front"><div class="gear-front-hint">Hover ↻</div><div class="gear-img"><img src="photos/gear/mouth-guard.png" alt="Mouth Guard" /></div><div class="gear-body"><div class="gear-name">Mouth Guard</div><div class="gear-price">฿100 <small>THB</small></div></div></div><div class="gear-back"><div class="gear-back-hint">Info</div><div><div class="gear-back-title">Mouth Guard</div><div class="gear-back-desc">Protects teeth, gums, and jaw from accidental impact during sparring. Most are the boil-and-bite type — you soften it in hot water and bite for a custom fit. Mandatory for all contact training and competition.</div></div><div class="gear-back-price">฿100 <small>THB</small></div></div></div></div>
+      <div class="gear-item"><div class="gear-card-inner"><div class="gear-front"><div class="gear-front-hint">Hover ↻</div><div class="gear-img"><img src="photos/gear/head-guard.png" alt="Head Guard" /></div><div class="gear-body"><div class="gear-name">Head Guard</div><div class="gear-price">฿800–1,200 <small>THB</small></div></div></div><div class="gear-back"><div class="gear-back-hint">Info</div><div><div class="gear-back-title">Head Guard</div><div class="gear-back-desc">Cushions direct and spinning kicks to the head. Padded foam shell with forehead, temple, and crown coverage. Required for every Kyorugi competition and recommended for any hard sparring session.</div></div><div class="gear-back-price">฿800–1,200 <small>THB</small></div></div></div></div>
+      <div class="gear-item"><div class="gear-card-inner"><div class="gear-front"><div class="gear-front-hint">Hover ↻</div><div class="gear-img"><img src="photos/gear/arm-shin-guard.png" alt="Arm and Shin Guard" /></div><div class="gear-body"><div class="gear-name">Arm &amp; Shin Guard</div><div class="gear-price">฿850 <small>THB</small></div></div></div><div class="gear-back"><div class="gear-back-hint">Info</div><div><div class="gear-back-title">Arm &amp; Shin Guard</div><div class="gear-back-desc">Lightweight padded sleeves that protect the forearms and shins — the two areas that take the most impact when blocking kicks. Slim enough to allow full range of motion for fast techniques.</div></div><div class="gear-back-price">฿850 <small>THB</small></div></div></div></div>
+      <div class="gear-item"><div class="gear-card-inner"><div class="gear-front"><div class="gear-front-hint">Hover ↻</div><div class="gear-img"><img src="photos/gear/glove.png" alt="Glove" /></div><div class="gear-body"><div class="gear-name">Glove</div><div class="gear-price">฿550 <small>THB</small></div></div></div><div class="gear-back"><div class="gear-back-hint">Info</div><div><div class="gear-back-title">Glove</div><div class="gear-back-desc">Open-finger padded gloves protecting the knuckles and back of the hand. Used in sparring so partners can punch and grab safely without injuring their hands or each other.</div></div><div class="gear-back-price">฿550 <small>THB</small></div></div></div></div>
+      <div class="gear-item"><div class="gear-card-inner"><div class="gear-front"><div class="gear-front-hint">Hover ↻</div><div class="gear-img"><img src="photos/gear/groin-guard.png" alt="Groin Guard" /></div><div class="gear-body"><div class="gear-name">Groin Guard</div><div class="gear-price">฿500 <small>THB</small></div></div></div><div class="gear-back"><div class="gear-back-hint">Info</div><div><div class="gear-back-title">Groin Guard</div><div class="gear-back-desc">A hard cup worn under the dobok to protect vital areas during sparring. Different designs for male and female athletes. Mandatory for all sparring competitions; strongly recommended in training too.</div></div><div class="gear-back-price">฿500 <small>THB</small></div></div></div></div>
+      <div class="gear-item"><div class="gear-card-inner"><div class="gear-front"><div class="gear-front-hint">Hover ↻</div><div class="gear-img"><img src="photos/gear/foot-guard.png" alt="Foot Guard" /></div><div class="gear-body"><div class="gear-name">Foot Guard</div><div class="gear-price">฿650 <small>THB</small></div></div></div><div class="gear-back"><div class="gear-back-hint">Info</div><div><div class="gear-back-title">Foot Guard (Socks)</div><div class="gear-back-desc">Soft padded sock-style protectors that wrap around the instep and ankle. Cushion the impact of kicks for both the attacker and the receiver. Required gear for Olympic-style sparring competition.</div></div><div class="gear-back-price">฿650 <small>THB</small></div></div></div></div>
     </div>
   </div>
 </section>
@@ -1289,6 +1299,13 @@
   })();
 
   /* dobok 360° video — uses <video> element, no JS needed */
+
+  /* gear cards: tap-to-flip on touch devices (desktop uses :hover) */
+  document.querySelectorAll('.gear-item').forEach(card => {
+    card.addEventListener('click', e => {
+      if (matchMedia('(hover: none)').matches) card.classList.toggle('is-flipped');
+    });
+  });
 
 })();
 </script>

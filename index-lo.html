@@ -245,14 +245,24 @@
     .dobok-tag .amt{font-size:1.75rem;font-weight:900;letter-spacing:-.04em}
     .dobok-tag .lbl-t{font-size:.8rem;color:rgba(255,255,255,.5)}
     .gear-list{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:1.5rem}
-    .gear-item{display:flex;flex-direction:column;background:white;border:1px solid rgba(0,0,0,.08);border-radius:var(--r-lg);overflow:hidden;transition:all .3s var(--expo);font-family:inherit}
-    .gear-item:hover{transform:translateY(-4px);box-shadow:var(--shadow-sm);border-color:rgba(220,38,38,.25)}
-    .gear-img{width:100%;aspect-ratio:1/1;background:var(--surface);display:flex;align-items:center;justify-content:center;overflow:hidden}
-    .gear-img img{width:88%;height:88%;object-fit:contain;display:block}
-    .gear-body{padding:.875rem 1rem 1rem;display:flex;flex-direction:column;gap:.25rem;border-top:1px solid rgba(0,0,0,.06)}
-    .gear-name{font-size:.85rem;font-weight:700;color:var(--dark);letter-spacing:-.01em}
-    .gear-price{font-size:1.05rem;font-weight:800;color:var(--red);letter-spacing:-.02em}
-    .gear-price small{font-size:.62rem;font-weight:700;color:var(--mid);letter-spacing:.06em;text-transform:uppercase;margin-left:.2rem}
+    .gear-item{position:relative;perspective:1100px;aspect-ratio:4/5;cursor:pointer;font-family:inherit}
+    .gear-card-inner{position:absolute;inset:0;transition:transform .8s var(--expo);transform-style:preserve-3d;will-change:transform}
+    .gear-item:hover .gear-card-inner,.gear-item.is-flipped .gear-card-inner{transform:rotateY(180deg)}
+    .gear-front,.gear-back{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:var(--r-lg);overflow:hidden;display:flex;flex-direction:column;border:1px solid rgba(0,0,0,.08)}
+    .gear-front{background:white}
+    .gear-front-hint{position:absolute;top:.7rem;right:.9rem;font-size:.55rem;letter-spacing:.15em;color:rgba(0,0,0,.32);text-transform:uppercase;z-index:2;font-weight:700}
+    .gear-img{flex:1;width:100%;background:var(--surface);display:flex;align-items:center;justify-content:center;overflow:hidden}
+    .gear-img img{width:84%;height:84%;object-fit:contain;display:block}
+    .gear-body{padding:.875rem 1rem 1rem;border-top:1px solid rgba(0,0,0,.06)}
+    .gear-name{font-size:.85rem;font-weight:700;color:var(--dark);letter-spacing:-.01em;line-height:1.25}
+    .gear-price{font-size:1rem;font-weight:800;color:var(--red);letter-spacing:-.02em;margin-top:.2rem}
+    .gear-price small{font-size:.6rem;font-weight:700;color:var(--mid);letter-spacing:.06em;text-transform:uppercase;margin-left:.2rem}
+    .gear-back{background:var(--dark);color:white;border-color:var(--dark);transform:rotateY(180deg);padding:1.25rem 1.125rem;justify-content:space-between}
+    .gear-back-hint{position:absolute;top:.7rem;right:.9rem;font-size:.55rem;letter-spacing:.15em;color:rgba(255,255,255,.3);text-transform:uppercase;font-weight:700}
+    .gear-back-title{font-size:.95rem;font-weight:800;color:white;margin-bottom:.55rem;letter-spacing:-.01em;line-height:1.3;padding-right:2rem}
+    .gear-back-desc{font-size:.74rem;font-weight:400;line-height:1.65;color:rgba(255,255,255,.72)}
+    .gear-back-price{font-size:1rem;font-weight:800;color:var(--red-l);margin-top:.75rem;border-top:1px solid rgba(255,255,255,.1);padding-top:.7rem}
+    .gear-back-price small{font-size:.58rem;font-weight:700;color:rgba(255,255,255,.45);letter-spacing:.06em;text-transform:uppercase;margin-left:.2rem}
 
     /* ── FOUNDERS ───────────────────────────── */
     .founders-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:4rem}
@@ -724,13 +734,13 @@
     <h3>ອຸປະກອນປ້ອງກັນ (ທາງເລືອກ)</h3>
     <p class="body" style="margin-bottom:1.25rem">ແນະນຳສຳລັບການຕໍ່ສູ້ ແລະ ການຝຶກແຂ່ງຂັນ. ສອບຖາມຄູຝຶກວ່າເຈົ້າຕ້ອງການອັນໃດສຳລັບລະດັບຂອງເຈົ້າ.</p>
     <div class="gear-list">
-      <div class="gear-item"><div class="gear-img"><img src="photos/gear/chest-guard.png" alt="ຊຸດເກາະ" /></div><div class="gear-body"><div class="gear-name">ຊຸດເກາະ</div><div class="gear-price">฿850 <small>ບາດ</small></div></div></div>
-      <div class="gear-item"><div class="gear-img"><img src="photos/gear/mouth-guard.png" alt="ຟັນຢາງ" /></div><div class="gear-body"><div class="gear-name">ຟັນຢາງ</div><div class="gear-price">฿100 <small>ບາດ</small></div></div></div>
-      <div class="gear-item"><div class="gear-img"><img src="photos/gear/head-guard.png" alt="ໝວກ" /></div><div class="gear-body"><div class="gear-name">ໝວກ</div><div class="gear-price">฿800–1,200 <small>ບາດ</small></div></div></div>
-      <div class="gear-item"><div class="gear-img"><img src="photos/gear/arm-shin-guard.png" alt="ກັນແຂນ ແລະ ກັນຂາ" /></div><div class="gear-body"><div class="gear-name">ກັນແຂນ ແລະ ກັນຂາ</div><div class="gear-price">฿850 <small>ບາດ</small></div></div></div>
-      <div class="gear-item"><div class="gear-img"><img src="photos/gear/glove.png" alt="ຖົງມື" /></div><div class="gear-body"><div class="gear-name">ຖົງມື</div><div class="gear-price">฿550 <small>ບາດ</small></div></div></div>
-      <div class="gear-item"><div class="gear-img"><img src="photos/gear/groin-guard.png" alt="ກະຈັບ" /></div><div class="gear-body"><div class="gear-name">ກະຈັບ</div><div class="gear-price">฿500 <small>ບາດ</small></div></div></div>
-      <div class="gear-item"><div class="gear-img"><img src="photos/gear/foot-guard.png" alt="ຖົງຕີນ" /></div><div class="gear-body"><div class="gear-name">ຖົງຕີນ</div><div class="gear-price">฿650 <small>ບາດ</small></div></div></div>
+      <div class="gear-item"><div class="gear-card-inner"><div class="gear-front"><div class="gear-front-hint">ເລື່ອນເມົາສ໌ ↻</div><div class="gear-img"><img src="photos/gear/chest-guard.png" alt="ຊຸດເກາະ" /></div><div class="gear-body"><div class="gear-name">ຊຸດເກາະ</div><div class="gear-price">฿850 <small>ບາດ</small></div></div></div><div class="gear-back"><div class="gear-back-hint">ຂໍ້ມູນ</div><div><div class="gear-back-title">ຊຸດເກາະ (Hogu)</div><div class="gear-back-desc">ອຸປະກອນຫຼັກທີ່ສຳຄັນທີ່ສຸດສຳລັບການຕໍ່ສູ້. ປ້ອງກັນເອິກ ແລະ ກະດູກຊີ່ໂຄງຈາກການເຕະທີ່ມີແຮງສູງໃນ ກຽວຣູກິ. ໃນຮູບແບບໂອລິມປິກ ຊຸດເກາະອີເລັກໂທນິກສາມາດໃຫ້ຄະແນນອັດຕະໂນມັດໃນການແຂ່ງຂັນ.</div></div><div class="gear-back-price">฿850 <small>ບາດ</small></div></div></div></div>
+      <div class="gear-item"><div class="gear-card-inner"><div class="gear-front"><div class="gear-front-hint">ເລື່ອນເມົາສ໌ ↻</div><div class="gear-img"><img src="photos/gear/mouth-guard.png" alt="ຟັນຢາງ" /></div><div class="gear-body"><div class="gear-name">ຟັນຢາງ</div><div class="gear-price">฿100 <small>ບາດ</small></div></div></div><div class="gear-back"><div class="gear-back-hint">ຂໍ້ມູນ</div><div><div class="gear-back-title">ຟັນຢາງ</div><div class="gear-back-desc">ປ້ອງກັນແຂ້ວ, ເຫງືອກ, ແລະ ກະດູກຄາງຈາກການກະທົບໂດຍບັງເອີນໃນເວລາຕໍ່ສູ້. ສ່ວນຫຼາຍເປັນແບບ ຮ້ອນ-ກັດ (boil-and-bite) ທີ່ປັບໃຫ້ເຂົ້າປາກໄດ້. ບັງຄັບໃຊ້ໃນທຸກການຝຶກ ແລະ ການແຂ່ງຂັນ.</div></div><div class="gear-back-price">฿100 <small>ບາດ</small></div></div></div></div>
+      <div class="gear-item"><div class="gear-card-inner"><div class="gear-front"><div class="gear-front-hint">ເລື່ອນເມົາສ໌ ↻</div><div class="gear-img"><img src="photos/gear/head-guard.png" alt="ໝວກ" /></div><div class="gear-body"><div class="gear-name">ໝວກ</div><div class="gear-price">฿800–1,200 <small>ບາດ</small></div></div></div><div class="gear-back"><div class="gear-back-hint">ຂໍ້ມູນ</div><div><div class="gear-back-title">ໝວກປ້ອງກັນຫົວ</div><div class="gear-back-desc">ຫຼຸດແຮງກະທົບຈາກການເຕະຫົວແບບກົງ ແລະ ແບບໝູນ. ເຮັດດ້ວຍຊັ້ນສະຟອມບຸໜ້າຜາກ, ຂະຫມັບ, ແລະ ກະໂຫຼກຫົວ. ບັງຄັບໃຊ້ໃນທຸກການແຂ່ງຂັນ ກຽວຣູກິ ແລະ ແນະນຳສຳລັບການຕໍ່ສູ້ໜັກ.</div></div><div class="gear-back-price">฿800–1,200 <small>ບາດ</small></div></div></div></div>
+      <div class="gear-item"><div class="gear-card-inner"><div class="gear-front"><div class="gear-front-hint">ເລື່ອນເມົາສ໌ ↻</div><div class="gear-img"><img src="photos/gear/arm-shin-guard.png" alt="ກັນແຂນ ແລະ ກັນຂາ" /></div><div class="gear-body"><div class="gear-name">ກັນແຂນ ແລະ ກັນຂາ</div><div class="gear-price">฿850 <small>ບາດ</small></div></div></div><div class="gear-back"><div class="gear-back-hint">ຂໍ້ມູນ</div><div><div class="gear-back-title">ກັນແຂນ ແລະ ກັນຂາ</div><div class="gear-back-desc">ປອກບຸເບົາທີ່ປ້ອງກັນແຂນ ແລະ ໜ້າແຂ້ງ — ສອງບໍລິເວນທີ່ຮັບແຮງກະທົບຫຼາຍທີ່ສຸດເວລາກັນເຕະ. ມີນ້ຳໜັກເບົາພໍທີ່ຍອມໃຫ້ເຄື່ອນໄຫວໄດ້ເຕັມຮູບແບບສຳລັບເຕັກນິກທີ່ວ່ອງໄວ.</div></div><div class="gear-back-price">฿850 <small>ບາດ</small></div></div></div></div>
+      <div class="gear-item"><div class="gear-card-inner"><div class="gear-front"><div class="gear-front-hint">ເລື່ອນເມົາສ໌ ↻</div><div class="gear-img"><img src="photos/gear/glove.png" alt="ຖົງມື" /></div><div class="gear-body"><div class="gear-name">ຖົງມື</div><div class="gear-price">฿550 <small>ບາດ</small></div></div></div><div class="gear-back"><div class="gear-back-hint">ຂໍ້ມູນ</div><div><div class="gear-back-title">ຖົງມື</div><div class="gear-back-desc">ຖົງມືບຸເບົາແບບເປີດນິ້ວ ປ້ອງກັນຂໍ້ນິ້ວມື ແລະ ຫຼັງມື. ໃຊ້ໃນການຕໍ່ສູ້ເພື່ອໃຫ້ຄູ່ຝຶກສາມາດຊົກ ແລະ ຈັບໄດ້ຢ່າງປອດໄພ ໂດຍບໍ່ໃຫ້ມືຂອງຕົນ ຫຼື ຄູ່ຝຶກບາດເຈັບ.</div></div><div class="gear-back-price">฿550 <small>ບາດ</small></div></div></div></div>
+      <div class="gear-item"><div class="gear-card-inner"><div class="gear-front"><div class="gear-front-hint">ເລື່ອນເມົາສ໌ ↻</div><div class="gear-img"><img src="photos/gear/groin-guard.png" alt="ກະຈັບ" /></div><div class="gear-body"><div class="gear-name">ກະຈັບ</div><div class="gear-price">฿500 <small>ບາດ</small></div></div></div><div class="gear-back"><div class="gear-back-hint">ຂໍ້ມູນ</div><div><div class="gear-back-title">ກະຈັບ</div><div class="gear-back-desc">ກະຈັບແຂງທີ່ໃສ່ໃນຊຸດເທຄວັນໂດເພື່ອປ້ອງກັນຈຸດສຳຄັນໃນເວລາຕໍ່ສູ້. ມີຮູບແບບແຍກສຳລັບເພດຊາຍ ແລະ ເພດຍິງ. ບັງຄັບໃຊ້ໃນທຸກການແຂ່ງຂັນ ແລະ ແນະນຳໃນການຝຶກຄືກັນ.</div></div><div class="gear-back-price">฿500 <small>ບາດ</small></div></div></div></div>
+      <div class="gear-item"><div class="gear-card-inner"><div class="gear-front"><div class="gear-front-hint">ເລື່ອນເມົາສ໌ ↻</div><div class="gear-img"><img src="photos/gear/foot-guard.png" alt="ຖົງຕີນ" /></div><div class="gear-body"><div class="gear-name">ຖົງຕີນ</div><div class="gear-price">฿650 <small>ບາດ</small></div></div></div><div class="gear-back"><div class="gear-back-hint">ຂໍ້ມູນ</div><div><div class="gear-back-title">ຖົງຕີນ</div><div class="gear-back-desc">ຖົງຕີນແບບບຸເບົາທີ່ຫຸ້ມຫຼັງຕີນ ແລະ ຂໍ້ຕີນ. ຫຼຸດແຮງກະທົບຈາກການເຕະທັງສຳລັບຜູ້ເຕະ ແລະ ຜູ້ຮັບ. ອຸປະກອນທີ່ບັງຄັບໃຊ້ໃນກິລາໂອລິມປິກ ກຽວຣູກິ.</div></div><div class="gear-back-price">฿650 <small>ບາດ</small></div></div></div></div>
     </div>
   </div>
 </section>
@@ -1313,6 +1323,13 @@
   })();
 
   /* dobok 360° video — uses <video> element, no JS needed */
+
+  /* gear cards: tap-to-flip on touch devices (desktop uses :hover) */
+  document.querySelectorAll('.gear-item').forEach(card => {
+    card.addEventListener('click', e => {
+      if (matchMedia('(hover: none)').matches) card.classList.toggle('is-flipped');
+    });
+  });
 
 })();
 </script>
